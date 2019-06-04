@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TimeDialator</string>
+    <string name="mainmenu_btn_play">Play</string>
+    <string name="mainmenu_btn_settings">Settings</string>
+    <string name="mainmenu_btn_quit">Quit</string>
+    <string name="settings_text_sound">Sound</string>
+    <string name="sharedpref_sound_key">timedialator_soundvalue</string>
+    <string name="sharedpref_name">timedialation</string>
+    <string name="settings_text_music">Music</string>
+</resources>
