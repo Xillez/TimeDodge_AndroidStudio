@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.example.timedialator.R;
+import com.example.timedialator.utils.ToolbarMgr;
 
 public class MainMenu extends AppCompatActivity
 {
@@ -14,10 +15,20 @@ public class MainMenu extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainmenu);
-        Button btn = findViewById(R.id.mainmenu_btn_settings);
-        btn.setOnClickListener((view) -> {
+
+
+
+        //TODO: Add game activity!
+
+
+        Button btn_settings = findViewById(R.id.mainmenu_btn_settings);
+        btn_settings.setOnClickListener((view) -> {
             Intent settingsIntent = new Intent(getApplicationContext(), Settings.class);
             startActivity(settingsIntent);
+        });
+        Button btn_quit = findViewById(R.id.mainmenu_btn_quit);
+        btn_quit.setOnClickListener((view) -> {
+            finish();
         });
     }
 }
