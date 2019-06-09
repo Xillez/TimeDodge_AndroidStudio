@@ -16,11 +16,11 @@ public class MainMenu extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainmenu);
 
-
-
-        //TODO: Add game activity!
-
-
+        Button btn_play = findViewById(R.id.mainmenu_btn_play);
+        btn_play.setOnClickListener((view) -> {
+            Intent settingsIntent = new Intent(getApplicationContext(), GameActivity.class);
+            startActivity(settingsIntent);
+        });
         Button btn_settings = findViewById(R.id.mainmenu_btn_settings);
         btn_settings.setOnClickListener((view) -> {
             Intent settingsIntent = new Intent(getApplicationContext(), Settings.class);
