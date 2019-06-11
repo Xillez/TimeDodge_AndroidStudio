@@ -1,7 +1,7 @@
-package com.example.timedialator.game.ecs.components;
+package com.example.timedodge.game.ecs.components;
 
-import com.example.timedialator.game.ecs.Component;
-import com.example.timedialator.game.ecs.Entity;
+import com.example.timedodge.game.ecs.Component;
+import com.example.timedodge.game.ecs.Entity;
 
 public class Transform extends Component
 {

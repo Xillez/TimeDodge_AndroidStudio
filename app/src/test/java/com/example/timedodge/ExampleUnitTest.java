@@ -1,4 +1,4 @@
-package com.example.timedialator;
+package com.example.timedodge;
 
 import org.junit.Test;
 

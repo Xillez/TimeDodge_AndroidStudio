@@ -1,4 +1,4 @@
-package com.example.timedialator;
+package com.example.timedodge;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -23,6 +23,6 @@ public class ExampleInstrumentedTest
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.timedialator", appContext.getPackageName());
+        assertEquals("com.example.timedodge", appContext.getPackageName());
     }
 }

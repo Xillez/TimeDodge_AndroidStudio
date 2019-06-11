@@ -1,4 +1,4 @@
-package com.example.timedialator.activities;
+package com.example.timedodge.activities;
 
 import android.app.Service;
 import android.content.Context;
@@ -11,12 +11,11 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.timedialator.R;
-import com.example.timedialator.game.GameCanvas;
-import com.example.timedialator.game.GameView;
+import com.example.timedodge.R;
+import com.example.timedodge.game.GameView;
 
-import static com.example.timedialator.utils.Logging.LOG_INFO_TAG;
-import static com.example.timedialator.utils.Logging.LOG_WARN_TAG;
+import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
+import static com.example.timedodge.utils.Logging.LOG_WARN_TAG;
 
 public class GameActivity extends AppCompatActivity
 {

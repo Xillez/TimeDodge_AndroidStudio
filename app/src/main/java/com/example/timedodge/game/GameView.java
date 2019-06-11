@@ -1,42 +1,33 @@
-package com.example.timedialator.game;
+package com.example.timedodge.game;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.drawable.shapes.OvalShape;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.support.annotation.Nullable;
+import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
-import android.view.View;
 
-import com.example.timedialator.game.ecs.Entity;
+import com.example.timedodge.game.ecs.Entity;
 
-import java.util.ArrayList;
-
-public class GameCanvas extends View implements SensorEventListener
+public class GameView extends GLSurfaceView implements SensorEventListener
 {
     private Context context;
     private Point wSize = new Point();
     private final int MARGIN = 5;
 
-    private ArrayList<Entity> entities = new ArrayList<>();
-
-    public GameCanvas(Context context)
+    public GameView(Context context)
     {
         super(context);
         this.context = context;
-        this.setup();
     }
 
-    public GameCanvas(Context context, @Nullable AttributeSet attrs)
+    public GameView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         this.context = context;
-        this.setup();
     }
 
     private void setup()

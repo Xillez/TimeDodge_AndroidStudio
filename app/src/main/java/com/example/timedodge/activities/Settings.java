@@ -1,4 +1,4 @@
-package com.example.timedialator.activities;
+package com.example.timedodge.activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.SeekBar;
 
-import com.example.timedialator.R;
-import com.example.timedialator.utils.ToolbarMgr;
+import com.example.timedodge.R;
+import com.example.timedodge.utils.ToolbarMgr;
 
 public class Settings extends AppCompatActivity
 {

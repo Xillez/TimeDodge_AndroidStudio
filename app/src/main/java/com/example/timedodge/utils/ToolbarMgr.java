@@ -1,4 +1,4 @@
-package com.example.timedialator.utils;
+package com.example.timedodge.utils;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;

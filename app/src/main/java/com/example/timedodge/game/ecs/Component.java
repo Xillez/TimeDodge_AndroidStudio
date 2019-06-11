@@ -1,8 +1,8 @@
-package com.example.timedialator.game.ecs;
+package com.example.timedodge.game.ecs;
 
 import android.util.Log;
 
-import static com.example.timedialator.utils.Logging.LOG_INFO_TAG;
+import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
 
 public class Component
 {

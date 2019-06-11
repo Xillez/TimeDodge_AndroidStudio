@@ -1,4 +1,4 @@
-package com.example.timedialator.game.ecs;
+package com.example.timedodge.game.ecs;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
@@ -8,7 +8,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import static com.example.timedialator.utils.Logging.LOG_INFO_TAG;
+import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
 
 public class Entity extends ShapeDrawable
 {

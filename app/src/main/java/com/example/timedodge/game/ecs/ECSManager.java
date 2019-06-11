@@ -1,4 +1,4 @@
-package com.example.timedialator.game.ecs;
+package com.example.timedodge.game.ecs;
 
 import android.content.Context;
 import android.graphics.Canvas;

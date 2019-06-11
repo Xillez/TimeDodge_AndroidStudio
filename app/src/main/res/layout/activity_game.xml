@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent">
 
-        <com.example.timedialator.game.GameCanvas
+        <com.example.timedodge.game.GameCanvas
             android:id="@+id/game_gamecanvas"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

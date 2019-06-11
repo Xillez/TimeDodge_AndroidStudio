@@ -1,4 +1,4 @@
-package com.example.timedialator.utils;
+package com.example.timedodge.utils;
 
 public class Logging
 {
