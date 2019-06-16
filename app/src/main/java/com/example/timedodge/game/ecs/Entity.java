@@ -49,9 +49,14 @@ public class Entity extends ShapeDrawable
     public void draw(Canvas canvas)
     {
         Log.i(LOG_INFO_TAG, "Entity draw");
+
+        for (Component component : this.components)
+        {
+            component.destroy();
+        }
     }
 
-    public void destroy()
+    /*public void destroy()
     {
         Log.i(LOG_INFO_TAG, "Entity destroy");
 
@@ -59,7 +64,7 @@ public class Entity extends ShapeDrawable
         {
             component.destroy();
         }
-    }
+    }*/
 
     public ArrayList<Component> getComponents()
     {
