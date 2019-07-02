@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gamemode name="default">
+    <entity
+        name="ball"
+        shape="circle"
+        size="20x20"
+        position="centered"
+        color="0xFFFFFFFF"
+        />
+</gamemode>

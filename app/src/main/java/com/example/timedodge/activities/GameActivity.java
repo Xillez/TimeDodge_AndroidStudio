@@ -12,16 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.timedodge.R;
-import com.example.timedodge.game.GameView;
+import com.example.timedodge.game.GameCanvas;
+import com.example.timedodge.game.Public;
 
 import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
 import static com.example.timedodge.utils.Logging.LOG_WARN_TAG;
 
 public class GameActivity extends AppCompatActivity
 {
-    //private GameCanvas canvas = null;
-    private GameView gameView = null;
-
     private boolean gameOver = false;
 
     // SensorManagers
@@ -42,8 +40,8 @@ public class GameActivity extends AppCompatActivity
         // Set view
         Log.i(LOG_INFO_TAG, "Setting view!");
         setContentView(R.layout.activity_game);         // TODO: exception thrown on screen blackout. FIX THIS!.
-        /*canvas = findViewById(R.id.game_gamecanvas);
-        Log.i(LOG_INFO_TAG, "" + canvas);*/
+        Public.canvas = findViewById(R.id.game_gamecanvas);
+        Log.i(LOG_INFO_TAG, "" + Public.canvas);
 
         // Set screen orientation
         Log.i(LOG_INFO_TAG, "Setting screen orientation!");
@@ -55,7 +53,7 @@ public class GameActivity extends AppCompatActivity
         if (vibrator == null)
             Log.i(LOG_WARN_TAG, "Vibrator is null!");
 
-        // Make a media play to play bloop sound
+        // Make the media player play bloop sound
         Log.i(LOG_INFO_TAG, "Trying to get media player!");
         mediaPlayer = MediaPlayer.create(this, R.raw.boop);
 
@@ -68,8 +66,9 @@ public class GameActivity extends AppCompatActivity
 
         // Register the sensor listener
         Log.i(LOG_INFO_TAG, "Tying to register sensor!");
-        //sensorManager.registerListener(canvas, sensor, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(gameView, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(Public.canvas, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+        findViewById(R.id.game_debuginfo_panel).setOnClickListener(v -> v.setActivated(false));
     }
 
     @Override
@@ -77,11 +76,17 @@ public class GameActivity extends AppCompatActivity
     {
         super.onPause();
 
+        Public.canvas.destroy();
+
         // Un-register sensor listener
         Log.i(LOG_INFO_TAG, "App paused, un-registering sensor listener");
-        //sensorManager.unregisterListener(canvas);
-        sensorManager.unregisterListener(gameView);
-     //   gameCanvas.stopPointGiving();
+        sensorManager.unregisterListener(Public.canvas);
+
+        // Un-register sensor listener
+        Log.i(LOG_INFO_TAG, "App paused, releasing media listener");
+        mediaPlayer.release();
+
+        //gameCanvas.stopPointGiving();
     }
 
     @Override
@@ -91,8 +96,11 @@ public class GameActivity extends AppCompatActivity
 
         // Re-register sensor listener
         Log.i(LOG_INFO_TAG, "App un-paused, registering sensor listener");
-        //sensorManager.registerListener(canvas, sensor, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(gameView, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(Public.canvas, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+        // Make a media play to play bloop sound
+        Log.i(LOG_INFO_TAG, "App un-paused, trying to get media player!");
+        mediaPlayer = MediaPlayer.create(this, R.raw.boop);
 
         // Log first drawing even after resume
         //if (canvas.isLoggingFirstDrawEvent()) canvas.setLoggingFirstDrawEvent(true);

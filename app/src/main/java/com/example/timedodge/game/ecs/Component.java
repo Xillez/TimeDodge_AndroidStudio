@@ -1,41 +1,48 @@
 package com.example.timedodge.game.ecs;
 
-import android.util.Log;
-
-import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
+import android.graphics.Canvas;
+import android.hardware.SensorEvent;
 
 public class Component
-{
-    protected int id = 0;
-    protected Entity parent = null;
-
-    public Component(Entity parent)
     {
-        this.parent = parent;
-    }
+        protected int id = 0;
+        protected Entity parent = null;
 
-    public void create()
-    {
-        Log.i(LOG_INFO_TAG, "Component create");
-    }
+        public Component()
+        {
 
-    public void update(float dt)
-    {
-        Log.i(LOG_INFO_TAG, "Component update");
-    }
+        }
 
-    public void destroy()
-    {
-        Log.i(LOG_INFO_TAG, "Component destroy");
-    }
+        public void create(int id, Entity parent)
+        {
+            //Log.i(LOG_INFO_TAG, "Component create");
 
-    public int getId()
-    {
-        return id;
-    }
+            this.id = id;
+            this.parent = parent;
+        }
 
-    public Entity getParent()
-    {
-        return parent;
-    }
+        public void update(float dt, SensorEvent event)
+        {
+            //Log.i(LOG_INFO_TAG, "Component update");
+        }
+
+        public void draw(Canvas canvas)
+        {
+            //Log.i(LOG_INFO_TAG, "Component draw");
+        }
+
+        public void destroy()
+        {
+            //Log.i(LOG_INFO_TAG, "Component destroy");
+        }
+
+        public int getId()
+        {
+            return id;
+        }
+
+        public Entity getParent()
+        {
+            return parent;
+        }
 }

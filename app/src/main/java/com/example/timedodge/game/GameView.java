@@ -3,7 +3,6 @@ package com.example.timedodge.game;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.graphics.drawable.shapes.OvalShape;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -34,7 +33,7 @@ public class GameView extends GLSurfaceView implements SensorEventListener
     {
         updateScreenBounds();
         Entity ball = new Entity();
-        ball.create(new OvalShape());
+        //ball.create(new OvalShape());
         /*ball.setRadius(25);
         ball.setPosition(new PointF(this.wSize.x / 2, this.wSize.y / 2));
         ball.setVelocity(new PointF(0.0f, 0.0f));
