@@ -1,12 +1,7 @@
 package com.example.timedodge.game.ecs.components;
 
 import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
-import android.graphics.drawable.shapes.RectShape;
 import android.hardware.SensorEvent;
-import android.util.Log;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
@@ -14,7 +9,6 @@ import com.example.timedodge.game.ecs.Entity;
 import com.example.timedodge.game.event.GameEventListener;
 import com.example.timedodge.game.event.events.GameEntityCollisionEvent;
 import com.example.timedodge.game.event.events.GameWallCollisionEvent;
-import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Vector;
 
 public class CollisionCircle extends Collision
@@ -73,16 +67,16 @@ public class CollisionCircle extends Collision
         {
             Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
             if ((pos.x - (size.x / 2.0f)) <= 0.0f && parentPhysics != null) {
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_LEFT);
+                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_LEFT, new Vector((size.x / 2.0f) + 1.0f, pos.y));
             }
             if ((pos.y - (size.y / 2.0f)) <= 0.0f && parentPhysics != null)
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_TOP);
+                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_TOP, new Vector(pos.x, (size.y / 2.0f) + 1.0f));
             if ((pos.x + (size.x / 2.0f)) >= Public.screenSize.x && parentPhysics != null) {
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_RIGHT);
+                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_RIGHT, new Vector(Public.screenSize.x - (size.x / 2.0f) - 1.0f, pos.y));
                 //Log.d(Logging.LOG_DEBUG_TAG, "Touching left wall");
             }
             if ((pos.y + (size.y / 2.0f)) >= Public.screenSize.y && parentPhysics != null)
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_BOTTOM);
+                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_BOTTOM, new Vector(pos.x, Public.screenSize.y - (size.y / 2.0f) - 1.0f));
         }
 
         super.update(dt, event);
@@ -125,12 +119,13 @@ public class CollisionCircle extends Collision
         Public.gameEventHandler.registerEvent(collEvent);
     }
 
-    public void triggerWallCollisionEvent(GameEventListener other, GameWallCollisionEvent.WallSide wallSide)
+    public void triggerWallCollisionEvent(GameEventListener other, GameWallCollisionEvent.WallSide wallSide, Vector unstuckPosition)
     {
         GameWallCollisionEvent collEvent = new GameWallCollisionEvent();
         collEvent.target = other;
         collEvent.referrer = this;
         collEvent.collisionWithSide = wallSide;
+        collEvent.unstuckPosition = unstuckPosition;
         Public.gameEventHandler.registerEvent(collEvent);
     }
 }

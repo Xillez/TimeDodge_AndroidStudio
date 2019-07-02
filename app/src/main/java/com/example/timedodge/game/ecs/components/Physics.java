@@ -43,13 +43,13 @@ public class Physics extends Component implements GameEventListener
             return;
 
         // Set acceleration
-        acceleration.set(event.values[2] * 100000.0f, event.values[0] * 100000.0f);
+        acceleration.set(event.values[1], event.values[0]);
 
         // Update velocity
-        this.velocity.addTo(this.acceleration.multi(dt));
-
+        this.velocity.addTo(this.acceleration);
+        
         // Update position
-        parentTransform.setPosition(parentTransform.getPosition().x + this.velocity.x * dt, parentTransform.getPosition().y + this.velocity.y * dt);
+        parentTransform.setPosition(parentTransform.getPosition().x + this.velocity.x * dt , parentTransform.getPosition().y + this.velocity.y * dt);
     }
 
     @Override
@@ -78,22 +78,34 @@ public class Physics extends Component implements GameEventListener
         if (parentTransform == null)
             return;
 
+        // Entity to entity collision
         if (event instanceof GameEntityCollisionEvent)
         {
+            // Add bounce of other entity + removal of energy (hence 0.75 instead of 1)
             Transform otherTransform = (Transform) event.referrer.getParent().getComponentByType(Transform.class);
             if (otherTransform != null)
-                this.velocity.addTo(parentTransform.getPosition().sub(otherTransform.getPosition()).multi(0.90f));
+                this.velocity.addTo(parentTransform.getPosition().sub(otherTransform.getPosition()).multi(0.75f));
         }
+        // Entity to wall collision
         else if (event instanceof GameWallCollisionEvent)
         {
+            GameWallCollisionEvent wallCollisionEvent = (GameWallCollisionEvent) event;
 
-            if (((GameWallCollisionEvent) event).collisionWithSide == GameWallCollisionEvent.WallSide.WALL_LEFT &&
-                ((GameWallCollisionEvent) event).collisionWithSide == GameWallCollisionEvent.WallSide.WALL_RIGHT)
-                this.velocity.multiToAxis(Vector.Axis.x, -1.0f);
-            if (((GameWallCollisionEvent) event).collisionWithSide == GameWallCollisionEvent.WallSide.WALL_TOP &&
-                ((GameWallCollisionEvent) event).collisionWithSide == GameWallCollisionEvent.WallSide.WALL_BOTTOM)
-                this.velocity.multiToAxis(Vector.Axis.y, -1.0f);
-            Log.d(Logging.LOG_DEBUG_TAG, "WallCollisionEvent! " + this.velocity.toString());
+            // Flip velocity for bounce effect + removal of energy (hence 0.75 instead of 1)
+            if (wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_LEFT.ordinal() ||
+                    wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_RIGHT.ordinal())
+            {
+                this.velocity.multiToAxis(Vector.Axis.x, -0.75f);
+            }
+            if (wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_TOP.ordinal() ||
+                    wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_BOTTOM.ordinal())
+            {
+                this.velocity.multiToAxis(Vector.Axis.y, -0.75f);
+            }
+
+            // Unstuck ball
+            if (wallCollisionEvent.unstuckPosition != null)
+                parentTransform.getPosition().set(wallCollisionEvent.unstuckPosition);
         }
     }
 }

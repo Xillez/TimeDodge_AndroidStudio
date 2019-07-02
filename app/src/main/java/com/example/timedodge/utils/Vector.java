@@ -1,10 +1,11 @@
 package com.example.timedodge.utils;
 
 import android.graphics.PointF;
+import android.util.Log;
 
 public class Vector extends PointF
 {
-    public enum Axis {x, y};
+    public enum Axis {x, y}
 
     public Vector(float x, float y)
     {
@@ -19,6 +20,12 @@ public class Vector extends PointF
     }
 
     public Vector(Vector vector)
+    {
+        this.x = vector.x;
+        this.y = vector.y;
+    }
+
+    public void set(Vector vector)
     {
         this.x = vector.x;
         this.y = vector.y;
@@ -158,30 +165,31 @@ public class Vector extends PointF
 
     public void addToAxis(Axis axis, float scalar)
     {
-        if (axis == Axis.x)
+        if (axis.ordinal() == Axis.x.ordinal())
             this.x += scalar;
-        else if (axis == Axis.y)
+        else if (axis.ordinal() == Axis.y.ordinal())
             this.y += scalar;
     }
     public void subToAxis(Axis axis, float scalar)
     {
-        if (axis == Axis.x)
+        if (axis.ordinal() == Axis.x.ordinal())
             this.x -= scalar;
-        else if (axis == Axis.y)
+        else if (axis.ordinal() == Axis.y.ordinal())
             this.y -= scalar;
     }
     public void multiToAxis(Axis axis, float scalar)
     {
-        if (axis == Axis.x)
+        Log.d(Logging.LOG_DEBUG_TAG, "Axis: " + Axis.x.name());
+        if (axis.ordinal() == Axis.x.ordinal())
             this.x *= scalar;
-        else if (axis == Axis.y)
+        else if (axis.ordinal() == Axis.y.ordinal())
             this.y *= scalar;
     }
     public void divToAxis(Axis axis, float scalar)
     {
-        if (axis == Axis.x)
+        if (axis.ordinal() == Axis.x.ordinal())
             this.x /= scalar;
-        else if (axis == Axis.y)
+        else if (axis.ordinal() == Axis.y.ordinal())
             this.y /= scalar;
     }
 
