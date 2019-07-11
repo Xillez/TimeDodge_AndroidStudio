@@ -5,6 +5,8 @@
     <string name="mainmenu_btn_quit">Quit</string>
     <string name="settings_text_sound">Sound</string>
     <string name="sharedpref_sound_key">timedodge_soundvalue</string>
+    <string name="sharedpref_sensitivity_key">timedodge_sensitivityvalue</string>
     <string name="sharedpref_name">timedodge</string>
     <string name="settings_text_music">Music</string>
+    <string name="settings_text_sensorsensitivity">Tilt sensitivity</string>
 </resources>
