@@ -29,6 +29,8 @@ public class CollisionCircle extends Collision
     @Override
     public void update(float dt, SensorEvent event)
     {
+        super.update(dt, event);
+
         // Fetch transform and graphics components from parent
         Transform parentTransform = ((Transform) this.parent.getComponentByType(Transform.class));
         Graphics parentGraphics = (Graphics) this.parent.getComponentByType(Graphics.class);
@@ -66,20 +68,18 @@ public class CollisionCircle extends Collision
         if (backgroundCollision)
         {
             Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
-            if ((pos.x - (size.x / 2.0f)) <= 0.0f && parentPhysics != null) {
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_LEFT, new Vector((size.x / 2.0f) + 1.0f, pos.y));
-            }
-            if ((pos.y - (size.y / 2.0f)) <= 0.0f && parentPhysics != null)
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_TOP, new Vector(pos.x, (size.y / 2.0f) + 1.0f));
-            if ((pos.x + (size.x / 2.0f)) >= Public.screenSize.x && parentPhysics != null) {
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_RIGHT, new Vector(Public.screenSize.x - (size.x / 2.0f) - 1.0f, pos.y));
-                //Log.d(Logging.LOG_DEBUG_TAG, "Touching left wall");
-            }
-            if ((pos.y + (size.y / 2.0f)) >= Public.screenSize.y && parentPhysics != null)
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_BOTTOM, new Vector(pos.x, Public.screenSize.y - (size.y / 2.0f) - 1.0f));
-        }
+            if (parentPhysics == null)
+                return;
 
-        super.update(dt, event);
+            if ((pos.x - (size.x / 2.0f)) <= (0.0f + Public.MARGIN))
+                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_LEFT, new Vector((size.x / 2.0f) + Public.MARGIN + 0.01f, pos.y));
+            if ((pos.y - (size.y / 2.0f)) <= (0.0f + Public.MARGIN))
+                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_TOP, new Vector(pos.x, (size.y / 2.0f) + Public.MARGIN + 0.01f));
+            if ((pos.x + (size.x / 2.0f)) >= (Public.screenSize.x - Public.MARGIN))
+                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_RIGHT, new Vector(Public.screenSize.x - (size.x / 2.0f) - Public.MARGIN - 0.01f, pos.y));
+            if ((pos.y + (size.y / 2.0f)) >= (Public.screenSize.y - Public.MARGIN))
+                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_BOTTOM, new Vector(pos.x, Public.screenSize.y - (size.y / 2.0f) - Public.MARGIN - 0.01f));
+        }
     }
 
     @Override
