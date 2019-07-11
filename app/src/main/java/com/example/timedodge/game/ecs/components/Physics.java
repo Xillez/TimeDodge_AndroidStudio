@@ -43,13 +43,13 @@ public class Physics extends Component implements GameEventListener
             return;
 
         // Set acceleration
-        acceleration.set(event.values[1], event.values[0]);
+        acceleration.set(event.values[1] * 100.0f, event.values[0] * 100.0f);
 
         // Update velocity
         this.velocity.addTo(this.acceleration);
-        
+
         // Update position
-        parentTransform.setPosition(parentTransform.getPosition().x + this.velocity.x * dt , parentTransform.getPosition().y + this.velocity.y * dt);
+        parentTransform.setPosition(parentTransform.getPosition().x + this.velocity.x * dt, parentTransform.getPosition().y + this.velocity.y * dt);
     }
 
     @Override
@@ -94,14 +94,10 @@ public class Physics extends Component implements GameEventListener
             // Flip velocity for bounce effect + removal of energy (hence 0.75 instead of 1)
             if (wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_LEFT.ordinal() ||
                     wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_RIGHT.ordinal())
-            {
                 this.velocity.multiToAxis(Vector.Axis.x, -0.75f);
-            }
             if (wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_TOP.ordinal() ||
                     wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_BOTTOM.ordinal())
-            {
                 this.velocity.multiToAxis(Vector.Axis.y, -0.75f);
-            }
 
             // Unstuck ball
             if (wallCollisionEvent.unstuckPosition != null)
