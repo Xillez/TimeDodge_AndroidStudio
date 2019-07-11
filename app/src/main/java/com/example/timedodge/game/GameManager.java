@@ -21,7 +21,7 @@ import com.example.timedodge.game.ecs.components.Physics;
 
 import java.util.ArrayList;
 
-public class GameCanvas extends View implements SensorEventListener
+public class GameManager extends View implements SensorEventListener
 {
     private Context context;
 
@@ -33,14 +33,14 @@ public class GameCanvas extends View implements SensorEventListener
 
     private ArrayList<Entity> entities = new ArrayList<>();
 
-    public GameCanvas(Context context)
+    public GameManager(Context context)
     {
         super(context);
         this.context = context;
         this.setup();
     }
 
-    public GameCanvas(Context context, @Nullable AttributeSet attrs)
+    public GameManager(Context context, @Nullable AttributeSet attrs)
     {
         super(context, attrs);
         this.context = context;
