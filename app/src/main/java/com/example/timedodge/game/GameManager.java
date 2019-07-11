@@ -24,7 +24,6 @@ import java.util.ArrayList;
 public class GameCanvas extends View implements SensorEventListener
 {
     private Context context;
-    private final int MARGIN = 5;
 
     private int framesSinceDebugUpdate = 0;
 
