@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.timedodge.R;
-import com.example.timedodge.game.GameCanvas;
 import com.example.timedodge.game.Public;
 
 import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
@@ -40,7 +39,7 @@ public class GameActivity extends AppCompatActivity
         // Set view
         Log.i(LOG_INFO_TAG, "Setting view!");
         setContentView(R.layout.activity_game);         // TODO: exception thrown on screen blackout. FIX THIS!.
-        Public.canvas = findViewById(R.id.game_gamecanvas);
+        Public.canvas = findViewById(R.id.game_gamemanager);
         Log.i(LOG_INFO_TAG, "" + Public.canvas);
 
         // Set screen orientation

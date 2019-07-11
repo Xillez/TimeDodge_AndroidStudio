@@ -15,8 +15,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent">
 
-        <com.example.timedodge.game.GameCanvas
-            android:id="@+id/game_gamecanvas"
+        <com.example.timedodge.game.GameManager
+            android:id="@+id/game_gamemanager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background" />
