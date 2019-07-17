@@ -1,13 +1,18 @@
 package com.example.timedodge.game.ecs.components;
 
 import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.hardware.SensorEvent;
+import android.util.Log;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
 import com.example.timedodge.game.event.GameEventListener;
 import com.example.timedodge.game.event.events.GameEntityCollisionEvent;
 import com.example.timedodge.game.event.events.GameWallCollisionEvent;
+import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Vector;
 
 public class CollisionCircle extends Collision
@@ -36,21 +41,26 @@ public class CollisionCircle extends Collision
         super.update(dt, event);
 
         // Fetch transform and graphics components from parent
-        Transform parentTransform = ((Transform) this.parent.getComponentByType(Transform.class));
+        Transform parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
         Graphics parentGraphics = (Graphics) this.parent.getComponentByType(Graphics.class);
 
         // Not found, abort
         if (parentTransform == null || parentGraphics == null)
+        {
             return;
+        }
+        Log.d(Logging.LOG_DEBUG_TAG, "AAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHH");
 
         Vector pos = parentTransform.getPosition();
         Vector size = parentGraphics.getActualSize();
 
+
+        Log.d(Logging.LOG_DEBUG_TAG, "" + Public.gameManager.getAllComponentsOfType(CollisionCircle.class));
         // Run through all collision components on canvas
         for (Component comp : Public.gameManager.getAllComponentsOfType(CollisionCircle.class))
         {
             // If me, skip.
-            if (comp == this)
+            if (comp.getId() == this.getId())
                 continue;
 
             // Get other's components
@@ -60,11 +70,14 @@ public class CollisionCircle extends Collision
             Vector otherSize = parentGraphics.getActualSize();
 
             // Distance is less than their combined radius', trigger collision if a Physics component exists.
+            Log.d(Logging.LOG_DEBUG_TAG, String.format("%f | %f | %f", size.x, otherSize.x, otherPos.sub(pos).length()));
             if (otherPos.sub(pos).length() < otherSize.x + size.x)
             {
                 Physics otherPhysics = (Physics) comp.getParent().getComponentByType(Physics.class);
                 if (otherPhysics != null)
+                {
                     this.triggerEntityCollisionEvent(otherPhysics, otherPos.sub(pos).div(2.0f));
+                }
             }
         }
 
@@ -92,7 +105,7 @@ public class CollisionCircle extends Collision
         super.draw(canvas);
 
         // Fetch transform and graphics components from parent
-        /*Transform parentTransform = ((Transform) this.parent.getComponentByType(Transform.class));
+        Transform parentTransform = ((Transform) this.parent.getComponentByType(Transform.class));
         Graphics parentGraphics = (Graphics) this.parent.getComponentByType(Graphics.class);
 
         // Not found, abort
@@ -104,8 +117,8 @@ public class CollisionCircle extends Collision
 
         ShapeDrawable circle = new ShapeDrawable(new RectShape());
         circle.getPaint().setColor(0xFF98FA8f);
-        circle.setBounds(new Rect((int)(pos.x - (size.x / 2.0f)), (int)(pos.y - (size.y / 2.0f)), (int)(pos.x + (size.x / 2.0f)), (int)(pos.y + (size.y / 2.0f))));
-        circle.draw(canvas);*/
+        circle.setBounds(new Rect((int) (pos.x - ( size.x / 2.0f)), (int)( pos.y - ( size.y / 2.0f)), (int)( pos.x + ( size.x / 2.0f)), (int)( pos.y + ( size.y / 2.0f))));
+        circle.draw(canvas);
     }
 
     @Override

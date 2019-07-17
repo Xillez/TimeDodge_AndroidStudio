@@ -19,14 +19,16 @@ public class Graphics extends Component
 
     public Graphics()
     {
-        this.id = Component.NO_ID;
+        super();
         this.shape.setShape(new OvalShape());
         this.shape.getPaint().setColor(0xffffffff);
     }
 
     public Graphics(int id)
     {
-        this.id = id;
+        super(id);
+        this.shape.setShape(new OvalShape());
+        this.shape.getPaint().setColor(0xffffffff);
     }
 
     @Override

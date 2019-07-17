@@ -21,7 +21,7 @@ import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
 public class SpawnManager
 {
     private float spawnDelaySec = 5.0f;
-    private boolean shouldSpawn = false;
+    private boolean shouldSpawn = true;
     private CountDownTimer cdt = new CountDownTimer((long) this.spawnDelaySec * 1000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
@@ -33,7 +33,7 @@ public class SpawnManager
             if (shouldSpawn)
                 spawnEntity();
             cdt.cancel();
-            //cdt.start();
+            cdt.start();
             Log.d(Logging.LOG_DEBUG_TAG, "REE_Spawn entity!");
         }
     };
@@ -47,8 +47,7 @@ public class SpawnManager
 
     public void create()
     {
-        //cdt.start();
-        this.spawnEntity();
+        cdt.start();
     }
 
     public void update(float dt, SensorEvent event)
@@ -75,11 +74,11 @@ public class SpawnManager
         Physics entityPhysics = new Physics();
         entity.addComponent(entityPhysics);
         CollisionCircle collision = new CollisionCircle();
-        collision.setBackgroundCollision(false);
+        collision.setBackgroundCollision(true);
         entity.addComponent(collision);
 
-        float radius = 50;//Public.screenSize.x;
-        float angle = (rnd.nextInt(360) + 1) / (180.0f * (float) Math.PI);
+        float radius = 250;//Public.screenSize.x;
+        float angle = (rnd.nextInt(360) + 1) * (180.0f / (float) Math.PI);
         Vector pos = new Vector((radius * (float) Math.cos(angle)) + (Public.screenSize.x / 2.0f), (radius * (float) Math.sin(angle)) + (Public.screenSize.y / 2.0f));
         entityTransform.setPosition(pos);
         entityPhysics.setVelocity((Public.screenSize.x / 2.0f) - pos.x, (Public.screenSize.y / 2.0f) - pos.y);

@@ -32,6 +32,8 @@ public class Entity
     {
         for (Component component : this.components)
         {
+            if (!component.isCreated())
+                component.create();
             component.update(dt, event);
         }
     }
@@ -76,8 +78,6 @@ public class Entity
         if (component != null) {
             component.setId(this.nextCompId++);
             component.setParent(this);
-            if (!component.isCreated())
-                component.create();
             this.components.add(component);
         }
     }

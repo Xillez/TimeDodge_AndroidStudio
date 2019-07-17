@@ -9,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.example.timedodge.game.ecs.components.Graphics;
 import com.example.timedodge.game.ecs.components.Physics;
 import com.example.timedodge.game.ecs.components.PlayerController;
 import com.example.timedodge.game.spawn.SpawnManager;
+import com.example.timedodge.utils.Logging;
 
 import java.util.ArrayList;
 
@@ -35,8 +37,6 @@ public class GameManager implements SensorEventListener
     private boolean firstFrame = true;
 
     private ArrayList<Entity> entities = new ArrayList<>();
-
-    // TODO: Split GameManager to GameView and GameManager to allow public access of GameManager.
 
     public GameManager(Context context)
     {
@@ -60,7 +60,6 @@ public class GameManager implements SensorEventListener
         Public.spawnManager.create();
     }
 
-    @SuppressLint("DefaultLocale")
     private void update(SensorEvent event)
     {
         this.framesSinceDebugUpdate++;
@@ -72,11 +71,11 @@ public class GameManager implements SensorEventListener
             ((TextView)((Activity) context).findViewById(R.id.game_debuginfo_fps)).setText(String.format("FPS: %f", (float)(1.0f / elapsed)));
             this.framesSinceDebugUpdate = 0;
         }
-        elapsed *= 0.01f;
+        //elapsed *= 0.01f;
         this.lastSysTime = currentSysTime;
 
 
-        // Skip first frame due to massive time lag with setup.
+        // Skip updating on the first frame due to massive time lag with setup.
         if(this.firstFrame) {
             this.firstFrame = false;
             return;
@@ -98,26 +97,26 @@ public class GameManager implements SensorEventListener
 
     protected void draw(Canvas canvas)
     {
+        // Draw for SpawnManager, Not really needed
+        Public.spawnManager.draw(canvas);
+
         // Draw entities
         for (Entity entity : this.entities)
         {
             entity.draw(canvas);
         }
-
-        // Draw for SpawnManager, rNot really needed
-        Public.spawnManager.draw(canvas);
     }
 
     public void destroy()
     {
+        // Destroy for SpawnManager
+        Public.spawnManager.destroy();
+
         // Destroy entities
         for (Entity entity : this.entities)
         {
             entity.destroy();
         }
-
-        // Destroy for SpawnManager
-        Public.spawnManager.destroy();
     }
 
     @Override
@@ -160,11 +159,9 @@ public class GameManager implements SensorEventListener
         ArrayList<Component> components = new ArrayList<>();
         for (Entity entity : this.entities)
         {
+            Log.d(Logging.LOG_DEBUG_TAG, "" + entity.getComponents());
             for (Component comp : entity.getComponents())
-            {
-                if (comp.getClass().equals(clazz))
-                    components.add(comp);
-            }
+                if (comp.getClass().equals(clazz)) components.add(comp);
         }
         return components;
     }

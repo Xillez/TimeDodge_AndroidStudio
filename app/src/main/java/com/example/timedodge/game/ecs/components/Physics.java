@@ -19,12 +19,12 @@ public class Physics extends Component implements GameEventListener
 
     public Physics()
     {
-        this.id = Component.NO_ID;
+        super();
     }
 
     public Physics(int id)
     {
-        this.id = id;
+        super(id);
     }
 
     @Override

@@ -37,6 +37,8 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        Public.screenSize.set(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
         Public.gameManager = new GameManager(this);
 
         super.onCreate(savedInstanceState);
@@ -48,7 +50,6 @@ public class GameActivity extends AppCompatActivity
 
         // Set screen orientation
         Log.i(LOG_INFO_TAG, "Setting screen orientation!");
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         // Get Vibrator
         Log.i(LOG_INFO_TAG, "Tying to find vibrator!");
@@ -72,8 +73,6 @@ public class GameActivity extends AppCompatActivity
         sensorManager.registerListener(Public.gameManager, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         findViewById(R.id.game_debuginfo_panel).setOnClickListener(v -> v.setActivated(false));
-
-        Public.screenSize.set(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
     }
 
     @Override

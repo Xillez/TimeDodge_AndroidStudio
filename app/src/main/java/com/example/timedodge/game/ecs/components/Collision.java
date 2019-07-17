@@ -12,12 +12,12 @@ public class Collision extends Component
 
     public Collision()
     {
-        this.id = Component.NO_ID;
+        super();
     }
 
     public Collision(int id)
     {
-        this.id = id;
+        super(id);
     }
 
     @Override

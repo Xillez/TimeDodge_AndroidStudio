@@ -9,12 +9,12 @@ public class PlayerController extends Component
 {
     public PlayerController()
     {
-        this.id = Component.NO_ID;
+        super();
     }
 
     public PlayerController(int id)
     {
-        this.id = id;
+        super(id);
     }
 
     @Override
@@ -28,15 +28,13 @@ public class PlayerController extends Component
     {
         super.update(dt, event);
 
-        super.update(dt, event);
-
         // Find parent physics, fail if none
         Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
         if (parentPhysics == null)
             return;
 
         // Set acceleration
-        parentPhysics.setAcceleration(event.values[1] * 100.0f, event.values[0] * 100.0f);
+        parentPhysics.setAcceleration(event.values[1], event.values[0]);
     }
 
     @Override
