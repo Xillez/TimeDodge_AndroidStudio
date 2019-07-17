@@ -3,7 +3,6 @@ package com.example.timedodge.game.ecs;
 import android.graphics.Canvas;
 import android.hardware.SensorEvent;
 
-import com.example.timedodge.game.ecs.components.Collision;
 import com.example.timedodge.game.ecs.components.Transform;
 import com.example.timedodge.utils.Vector;
 
@@ -21,20 +20,16 @@ public class Entity
 
     public void create()
     {
-        //Log.i(LOG_INFO_TAG, "Entity create");
-
         this.addComponent(new Transform());
 
         for (Component component : this.components)
         {
-            component.create(this.nextCompId++, this);
+            component.create();
         }
     }
 
     public void update(float dt, SensorEvent event)
     {
-        //Log.i(LOG_INFO_TAG, "Entity update");
-
         for (Component component : this.components)
         {
             component.update(dt, event);
@@ -43,8 +38,6 @@ public class Entity
 
     public void draw(Canvas canvas)
     {
-        //Log.i(LOG_INFO_TAG, "Entity draw");
-
         for (Component component : this.components)
         {
             component.draw(canvas);
@@ -53,8 +46,6 @@ public class Entity
 
     public void destroy()
     {
-        //Log.i(LOG_INFO_TAG, "Entity destroy");
-
         for (Component component : this.components)
         {
             component.destroy();
@@ -83,6 +74,10 @@ public class Entity
     public void addComponent(Component component)
     {
         if (component != null) {
+            component.setId(this.nextCompId++);
+            component.setParent(this);
+            if (!component.isCreated())
+                component.create();
             this.components.add(component);
         }
     }

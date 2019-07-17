@@ -179,7 +179,6 @@ public class Vector extends PointF
     }
     public void multiToAxis(Axis axis, float scalar)
     {
-        Log.d(Logging.LOG_DEBUG_TAG, "Axis: " + Axis.x.name());
         if (axis.ordinal() == Axis.x.ordinal())
             this.x *= scalar;
         else if (axis.ordinal() == Axis.y.ordinal())

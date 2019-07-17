@@ -18,12 +18,15 @@ import com.example.timedodge.game.ecs.Entity;
 import com.example.timedodge.game.ecs.components.CollisionCircle;
 import com.example.timedodge.game.ecs.components.Graphics;
 import com.example.timedodge.game.ecs.components.Physics;
+import com.example.timedodge.game.ecs.components.PlayerController;
+import com.example.timedodge.game.spawn.SpawnManager;
 
 import java.util.ArrayList;
 
-public class GameManager extends View implements SensorEventListener
+public class GameManager implements SensorEventListener
 {
     private Context context;
+    private GameCanvas gameCanvas;
 
     private int framesSinceDebugUpdate = 0;
 
@@ -33,51 +36,45 @@ public class GameManager extends View implements SensorEventListener
 
     private ArrayList<Entity> entities = new ArrayList<>();
 
+    // TODO: Split GameManager to GameView and GameManager to allow public access of GameManager.
+
     public GameManager(Context context)
     {
-        super(context);
+        //super(context);
         this.context = context;
         this.setup();
     }
 
     public GameManager(Context context, @Nullable AttributeSet attrs)
     {
-        super(context, attrs);
+        //super(context, attrs);
         this.context = context;
         this.setup();
     }
 
-    private void setup()
+    public void setup()
     {
         updateScreenBounds();
         Entity ball = new Entity();
         ball.addComponent(new Graphics());
+        ball.addComponent(new PlayerController());
         ball.addComponent(new Physics());
         ball.addComponent(new CollisionCircle());
         this.entities.add(ball);
-
-        /*Entity background = new Entity();
-        second.addComponent(new Graphics());
-        this.entities.add(second);*/
-
-        /*Entity ball = new Entity();
-        ball.create(new OvalShape());
-        ball.setRadius(25);
-        ball.setPosition(new PointF(this.wSize.x / 2, this.wSize.y / 2));
-        ball.setVelocity(new PointF(0.0f, 0.0f));
-        ball.setColor(Color.GREEN);
-        ball.registerCollisionCallback(this);*/
 
         for (Entity entity : this.entities)
         {
             entity.create();
         }
+
+        Public.spawnManager.create();
     }
 
     @SuppressLint("DefaultLocale")
     private void update(SensorEvent event)
     {
         this.framesSinceDebugUpdate++;
+
         // DeltaTime calc
         this.currentSysTime = System.currentTimeMillis();
         float elapsed = (currentSysTime - lastSysTime) / 1000.0f;
@@ -102,18 +99,19 @@ public class GameManager extends View implements SensorEventListener
         {
             entity.update(elapsed, event);
         }
+
+        Public.spawnManager.update(elapsed, event);
     }
 
-    @Override
-    protected void onDraw(Canvas canvas)
+    protected void draw(Canvas canvas)
     {
-        super.onDraw(canvas);
-
         // Draw entities
         for (Entity entity : this.entities)
         {
             entity.draw(canvas);
         }
+
+        Public.spawnManager.draw(canvas);
     }
 
     public void destroy()
@@ -123,6 +121,8 @@ public class GameManager extends View implements SensorEventListener
         {
             entity.destroy();
         }
+
+        Public.spawnManager.destroy();
     }
 
     @Override
@@ -131,7 +131,7 @@ public class GameManager extends View implements SensorEventListener
         this.update(sensorEvent);
 
         // Update GUI, new state available
-        invalidate();
+        //invalidate();
     }
 
     @Override
@@ -173,5 +173,10 @@ public class GameManager extends View implements SensorEventListener
             }
         }
         return components;
+    }
+
+    public void updateGameCanvas(GameCanvas gameCanvas)
+    {
+        this.gameCanvas = gameCanvas;
     }
 }

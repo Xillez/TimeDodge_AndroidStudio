@@ -5,7 +5,6 @@ import android.hardware.SensorEvent;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
-import com.example.timedodge.game.ecs.Entity;
 import com.example.timedodge.game.event.GameEventListener;
 import com.example.timedodge.game.event.events.GameEntityCollisionEvent;
 import com.example.timedodge.game.event.events.GameWallCollisionEvent;
@@ -17,13 +16,18 @@ public class CollisionCircle extends Collision
 
     public CollisionCircle()
     {
-        //
+        this.id = Component.NO_ID;
+    }
+
+    public CollisionCircle(int id)
+    {
+        this.id = id;
     }
 
     @Override
-    public void create(int id, Entity parent)
+    public void create()
     {
-        super.create(id, parent);
+        super.create();
     }
 
     @Override
@@ -43,7 +47,7 @@ public class CollisionCircle extends Collision
         Vector size = parentGraphics.getActualSize();
 
         // Run through all collision components on canvas
-        for (Component comp : Public.canvas.getAllComponentsOfType(CollisionCircle.class))
+        for (Component comp : Public.gameManager.getAllComponentsOfType(CollisionCircle.class))
         {
             // If me, skip.
             if (comp == this)
@@ -127,5 +131,15 @@ public class CollisionCircle extends Collision
         collEvent.collisionWithSide = wallSide;
         collEvent.unstuckPosition = unstuckPosition;
         Public.gameEventHandler.registerEvent(collEvent);
+    }
+
+    public boolean isBackgroundCollision()
+    {
+        return backgroundCollision;
+    }
+
+    public void setBackgroundCollision(boolean backgroundCollision)
+    {
+        this.backgroundCollision = backgroundCollision;
     }
 }

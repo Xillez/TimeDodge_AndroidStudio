@@ -19,16 +19,20 @@ public class Graphics extends Component
 
     public Graphics()
     {
+        this.id = Component.NO_ID;
         this.shape.setShape(new OvalShape());
         this.shape.getPaint().setColor(0xffffffff);
     }
 
-    @Override
-    public void create(int id, Entity parent)
+    public Graphics(int id)
     {
-        super.create(id, parent);
+        this.id = id;
+    }
 
-            Log.e(Logging.LOG_ERR_TAG, "No \"Transform\" component on parent");
+    @Override
+    public void create()
+    {
+        super.create();
     }
 
     @Override

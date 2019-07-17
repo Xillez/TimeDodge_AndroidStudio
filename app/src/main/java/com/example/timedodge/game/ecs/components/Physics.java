@@ -2,7 +2,6 @@ package com.example.timedodge.game.ecs.components;
 
 import android.graphics.Canvas;
 import android.hardware.SensorEvent;
-import android.util.Log;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
@@ -11,7 +10,6 @@ import com.example.timedodge.game.event.GameEvent;
 import com.example.timedodge.game.event.GameEventListener;
 import com.example.timedodge.game.event.events.GameEntityCollisionEvent;
 import com.example.timedodge.game.event.events.GameWallCollisionEvent;
-import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Vector;
 
 public class Physics extends Component implements GameEventListener
@@ -21,13 +19,18 @@ public class Physics extends Component implements GameEventListener
 
     public Physics()
     {
-        //
+        this.id = Component.NO_ID;
+    }
+
+    public Physics(int id)
+    {
+        this.id = id;
     }
 
     @Override
-    public void create(int id, Entity parent)
+    public void create()
     {
-        super.create(id, parent);
+        super.create();
 
         Public.gameEventHandler.registerListener(this);
     }
@@ -41,9 +44,6 @@ public class Physics extends Component implements GameEventListener
         Transform parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
         if (parentTransform == null)
             return;
-
-        // Set acceleration
-        acceleration.set(event.values[1] * 100.0f, event.values[0] * 100.0f);
 
         // Update velocity
         this.velocity.addTo(this.acceleration);
@@ -103,5 +103,28 @@ public class Physics extends Component implements GameEventListener
             if (wallCollisionEvent.unstuckPosition != null)
                 parentTransform.getPosition().set(wallCollisionEvent.unstuckPosition);
         }
+    }
+
+    public Vector getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(Vector velocity) {
+        this.velocity = velocity;
+    }
+
+    public void setVelocity(float x, float y) {
+        this.velocity.set(x, y);
+    }
+
+    public Vector getAcceleration() {
+        return acceleration;
+    }
+
+    public void setAcceleration(Vector acceleration) {
+        this.acceleration = acceleration;
+    }
+    public void setAcceleration(float x, float y) {
+        this.acceleration.set(x, y);
     }
 }

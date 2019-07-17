@@ -16,13 +16,18 @@ public class Transform extends Component
 
     public Transform()
     {
-        //
+        this.id = Component.NO_ID;
+    }
+
+    public Transform(int id)
+    {
+        this.id = id;
     }
 
     @Override
-    public void create(int id, Entity parent)
+    public void create()
     {
-        super.create(id, parent);
+        super.create();
     }
 
     @Override

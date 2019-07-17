@@ -5,24 +5,33 @@ import android.hardware.SensorEvent;
 
 public class Component
     {
+        public static int NO_ID = -1;
+
         protected int id = 0;
         protected Entity parent = null;
 
+        private boolean created = false;
+
         public Component()
         {
-
+            this.id = Component.NO_ID;
         }
 
-        public void create(int id, Entity parent)
+        public Component(int id)
+        {
+            this.id = id;
+        }
+
+        public void create()
         {
             //Log.i(LOG_INFO_TAG, "Component create");
-
-            this.id = id;
-            this.parent = parent;
+            this.created = true;
         }
 
         public void update(float dt, SensorEvent event)
         {
+            if (!this.isCreated())
+                this.create();
             //Log.i(LOG_INFO_TAG, "Component update");
         }
 
@@ -41,8 +50,21 @@ public class Component
             return id;
         }
 
+        public void setId(int id) {
+            this.id = id;
+        }
+
         public Entity getParent()
         {
             return parent;
+        }
+
+        public void setParent(Entity parent) {
+            this.parent = parent;
+        }
+
+        public boolean isCreated()
+        {
+            return created;
         }
 }

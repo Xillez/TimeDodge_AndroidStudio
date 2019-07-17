@@ -5,17 +5,14 @@ import android.hardware.SensorEvent;
 
 import com.example.timedodge.game.ecs.Component;
 
-public class Collision extends Component
+public class PlayerController extends Component
 {
-    // TODO: Add ignored layers integer array here!
-    // TODO: Make this use compute shaders! https://arm-software.github.io/opengl-es-sdk-for-android/compute_intro.html
-
-    public Collision()
+    public PlayerController()
     {
         this.id = Component.NO_ID;
     }
 
-    public Collision(int id)
+    public PlayerController(int id)
     {
         this.id = id;
     }
@@ -30,6 +27,16 @@ public class Collision extends Component
     public void update(float dt, SensorEvent event)
     {
         super.update(dt, event);
+
+        super.update(dt, event);
+
+        // Find parent physics, fail if none
+        Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
+        if (parentPhysics == null)
+            return;
+
+        // Set acceleration
+        parentPhysics.setAcceleration(event.values[1] * 100.0f, event.values[0] * 100.0f);
     }
 
     @Override

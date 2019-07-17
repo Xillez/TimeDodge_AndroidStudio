@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.timedodge.R;
+import com.example.timedodge.game.GameCanvas;
+import com.example.timedodge.game.GameManager;
 import com.example.timedodge.game.Public;
 
 import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
@@ -19,6 +21,7 @@ import static com.example.timedodge.utils.Logging.LOG_WARN_TAG;
 
 public class GameActivity extends AppCompatActivity
 {
+    GameCanvas gameCanvas;
     private boolean gameOver = false;
 
     // SensorManagers
@@ -39,8 +42,7 @@ public class GameActivity extends AppCompatActivity
         // Set view
         Log.i(LOG_INFO_TAG, "Setting view!");
         setContentView(R.layout.activity_game);         // TODO: exception thrown on screen blackout. FIX THIS!.
-        Public.canvas = findViewById(R.id.game_gamemanager);
-        Log.i(LOG_INFO_TAG, "" + Public.canvas);
+        this.gameCanvas = findViewById(R.id.game_gamecanvas);
 
         // Set screen orientation
         Log.i(LOG_INFO_TAG, "Setting screen orientation!");
@@ -65,7 +67,7 @@ public class GameActivity extends AppCompatActivity
 
         // Register the sensor listener
         Log.i(LOG_INFO_TAG, "Tying to register sensor!");
-        sensorManager.registerListener(Public.canvas, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this.gameCanvas, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         findViewById(R.id.game_debuginfo_panel).setOnClickListener(v -> v.setActivated(false));
     }
@@ -75,11 +77,11 @@ public class GameActivity extends AppCompatActivity
     {
         super.onPause();
 
-        Public.canvas.destroy();
+        Public.gameManager.destroy();
 
         // Un-register sensor listener
         Log.i(LOG_INFO_TAG, "App paused, un-registering sensor listener");
-        sensorManager.unregisterListener(Public.canvas);
+        sensorManager.unregisterListener(this.gameCanvas);
 
         // Un-register sensor listener
         Log.i(LOG_INFO_TAG, "App paused, releasing media listener");
@@ -95,7 +97,7 @@ public class GameActivity extends AppCompatActivity
 
         // Re-register sensor listener
         Log.i(LOG_INFO_TAG, "App un-paused, registering sensor listener");
-        sensorManager.registerListener(Public.canvas, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this.gameCanvas, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         // Make a media play to play bloop sound
         Log.i(LOG_INFO_TAG, "App un-paused, trying to get media player!");
