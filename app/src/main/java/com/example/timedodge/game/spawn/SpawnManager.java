@@ -48,6 +48,7 @@ public class SpawnManager
     public void create()
     {
         //cdt.start();
+        this.spawnEntity();
     }
 
     public void update(float dt, SensorEvent event)
@@ -73,9 +74,11 @@ public class SpawnManager
         entity.addComponent(new Graphics());
         Physics entityPhysics = new Physics();
         entity.addComponent(entityPhysics);
-        entity.addComponent(new CollisionCircle());
+        CollisionCircle collision = new CollisionCircle();
+        collision.setBackgroundCollision(false);
+        entity.addComponent(collision);
 
-        float radius = Public.screenSize.x;
+        float radius = 50;//Public.screenSize.x;
         float angle = (rnd.nextInt(360) + 1) / (180.0f * (float) Math.PI);
         Vector pos = new Vector((radius * (float) Math.cos(angle)) + (Public.screenSize.x / 2.0f), (radius * (float) Math.sin(angle)) + (Public.screenSize.y / 2.0f));
         entityTransform.setPosition(pos);

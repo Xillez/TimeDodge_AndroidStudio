@@ -37,6 +37,8 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Public.gameManager = new GameManager(this);
+
         super.onCreate(savedInstanceState);
 
         // Set view
@@ -67,9 +69,11 @@ public class GameActivity extends AppCompatActivity
 
         // Register the sensor listener
         Log.i(LOG_INFO_TAG, "Tying to register sensor!");
-        sensorManager.registerListener(this.gameCanvas, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(Public.gameManager, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         findViewById(R.id.game_debuginfo_panel).setOnClickListener(v -> v.setActivated(false));
+
+        Public.screenSize.set(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
     }
 
     @Override
@@ -77,11 +81,13 @@ public class GameActivity extends AppCompatActivity
     {
         super.onPause();
 
+        Public.gameManager.updateGameCanvas(null);
         Public.gameManager.destroy();
+        Public.spawnManager.destroy();
 
         // Un-register sensor listener
         Log.i(LOG_INFO_TAG, "App paused, un-registering sensor listener");
-        sensorManager.unregisterListener(this.gameCanvas);
+        sensorManager.unregisterListener(Public.gameManager);
 
         // Un-register sensor listener
         Log.i(LOG_INFO_TAG, "App paused, releasing media listener");
@@ -95,18 +101,27 @@ public class GameActivity extends AppCompatActivity
     {
         super.onResume();
 
+        Public.gameManager.updateGameCanvas(this.gameCanvas);
+
         // Re-register sensor listener
         Log.i(LOG_INFO_TAG, "App un-paused, registering sensor listener");
-        sensorManager.registerListener(this.gameCanvas, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(Public.gameManager, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         // Make a media play to play bloop sound
         Log.i(LOG_INFO_TAG, "App un-paused, trying to get media player!");
         mediaPlayer = MediaPlayer.create(this, R.raw.boop);
 
-        // Log first drawing even after resume
-        //if (canvas.isLoggingFirstDrawEvent()) canvas.setLoggingFirstDrawEvent(true);
-
         //canvas.setPrevTime(System.currentTimeMillis());
         //canvas.startPointGiving();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        Public.gameManager.updateGameCanvas(null);
+        Public.gameManager.destroy();
+        Public.spawnManager.destroy();
+
+        super.onDestroy();
     }
 }

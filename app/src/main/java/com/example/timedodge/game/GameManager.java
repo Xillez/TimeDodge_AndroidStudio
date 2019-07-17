@@ -40,21 +40,11 @@ public class GameManager implements SensorEventListener
 
     public GameManager(Context context)
     {
-        //super(context);
         this.context = context;
-        this.setup();
-    }
-
-    public GameManager(Context context, @Nullable AttributeSet attrs)
-    {
-        //super(context, attrs);
-        this.context = context;
-        this.setup();
     }
 
     public void setup()
     {
-        updateScreenBounds();
         Entity ball = new Entity();
         ball.addComponent(new Graphics());
         ball.addComponent(new PlayerController());
@@ -92,7 +82,11 @@ public class GameManager implements SensorEventListener
             return;
         }
 
+        // Handle events
         Public.gameEventHandler.handleEvents();
+
+        // Handle spawning of entities.
+        Public.spawnManager.update(elapsed, event);
 
         // Update entities
         for (Entity entity : this.entities)
@@ -100,7 +94,6 @@ public class GameManager implements SensorEventListener
             entity.update(elapsed, event);
         }
 
-        Public.spawnManager.update(elapsed, event);
     }
 
     protected void draw(Canvas canvas)
@@ -111,6 +104,7 @@ public class GameManager implements SensorEventListener
             entity.draw(canvas);
         }
 
+        // Draw for SpawnManager, rNot really needed
         Public.spawnManager.draw(canvas);
     }
 
@@ -122,6 +116,7 @@ public class GameManager implements SensorEventListener
             entity.destroy();
         }
 
+        // Destroy for SpawnManager
         Public.spawnManager.destroy();
     }
 
@@ -131,18 +126,14 @@ public class GameManager implements SensorEventListener
         this.update(sensorEvent);
 
         // Update GUI, new state available
-        //invalidate();
+        if (this.gameCanvas != null)
+            this.gameCanvas.invalidate();
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i)
     {
 
-    }
-
-    private void updateScreenBounds()
-    {
-        Public.screenSize.set(context.getResources().getDisplayMetrics().widthPixels, context.getResources().getDisplayMetrics().heightPixels);
     }
 
     public ArrayList<Entity> getEntities()
@@ -158,7 +149,10 @@ public class GameManager implements SensorEventListener
     public void addEntity(Entity entity)
     {
         if (entity != null)
+        {
+            entity.create();
             this.entities.add(entity);
+        }
     }
 
     public ArrayList<Component> getAllComponentsOfType(Class clazz)

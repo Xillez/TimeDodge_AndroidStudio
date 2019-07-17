@@ -11,18 +11,20 @@ import com.example.timedodge.game.ecs.Entity;
 
 public class GameCanvas extends View
 {
-
     private Context context;
 
     public GameCanvas(Context context)
     {
         super(context);
         this.context = context;
+        Public.gameManager.updateGameCanvas(this);
         Public.gameManager.setup();
     }
 
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
+        Public.gameManager.updateGameCanvas(this);
         Public.gameManager.setup();
     }
 
