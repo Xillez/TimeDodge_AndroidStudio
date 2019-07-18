@@ -69,14 +69,16 @@ public class CollisionCircle extends Collision
             Vector otherPos = parentTransform.getPosition();
             Vector otherSize = parentGraphics.getActualSize();
 
+            Vector diff = new Vector(otherPos.x - pos.x, otherPos.y - pos.y);
+
             // Distance is less than their combined radius', trigger collision if a Physics component exists.
-            Log.d(Logging.LOG_DEBUG_TAG, String.format("%f | %f | %f", size.x, otherSize.x, otherPos.sub(pos).length()));
-            if (otherPos.sub(pos).length() < otherSize.x + size.x)
+            Log.d(Logging.LOG_DEBUG_TAG, String.format("%f | %f | %f", size.x, otherSize.x, diff.length()));
+            if (diff.length() < otherSize.x + size.x)
             {
                 Physics otherPhysics = (Physics) comp.getParent().getComponentByType(Physics.class);
                 if (otherPhysics != null)
                 {
-                    this.triggerEntityCollisionEvent(otherPhysics, otherPos.sub(pos).div(2.0f));
+                    this.triggerEntityCollisionEvent(otherPhysics, new Vector(pos.x + (diff.x / 2.0f), pos.y + (diff.y / 2.0f)));
                 }
             }
         }

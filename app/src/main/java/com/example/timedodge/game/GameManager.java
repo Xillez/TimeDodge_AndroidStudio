@@ -159,7 +159,7 @@ public class GameManager implements SensorEventListener
         ArrayList<Component> components = new ArrayList<>();
         for (Entity entity : this.entities)
         {
-            Log.d(Logging.LOG_DEBUG_TAG, "" + entity.getComponents());
+            //Log.d(Logging.LOG_DEBUG_TAG, "" + entity.getComponents());
             for (Component comp : entity.getComponents())
                 if (comp.getClass().equals(clazz)) components.add(comp);
         }

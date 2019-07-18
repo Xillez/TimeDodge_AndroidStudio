@@ -84,7 +84,8 @@ public class Physics extends Component implements GameEventListener
             // Add bounce of other entity + removal of energy (hence 0.75 instead of 1)
             Transform otherTransform = (Transform) event.referrer.getParent().getComponentByType(Transform.class);
             if (otherTransform != null)
-                this.velocity.addTo(parentTransform.getPosition().sub(otherTransform.getPosition()).multi(0.75f));
+                this.velocity.x += (parentTransform.getPosition().x - otherTransform.getPosition().x) * 0.75f;
+                this.velocity.y += (parentTransform.getPosition().y - otherTransform.getPosition().y) * 0.75f;
         }
         // Entity to wall collision
         else if (event instanceof GameWallCollisionEvent)
