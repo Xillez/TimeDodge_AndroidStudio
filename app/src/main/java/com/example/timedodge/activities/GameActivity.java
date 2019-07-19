@@ -47,7 +47,7 @@ public class GameActivity extends AppCompatActivity
         //setContentView(R.layout.activity_game);         // TODO: exception thrown on screen blackout. FIX THIS!.
         //this.gameCanvas = findViewById(R.id.game_gamecanvas);
         this.gameView = new GameView(this);
-        setContentView(R.layout.activity_gameGL);
+        setContentView(R.layout.activity_gamegl);
 
 
         // Get Vibrator
