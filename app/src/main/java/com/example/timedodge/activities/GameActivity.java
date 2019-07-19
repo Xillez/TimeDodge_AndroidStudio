@@ -14,6 +14,7 @@ import android.util.Log;
 import com.example.timedodge.R;
 import com.example.timedodge.game.GameCanvas;
 import com.example.timedodge.game.GameManager;
+import com.example.timedodge.game.GameView;
 import com.example.timedodge.game.Public;
 
 import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
@@ -21,7 +22,8 @@ import static com.example.timedodge.utils.Logging.LOG_WARN_TAG;
 
 public class GameActivity extends AppCompatActivity
 {
-    GameCanvas gameCanvas;
+    //GameCanvas gameCanvas;
+    private GameView gameView;
     private boolean gameOver = false;
 
     // SensorManagers
@@ -37,6 +39,8 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        // Set screen orientation
+        Log.i(LOG_INFO_TAG, "Setting screen orientation!");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Public.screenSize.set(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
         Public.gameManager = new GameManager(this);
@@ -45,14 +49,14 @@ public class GameActivity extends AppCompatActivity
 
         // Set view
         Log.i(LOG_INFO_TAG, "Setting view!");
-        setContentView(R.layout.activity_game);         // TODO: exception thrown on screen blackout. FIX THIS!.
-        this.gameCanvas = findViewById(R.id.game_gamecanvas);
+        //setContentView(R.layout.activity_game);         // TODO: exception thrown on screen blackout. FIX THIS!.
+        //this.gameCanvas = findViewById(R.id.game_gamecanvas);
+        this.gameView = new GameView(this);
+        setContentView(R.layout.activity_gameGL);
 
-        // Set screen orientation
-        Log.i(LOG_INFO_TAG, "Setting screen orientation!");
 
         // Get Vibrator
-        Log.i(LOG_INFO_TAG, "Tying to find vibrator!");
+        /*Log.i(LOG_INFO_TAG, "Tying to find vibrator!");
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator == null)
             Log.i(LOG_WARN_TAG, "Vibrator is null!");
@@ -72,7 +76,7 @@ public class GameActivity extends AppCompatActivity
         Log.i(LOG_INFO_TAG, "Tying to register sensor!");
         sensorManager.registerListener(Public.gameManager, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
-        findViewById(R.id.game_debuginfo_panel).setOnClickListener(v -> v.setActivated(false));
+        findViewById(R.id.game_debuginfo_panel).setOnClickListener(v -> v.setActivated(false));*/
     }
 
     @Override
@@ -80,7 +84,7 @@ public class GameActivity extends AppCompatActivity
     {
         super.onPause();
 
-        Public.gameManager.updateGameCanvas(null);
+        /*Public.gameManager.updateGameCanvas(null);
         Public.gameManager.destroy();
         Public.spawnManager.destroy();
 
@@ -90,7 +94,7 @@ public class GameActivity extends AppCompatActivity
 
         // Un-register sensor listener
         Log.i(LOG_INFO_TAG, "App paused, releasing media listener");
-        mediaPlayer.release();
+        mediaPlayer.release();*/
 
         //gameCanvas.stopPointGiving();
     }
@@ -100,7 +104,7 @@ public class GameActivity extends AppCompatActivity
     {
         super.onResume();
 
-        Public.gameManager.updateGameCanvas(this.gameCanvas);
+        /*Public.gameManager.updateGameCanvas(this.gameCanvas);
 
         // Re-register sensor listener
         Log.i(LOG_INFO_TAG, "App un-paused, registering sensor listener");
@@ -108,7 +112,7 @@ public class GameActivity extends AppCompatActivity
 
         // Make a media play to play bloop sound
         Log.i(LOG_INFO_TAG, "App un-paused, trying to get media player!");
-        mediaPlayer = MediaPlayer.create(this, R.raw.boop);
+        mediaPlayer = MediaPlayer.create(this, R.raw.boop);*/
 
         //canvas.setPrevTime(System.currentTimeMillis());
         //canvas.startPointGiving();
@@ -117,9 +121,9 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onDestroy()
     {
-        Public.gameManager.updateGameCanvas(null);
+        /*Public.gameManager.updateGameCanvas(null);
         Public.gameManager.destroy();
-        Public.spawnManager.destroy();
+        Public.spawnManager.destroy();*/
 
         super.onDestroy();
     }

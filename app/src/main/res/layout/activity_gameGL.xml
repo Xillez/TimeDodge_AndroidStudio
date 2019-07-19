@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.GameActivity">
+
+    <RelativeLayout
+        android:id="@+id/fragmentContainer01"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent">
+
+        <com.example.timedodge.game.GameView
+            android:id="@+id/gameGL_gameview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <!--android:background="@drawable/background" />-->
+
+        <FrameLayout
+            android:id="@+id/gameGL_debuginfo_panel"
+            android:layout_width="211dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/debug_panel_background">
+
+            <TextView
+                android:id="@+id/gameGL_debuginfo_fps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="32sp" />
+        </FrameLayout>
+
+
+        <!--<FrameLayout
+            android:id="@+id/game_framelayout01"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:background= "@color/colorBackgroundTransp">
+
+            <fragment
+                android:id="@+id/game_gameover01"
+                android:name="no.xillez.kentwh.mobilelab3.GameOverFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </FrameLayout>-->
+
+        </com.example.timedodge.game.GameView>
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

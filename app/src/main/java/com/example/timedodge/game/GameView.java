@@ -11,16 +11,24 @@ import android.util.AttributeSet;
 
 import com.example.timedodge.game.ecs.Entity;
 
-public class GameView extends GLSurfaceView implements SensorEventListener
+public class GameView extends GLSurfaceView
 {
     private Context context;
+    private GameRenderer renderer;
     private Point wSize = new Point();
     private final int MARGIN = 5;
 
     public GameView(Context context)
     {
         super(context);
-        this.context = context;
+
+        // Create an OpenGL ES 2.0 context
+        setEGLContextClientVersion(2);
+
+        renderer = new MyGLRenderer();
+
+        // Set the Renderer for drawing on the GLSurfaceView
+        setRenderer(renderer);
     }
 
     public GameView(Context context, AttributeSet attrs)
