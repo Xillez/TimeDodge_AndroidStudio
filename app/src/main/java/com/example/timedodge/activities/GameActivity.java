@@ -1,7 +1,5 @@
 package com.example.timedodge.activities;
 
-import android.app.Service;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -12,13 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.timedodge.R;
-import com.example.timedodge.game.GameCanvas;
-import com.example.timedodge.game.GameManager;
-import com.example.timedodge.game.GameView;
+import com.example.timedodge.game.view.GameView;
 import com.example.timedodge.game.Public;
 
 import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
-import static com.example.timedodge.utils.Logging.LOG_WARN_TAG;
 
 public class GameActivity extends AppCompatActivity
 {
@@ -43,7 +38,7 @@ public class GameActivity extends AppCompatActivity
         Log.i(LOG_INFO_TAG, "Setting screen orientation!");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Public.screenSize.set(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
-        Public.gameManager = new GameManager(this);
+        //Public.gameManager = new GameManager(this);
 
         super.onCreate(savedInstanceState);
 

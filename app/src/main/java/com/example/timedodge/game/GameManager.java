@@ -1,27 +1,22 @@
 package com.example.timedodge.game;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import com.example.timedodge.R;
+import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
 import com.example.timedodge.game.ecs.Entity;
 import com.example.timedodge.game.ecs.components.CollisionCircle;
 import com.example.timedodge.game.ecs.components.Graphics;
 import com.example.timedodge.game.ecs.components.Physics;
 import com.example.timedodge.game.ecs.components.PlayerController;
-import com.example.timedodge.game.spawn.SpawnManager;
-import com.example.timedodge.utils.Logging;
+import com.example.timedodge.game.view.GameCanvas;
 
 import java.util.ArrayList;
 

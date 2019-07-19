@@ -1,4 +1,4 @@
-package com.example.timedodge.game;
+package com.example.timedodge.game.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

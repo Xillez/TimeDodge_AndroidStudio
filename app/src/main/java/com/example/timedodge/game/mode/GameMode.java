@@ -1,6 +1,8 @@
-package com.example.timedodge.game;
+package com.example.timedodge.game.mode;
 
 import android.content.Context;
+
+import com.example.timedodge.game.GameManager;
 
 public class GameMode
 {

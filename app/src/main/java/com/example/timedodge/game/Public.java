@@ -1,7 +1,5 @@
 package com.example.timedodge.game;
 
-import android.graphics.PointF;
-
 import com.example.timedodge.game.event.GameEventHandler;
 import com.example.timedodge.game.spawn.SpawnManager;
 import com.example.timedodge.utils.Vector;
