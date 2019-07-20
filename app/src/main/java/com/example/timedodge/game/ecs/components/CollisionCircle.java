@@ -36,9 +36,9 @@ public class CollisionCircle extends Collision
     }
 
     @Override
-    public void update(float dt, SensorEvent event)
+    public void update(float dt, Vector tiltValues)
     {
-        super.update(dt, event);
+        super.update(dt, tiltValues);
 
         // Fetch transform and graphics components from parent
         Transform parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
@@ -102,9 +102,9 @@ public class CollisionCircle extends Collision
     }
 
     @Override
-    public void draw(Canvas canvas)
+    public void draw()
     {
-        super.draw(canvas);
+        super.draw();
 
         // Fetch transform and graphics components from parent
         Transform parentTransform = ((Transform) this.parent.getComponentByType(Transform.class));
@@ -117,10 +117,10 @@ public class CollisionCircle extends Collision
         Vector pos = parentTransform.getPosition();
         Vector size = parentGraphics.getActualSize();
 
-        ShapeDrawable circle = new ShapeDrawable(new RectShape());
+        /*ShapeDrawable circle = new ShapeDrawable(new RectShape());
         circle.getPaint().setColor(0xFF98FA8f);
         circle.setBounds(new Rect((int) (pos.x - ( size.x / 2.0f)), (int)( pos.y - ( size.y / 2.0f)), (int)( pos.x + ( size.x / 2.0f)), (int)( pos.y + ( size.y / 2.0f))));
-        circle.draw(canvas);
+        circle.draw(canvas);*/
     }
 
     @Override

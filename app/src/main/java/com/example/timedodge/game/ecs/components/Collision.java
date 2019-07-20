@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.hardware.SensorEvent;
 
 import com.example.timedodge.game.ecs.Component;
+import com.example.timedodge.utils.Vector;
 
 public class Collision extends Component
 {
@@ -27,15 +28,15 @@ public class Collision extends Component
     }
 
     @Override
-    public void update(float dt, SensorEvent event)
+    public void update(float dt, Vector tiltValues)
     {
-        super.update(dt, event);
+        super.update(dt, tiltValues);
     }
 
     @Override
-    public void draw(Canvas canvas)
+    public void draw()
     {
-        super.draw(canvas);
+        super.draw();
     }
 
     @Override

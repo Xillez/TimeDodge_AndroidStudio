@@ -50,12 +50,12 @@ public class SpawnManager
         cdt.start();
     }
 
-    public void update(float dt, SensorEvent event)
+    public void update(float dt, Vector tiltValues) // CANVAS SYSTEM --> , SensorEvent event)
     {
         //
     }
 
-    public void draw(Canvas canvas)
+    public void draw(/*Canvas canvas*/)
     {
         //
     }

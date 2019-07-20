@@ -3,12 +3,13 @@ package com.example.timedodge.game.ecs;
 import android.graphics.Canvas;
 import android.hardware.SensorEvent;
 
+import com.example.timedodge.game.GameManager;
 import com.example.timedodge.game.ecs.components.Transform;
 import com.example.timedodge.utils.Vector;
 
 import java.util.ArrayList;
 
-public class Entity
+public final class Entity implements GameManager.GameLifecycle
 {
     private int nextCompId = 0;
     private ArrayList<Component> components = new ArrayList<>();
@@ -18,6 +19,7 @@ public class Entity
         //
     }
 
+    @Override
     public void create()
     {
         this.addComponent(new Transform());
@@ -28,24 +30,27 @@ public class Entity
         }
     }
 
-    public void update(float dt, SensorEvent event)
+    @Override
+    public void update(float dt, Vector tiltValues)
     {
         for (Component component : this.components)
         {
             if (!component.isCreated())
                 component.create();
-            component.update(dt, event);
+            component.update(dt, tiltValues);
         }
     }
 
-    public void draw(Canvas canvas)
+    @Override
+    public void draw()
     {
         for (Component component : this.components)
         {
-            component.draw(canvas);
+            component.draw();
         }
     }
 
+    @Override
     public void destroy()
     {
         for (Component component : this.components)
@@ -88,14 +93,4 @@ public class Entity
         if (transform != null)
             transform.setPosition(pos);
     }
-
-    /**
-     * Interface of method to be trigger at collision.
-     */
-    /*interface EntityEventListener
-    {
-        void triggerGameOver();
-        void triggerVibration();
-        void triggerSound();
-    }*/
 }

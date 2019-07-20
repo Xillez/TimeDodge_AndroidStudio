@@ -31,15 +31,15 @@ public class Transform extends Component
     }
 
     @Override
-    public void update(float dt, SensorEvent event)
+    public void update(float dt, Vector tiltValues)
     {
-        super.update(dt, event);
+        super.update(dt, tiltValues);
     }
 
     @Override
-    public void draw(Canvas canvas)
+    public void draw()
     {
-        super.draw(canvas);
+        super.draw();
     }
 
     @Override

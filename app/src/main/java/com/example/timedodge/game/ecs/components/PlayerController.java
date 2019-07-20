@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.hardware.SensorEvent;
 
 import com.example.timedodge.game.ecs.Component;
+import com.example.timedodge.utils.Vector;
 
 public class PlayerController extends Component
 {
@@ -24,9 +25,9 @@ public class PlayerController extends Component
     }
 
     @Override
-    public void update(float dt, SensorEvent event)
+    public void update(float dt, Vector tiltValues)
     {
-        super.update(dt, event);
+        super.update(dt, tiltValues);
 
         // Find parent physics, fail if none
         Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
@@ -34,13 +35,13 @@ public class PlayerController extends Component
             return;
 
         // Set acceleration
-        parentPhysics.setAcceleration(event.values[1], event.values[0]);
+        parentPhysics.setAcceleration(tiltValues);
     }
 
     @Override
-    public void draw(Canvas canvas)
+    public void draw()
     {
-        super.draw(canvas);
+        super.draw();
     }
 
     @Override

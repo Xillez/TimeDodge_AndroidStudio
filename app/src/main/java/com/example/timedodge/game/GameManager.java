@@ -6,22 +6,31 @@ import android.graphics.Canvas;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.util.Log;
+import android.view.SurfaceHolder;
 import android.widget.TextView;
 
 import com.example.timedodge.R;
-import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
 import com.example.timedodge.game.ecs.Entity;
 import com.example.timedodge.game.ecs.components.CollisionCircle;
 import com.example.timedodge.game.ecs.components.Graphics;
 import com.example.timedodge.game.ecs.components.Physics;
 import com.example.timedodge.game.ecs.components.PlayerController;
-import com.example.timedodge.game.view.GameCanvas;
+import com.example.timedodge.game.canvas.GameCanvas;
+import com.example.timedodge.game.view.GameView;
+import com.example.timedodge.utils.Logging;
+import com.example.timedodge.utils.Vector;
 
 import java.util.ArrayList;
 
-public class GameManager implements SensorEventListener
+public class GameManager extends Thread implements SensorEventListener
 {
+    private SurfaceHolder surfaceHolder;
+    private GameView gameView;
+    private volatile boolean running = true;
+    private Vector tiltValues;
+
     private Context context;
     private GameCanvas gameCanvas;
 
@@ -38,7 +47,7 @@ public class GameManager implements SensorEventListener
         this.context = context;
     }
 
-    public void setup()
+    private void gameCreate()
     {
         Entity ball = new Entity();
         ball.addComponent(new Graphics());
@@ -55,7 +64,7 @@ public class GameManager implements SensorEventListener
         Public.spawnManager.create();
     }
 
-    private void update(SensorEvent event)
+    private void gameUpdate(Vector tiltValues)
     {
         this.framesSinceDebugUpdate++;
 
@@ -80,29 +89,29 @@ public class GameManager implements SensorEventListener
         Public.gameEventHandler.handleEvents();
 
         // Handle spawning of entities.
-        Public.spawnManager.update(elapsed, event);
+        Public.spawnManager.update(elapsed, tiltValues);
 
         // Update entities
         for (Entity entity : this.entities)
         {
-            entity.update(elapsed, event);
+            entity.update(elapsed, tiltValues);
         }
 
     }
 
-    protected void draw(Canvas canvas)
+    private void gameDraw()
     {
         // Draw for SpawnManager, Not really needed
-        Public.spawnManager.draw(canvas);
+        Public.spawnManager.draw();
 
         // Draw entities
         for (Entity entity : this.entities)
         {
-            entity.draw(canvas);
+            entity.draw();
         }
     }
 
-    public void destroy()
+    private void gameDestroy()
     {
         // Destroy for SpawnManager
         Public.spawnManager.destroy();
@@ -117,17 +126,34 @@ public class GameManager implements SensorEventListener
     @Override
     public void onSensorChanged(SensorEvent sensorEvent)
     {
-        this.update(sensorEvent);
-
-        // Update GUI, new state available
-        if (this.gameCanvas != null)
-            this.gameCanvas.invalidate();
+        this.tiltValues.set(sensorEvent.values[1], sensorEvent.values[0]);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i)
     {
 
+    }
+
+    @Override
+    public void run()
+    {
+        super.run();
+
+        this.gameCreate();
+
+        while (running)
+        {
+            this.gameUpdate(tiltValues);
+            //this.gameDraw();
+        }
+
+        this.gameDestroy();
+    }
+
+    public void shutdown()
+    {
+        this.running = false;
     }
 
     public ArrayList<Entity> getEntities()
@@ -161,8 +187,16 @@ public class GameManager implements SensorEventListener
         return components;
     }
 
-    public void updateGameCanvas(GameCanvas gameCanvas)
+    public void triggerDraw()
     {
-        this.gameCanvas = gameCanvas;
+        this.gameDraw();
+    }
+
+    public interface GameLifecycle
+    {
+        void create();
+        void update(float dt, Vector tiltValues);
+        void draw();
+        void destroy();
     }
 }

@@ -36,9 +36,9 @@ public class Physics extends Component implements GameEventListener
     }
 
     @Override
-    public void update(float dt, SensorEvent event)
+    public void update(float dt, Vector tiltValues)
     {
-        super.update(dt, event);
+        super.update(dt, tiltValues);
 
         // Find parent transform, fail if none
         Transform parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
@@ -53,9 +53,9 @@ public class Physics extends Component implements GameEventListener
     }
 
     @Override
-    public void draw(Canvas canvas)
+    public void draw()
     {
-        super.draw(canvas);
+        super.draw();
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.example.timedodge.game.ecs;
 
-import android.graphics.Canvas;
-import android.hardware.SensorEvent;
+import com.example.timedodge.game.GameManager;
+import com.example.timedodge.utils.Vector;
 
-public class Component
+public class Component implements GameManager.GameLifecycle
     {
         public static int NO_ID = -1;
 
@@ -28,14 +28,14 @@ public class Component
             this.created = true;
         }
 
-        public void update(float dt, SensorEvent event)
+        public void update(float dt, Vector tiltValues)
         {
             if (!this.isCreated())
                 this.create();
             //Log.i(LOG_INFO_TAG, "Component update");
         }
 
-        public void draw(Canvas canvas)
+        public void draw()
         {
             //Log.i(LOG_INFO_TAG, "Component draw");
         }

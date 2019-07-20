@@ -1,4 +1,4 @@
-package com.example.timedodge.game.view;
+package com.example.timedodge.game.canvas;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,15 +17,15 @@ public class GameCanvas extends View
     {
         super(context);
         this.context = context;
-        Public.gameManager.updateGameCanvas(this);
-        Public.gameManager.setup();
+        //Public.gameManager.updateGameCanvas(this);
+        //Public.gameManager.setup();
     }
 
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        Public.gameManager.updateGameCanvas(this);
-        Public.gameManager.setup();
+        //Public.gameManager.updateGameCanvas(this);
+        //Public.gameManager.setup();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class GameCanvas extends View
     {
         super.onDraw(canvas);
 
-        Public.gameManager.draw(canvas);
-        Public.spawnManager.draw(canvas);
+        //Public.gameManager.draw(canvas);
+        //Public.spawnManager.draw(canvas);
     }
 }

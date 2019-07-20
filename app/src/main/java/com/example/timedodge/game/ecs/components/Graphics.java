@@ -14,21 +14,21 @@ import com.example.timedodge.utils.Vector;
 
 public class Graphics extends Component
 {
-    private ShapeDrawable shape = new ShapeDrawable();
+    //private ShapeDrawable shape = new ShapeDrawable();
     private Vector size = new Vector(10, 10);
 
     public Graphics()
     {
         super();
-        this.shape.setShape(new OvalShape());
-        this.shape.getPaint().setColor(0xffffffff);
+        /*this.shape.setShape(new OvalShape());
+        this.shape.getPaint().setColor(0xffffffff);*/
     }
 
     public Graphics(int id)
     {
         super(id);
-        this.shape.setShape(new OvalShape());
-        this.shape.getPaint().setColor(0xffffffff);
+        /*this.shape.setShape(new OvalShape());
+        this.shape.getPaint().setColor(0xffffffff);*/
     }
 
     @Override
@@ -38,25 +38,25 @@ public class Graphics extends Component
     }
 
     @Override
-    public void update(float dt, SensorEvent event)
+    public void update(float dt, Vector tiltValues)
     {
-        super.update(dt, event);
+        super.update(dt, tiltValues);
     }
 
     @Override
-    public void draw(Canvas canvas)
+    public void draw()
     {
-        super.draw(canvas);
+        super.draw();
 
         Transform parentTransform = (Transform) parent.getComponentByType(Transform.class);
         if (parentTransform != null)
         {
             Vector parentPos = parentTransform.getPosition();
             Vector parentScale = parentTransform.getScale();
-            this.shape.setBounds(new Rect((int) (parentPos.x - (size.x * parentScale.x * 0.5f)), (int) (parentPos.y - (size.y * parentScale.y * 0.5f)), (int) (parentPos.x + (size.x * parentScale.x * 0.5f)), (int) (parentPos.y + (size.y * parentScale.y * 0.5f))));
+            //this.shape.setBounds(new Rect((int) (parentPos.x - (size.x * parentScale.x * 0.5f)), (int) (parentPos.y - (size.y * parentScale.y * 0.5f)), (int) (parentPos.x + (size.x * parentScale.x * 0.5f)), (int) (parentPos.y + (size.y * parentScale.y * 0.5f))));
         }
 
-        this.shape.draw(canvas);
+        //this.shape.draw(canvas);
     }
 
     @Override
@@ -80,6 +80,6 @@ public class Graphics extends Component
 
     public Rect getBounds()
     {
-        return this.shape.getBounds();
+        return new Rect();//this.shape.getBounds();
     }
 }
