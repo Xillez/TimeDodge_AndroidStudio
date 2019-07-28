@@ -4,6 +4,8 @@ import com.example.timedodge.game.event.GameEventHandler;
 import com.example.timedodge.game.spawn.SpawnManager;
 import com.example.timedodge.utils.Vector;
 
+import java.util.concurrent.Semaphore;
+
 public class Public
 {
     public static Vector screenSize = new Vector(0, 0);

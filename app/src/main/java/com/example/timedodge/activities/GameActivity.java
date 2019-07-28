@@ -10,15 +10,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.timedodge.R;
-import com.example.timedodge.game.view.GameView;
+import com.example.timedodge.game.view.GameCanvas;
 import com.example.timedodge.game.Public;
 
 import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
 
 public class GameActivity extends AppCompatActivity
 {
-    //GameCanvas gameCanvas;
-    private GameView gameView;
+    GameCanvas gameCanvas;
+    // OpenGl Version --> private GameView gameView;
     private boolean gameOver = false;
 
     // SensorManagers
@@ -42,14 +42,14 @@ public class GameActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
 
-        // Set view
+        // Set view (canvas)
         Log.i(LOG_INFO_TAG, "Setting view!");
-        //setContentView(R.layout.activity_game);         // TODO: exception thrown on screen blackout. FIX THIS!.
-        //this.gameCanvas = findViewById(R.id.game_gamecanvas);
-        this.gameView = new GameView(this);
-        //setContentView(R.layout.activity_gamegl);
-        setContentView(this.gameView);
+        setContentView(R.layout.activity_game);         // TODO: exception thrown on screen blackout. FIX THIS!.
+        this.gameCanvas = findViewById(R.id.game_gamecanvas);
 
+        // OpenGL Version
+        /*this.gameView = new GameView(this);
+        setContentView(this.gameView);*/
 
         // Get Vibrator
         /*Log.i(LOG_INFO_TAG, "Tying to find vibrator!");
@@ -80,12 +80,12 @@ public class GameActivity extends AppCompatActivity
     {
         super.onPause();
 
-        /*Public.gameManager.updateGameCanvas(null);
-        Public.gameManager.destroy();
+
+        Public.gameManager.shutdown();
         Public.spawnManager.destroy();
 
         // Un-register sensor listener
-        Log.i(LOG_INFO_TAG, "App paused, un-registering sensor listener");
+        /*Log.i(LOG_INFO_TAG, "App paused, un-registering sensor listener");
         sensorManager.unregisterListener(Public.gameManager);
 
         // Un-register sensor listener
@@ -100,10 +100,8 @@ public class GameActivity extends AppCompatActivity
     {
         super.onResume();
 
-        /*Public.gameManager.updateGameCanvas(this.gameCanvas);
-
         // Re-register sensor listener
-        Log.i(LOG_INFO_TAG, "App un-paused, registering sensor listener");
+        /*Log.i(LOG_INFO_TAG, "App un-paused, registering sensor listener");
         sensorManager.registerListener(Public.gameManager, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         // Make a media play to play bloop sound
@@ -117,9 +115,8 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onDestroy()
     {
-        /*Public.gameManager.updateGameCanvas(null);
-        Public.gameManager.destroy();
-        Public.spawnManager.destroy();*/
+        Public.gameManager.shutdown();
+        Public.spawnManager.destroy();
 
         super.onDestroy();
     }

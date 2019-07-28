@@ -1,5 +1,6 @@
 package com.example.timedodge.game;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,19 +18,20 @@ import com.example.timedodge.game.ecs.components.CollisionCircle;
 import com.example.timedodge.game.ecs.components.Graphics;
 import com.example.timedodge.game.ecs.components.Physics;
 import com.example.timedodge.game.ecs.components.PlayerController;
-import com.example.timedodge.game.canvas.GameCanvas;
+import com.example.timedodge.game.view.GameCanvas;
 import com.example.timedodge.game.view.GameView;
 import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Vector;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 public class GameManager extends Thread implements SensorEventListener
 {
     private SurfaceHolder surfaceHolder;
     private GameView gameView;
     private volatile boolean running = true;
-    private Vector tiltValues;
+    private Vector tiltValues = new Vector(0, 0);
 
     private Context context;
     private GameCanvas gameCanvas;
@@ -40,7 +42,8 @@ public class GameManager extends Thread implements SensorEventListener
     private long currentSysTime = 0L;
     private boolean firstFrame = true;
 
-    private ArrayList<Entity> entities = new ArrayList<>();
+    private volatile ArrayList<Entity> entities = new ArrayList<>();
+    public final Semaphore haltUpdating = new Semaphore(1, true);
 
     public GameManager(Context context)
     {
@@ -54,25 +57,39 @@ public class GameManager extends Thread implements SensorEventListener
         ball.addComponent(new PlayerController());
         ball.addComponent(new Physics());
         ball.addComponent(new CollisionCircle());
-        this.entities.add(ball);
 
-        for (Entity entity : this.entities)
-        {
-            entity.create();
+        // Update entities
+        try {
+            this.haltUpdating();
+
+            this.entities.add(ball);
+
+            for (Entity entity : this.entities)
+            {
+                entity.create();
+            }
+
+            this.continueUpdating();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
         }
+
 
         Public.spawnManager.create();
     }
 
+    @SuppressLint("DefaultLocale")
     private void gameUpdate(Vector tiltValues)
     {
         this.framesSinceDebugUpdate++;
 
         // DeltaTime calc
-        this.currentSysTime = System.currentTimeMillis();
-        float elapsed = (currentSysTime - lastSysTime) / 1000.0f;
+        this.currentSysTime = System.nanoTime();
+        float elapsed = (currentSysTime - lastSysTime) / 1000000000.0f;
         if (this.framesSinceDebugUpdate >= 5) {
-            ((TextView)((Activity) context).findViewById(R.id.game_debuginfo_fps)).setText(String.format("FPS: %f", (float)(1.0f / elapsed)));
+            ((Activity) this.context).runOnUiThread(() -> { ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_fps)).setText(String.format("FPS: %f", (1.0f / elapsed))); });
+            Log.d(Logging.LOG_DEBUG_TAG, "FPS: " + elapsed);
             this.framesSinceDebugUpdate = 0;
         }
         //elapsed *= 0.01f;
@@ -92,24 +109,43 @@ public class GameManager extends Thread implements SensorEventListener
         Public.spawnManager.update(elapsed, tiltValues);
 
         // Update entities
-        for (Entity entity : this.entities)
-        {
-            entity.update(elapsed, tiltValues);
+        try {
+            this.haltUpdating();
+            for (Entity entity : this.entities)
+            {
+                entity.update(elapsed, tiltValues);
+            }
+            this.continueUpdating();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
         }
-
     }
 
-    private void gameDraw()
+    private void gameDraw(Canvas canvas)
     {
         // Draw for SpawnManager, Not really needed
-        Public.spawnManager.draw();
+        Public.spawnManager.draw(canvas);
 
         // Draw entities
         for (Entity entity : this.entities)
         {
-            entity.draw();
+            entity.draw(canvas);
         }
     }
+
+    // OpenGL Version
+    /*private void gameDraw(int vertexBufferPosition, int colorPosition)
+    {
+        // Draw for SpawnManager, Not really needed
+        Public.spawnManager.draw(vertexBufferPosition, colorPosition);
+
+        // Draw entities
+        for (Entity entity : this.entities)
+        {
+            entity.draw(vertexBufferPosition, colorPosition);
+        }
+    }*/
 
     private void gameDestroy()
     {
@@ -168,14 +204,21 @@ public class GameManager extends Thread implements SensorEventListener
 
     public void addEntity(Entity entity)
     {
-        if (entity != null)
-        {
-            entity.create();
-            this.entities.add(entity);
+        try {
+            this.haltUpdating();
+            if (entity != null)
+            {
+                entity.create();
+                this.entities.add(entity);
+            }
+            this.continueUpdating();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
         }
     }
 
-    public ArrayList<Component> getAllComponentsOfType(Class clazz)
+    public ArrayList<Component> getAllComponentsOfType(Class<CollisionCircle> clazz)
     {
         ArrayList<Component> components = new ArrayList<>();
         for (Entity entity : this.entities)
@@ -187,16 +230,49 @@ public class GameManager extends Thread implements SensorEventListener
         return components;
     }
 
-    public void triggerDraw()
+    public void triggerDraw(Canvas canvas)
     {
-        this.gameDraw();
+        try {
+            this.haltUpdating();
+            Log.d(Logging.LOG_DEBUG_TAG, "DDDDDRRRRRRAAAAWWWWW");
+            this.gameDraw(canvas);
+            this.continueUpdating();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
+        }
+    }
+
+    // OpenGL Version
+    /*public void triggerDraw(int vertexBufferPosition, int colorPosition)
+    {
+        try {
+            this.haltUpdating();
+            Log.d(Logging.LOG_DEBUG_TAG, "DDDDDRRRRRRAAAAWWWWW");
+            this.gameDraw(vertexBufferPosition, colorPosition);
+            this.continueUpdating();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
+        }
+    }*/
+
+    public void haltUpdating() throws InterruptedException
+    {
+        this.haltUpdating.acquire();
+    }
+
+    public void continueUpdating()
+    {
+        this.haltUpdating.release();
     }
 
     public interface GameLifecycle
     {
         void create();
         void update(float dt, Vector tiltValues);
-        void draw();
+        void draw(Canvas canvas);
+        //OpenGL Version --> void draw(int vertexBufferPosition, int colorPosition);
         void destroy();
     }
 }

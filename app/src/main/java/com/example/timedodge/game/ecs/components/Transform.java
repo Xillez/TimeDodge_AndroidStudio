@@ -37,10 +37,17 @@ public class Transform extends Component
     }
 
     @Override
-    public void draw()
+    public void draw(Canvas canvas)
     {
-        super.draw();
+        super.draw(canvas);
     }
+
+    //OpenGL Version
+    /*@Override
+    public void draw(int vertexBufferPosition, int colorPosition)
+    {
+        super.draw(vertexBufferPosition, colorPosition);
+    }*/
 
     @Override
     public void destroy()

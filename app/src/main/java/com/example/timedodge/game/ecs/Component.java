@@ -1,5 +1,7 @@
 package com.example.timedodge.game.ecs;
 
+import android.graphics.Canvas;
+
 import com.example.timedodge.game.GameManager;
 import com.example.timedodge.utils.Vector;
 
@@ -35,10 +37,16 @@ public class Component implements GameManager.GameLifecycle
             //Log.i(LOG_INFO_TAG, "Component update");
         }
 
-        public void draw()
+        public void draw(Canvas canvas)
         {
             //Log.i(LOG_INFO_TAG, "Component draw");
         }
+
+        //OpenGL Version
+        /*public void draw(int vertexBufferPosition, int colorPosition)
+        {
+            //Log.i(LOG_INFO_TAG, "Component draw");
+        }*/
 
         public void destroy()
         {

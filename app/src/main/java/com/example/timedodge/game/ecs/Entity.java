@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public final class Entity implements GameManager.GameLifecycle
 {
     private int nextCompId = 0;
-    private ArrayList<Component> components = new ArrayList<>();
+    private volatile ArrayList<Component> components = new ArrayList<>();
 
     public Entity()
     {
@@ -42,13 +42,23 @@ public final class Entity implements GameManager.GameLifecycle
     }
 
     @Override
-    public void draw()
+    public void draw(Canvas canvas)
     {
         for (Component component : this.components)
         {
-            component.draw();
+            component.draw(canvas);
         }
     }
+
+    // OpenGL version
+    /*@Override
+    public void draw(int vertexBufferPosition, int colorPosition)
+    {
+        for (Component component : this.components)
+        {
+            component.draw(vertexBufferPosition, colorPosition);
+        }
+    }*/
 
     @Override
     public void destroy()

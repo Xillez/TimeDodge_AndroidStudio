@@ -1,7 +1,6 @@
 package com.example.timedodge.game.spawn;
 
 import android.graphics.Canvas;
-import android.hardware.SensorEvent;
 import android.os.CountDownTimer;
 import android.util.Log;
 
@@ -15,8 +14,6 @@ import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Vector;
 
 import java.util.Random;
-
-import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
 
 public class SpawnManager
 {
@@ -55,10 +52,16 @@ public class SpawnManager
         //
     }
 
-    public void draw(/*Canvas canvas*/)
+    public void draw(Canvas canvas)
     {
         //
     }
+
+    //OpenGL Version
+    /*public void draw(int vertexBufferPosition, int colorPosition)
+    {
+        //
+    }*/
 
     public void destroy()
     {

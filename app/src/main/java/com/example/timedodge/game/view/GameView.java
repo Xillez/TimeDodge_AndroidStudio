@@ -1,6 +1,8 @@
 package com.example.timedodge.game.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
 import android.graphics.Point;
 import android.opengl.GLES20;
@@ -26,6 +28,26 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer
     private final int MARGIN = 5;
 
     private int shaderProg;
+    private int vertexBufferPosition;
+    private int colorPosition;
+
+    private String vertexShaderCode = "#version 120\n" +
+            "\n" +
+            "attribute vec2 vPosition;\n" +
+            "\n" +
+            "void main() {\n" +
+            "    gl_Position = vec4(vPosition, 0, 0);\n" +
+            "}\n";
+    private String fragmentShaderCode = "#version 120\n" +
+            "\n" +
+            "precision mediump float;\n" +
+            "\n" +
+            "uniform vec4 vColor;\n" +
+            "\n" +
+            "void main()\n" +
+            "{\n" +
+            "    gl_FragColor = vColor;\n" +
+            "}\n";
 
     public GameView(Context context)
     {
@@ -55,6 +77,10 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer
         GLES20.glAttachShader(this.shaderProg, fragmentShader);
         GLES20.glLinkProgram(this.shaderProg);
         GLES20.glUseProgram(this.shaderProg);
+
+        this.vertexBufferPosition = GLES20.glGetAttribLocation(this.shaderProg, "vPosition");
+        GLES20.glEnableVertexAttribArray(this.vertexBufferPosition);
+        this.colorPosition = GLES20.glGetUniformLocation(this.shaderProg, "vColor");
     }
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config)
@@ -69,35 +95,36 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer
     {
         // Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        Public.gameManager.triggerDraw();
+
+        // Enable for OpenGL Version!
+        //Public.gameManager.triggerDraw(this.vertexBufferPosition, this.colorPosition);
+
+        GLES20.glDisableVertexAttribArray(this.vertexBufferPosition);
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height)
     {
+        ((Activity) this.context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         GLES20.glViewport(0, 0, width, height);
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder)
     {
-        if (Public.gameManager != null)
+        while (Public.gameManager != null)
         {
             Public.gameManager.shutdown();
-
-            while (Public.gameManager != null)
-            {
-                try {
-                    Public.gameManager.join();
-                    Public.gameManager = null;
-                } catch (InterruptedException e){}
-            }
+            try {
+                Public.gameManager.join();
+                Public.gameManager = null;
+            } catch (InterruptedException e){}
         }
         super.surfaceDestroyed(holder);
     }
 
     private int loadShader(int type, String fileName)
     {
-        AssetManager assetManager = this.context.getAssets();
+        /*AssetManager assetManager = this.context.getAssets();
         byte byteCode[] = {};
         try
         {
@@ -106,11 +133,17 @@ public class GameView extends GLSurfaceView implements GLSurfaceView.Renderer
         } catch (IOException e)
         {
             return -1;
-        }
+        }*/
 
         int shader = GLES20.glCreateShader(type);
-        GLES20.glShaderSource(shader, new String(byteCode));
+        //GLES20.glShaderSource(shader, new String(byteCode));
+        if (fileName.contains("vertex"))
+            GLES20.glShaderSource(shader, this.vertexShaderCode);
+        else if (fileName.contains("fragment"))
+            GLES20.glShaderSource(shader, this.fragmentShaderCode);
         GLES20.glCompileShader(shader);
         return shader;
     }
+
+
 }

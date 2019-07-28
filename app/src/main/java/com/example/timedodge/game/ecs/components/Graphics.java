@@ -14,22 +14,35 @@ import com.example.timedodge.utils.Vector;
 
 public class Graphics extends Component
 {
-    //private ShapeDrawable shape = new ShapeDrawable();
+    // Disable for opengl drawing
+    private ShapeDrawable shape = new ShapeDrawable();
     private Vector size = new Vector(10, 10);
 
     public Graphics()
     {
         super();
-        /*this.shape.setShape(new OvalShape());
-        this.shape.getPaint().setColor(0xffffffff);*/
+        this.shape.setShape(new OvalShape());
+        this.shape.getPaint().setColor(0xffffffff);
     }
+
+    // OpenGL Version
+    /*public Graphics()
+    {
+        super();
+    }*/
 
     public Graphics(int id)
     {
         super(id);
-        /*this.shape.setShape(new OvalShape());
-        this.shape.getPaint().setColor(0xffffffff);*/
+        this.shape.setShape(new OvalShape());
+        this.shape.getPaint().setColor(0xffffffff);
     }
+
+    // OpenGL Version
+    /*public Graphics(int id)
+    {
+        super(id);
+    }*/
 
     @Override
     public void create()
@@ -44,9 +57,26 @@ public class Graphics extends Component
     }
 
     @Override
-    public void draw()
+    public void draw(Canvas canvas)
     {
-        super.draw();
+        super.draw(canvas);
+
+        Transform parentTransform = (Transform) parent.getComponentByType(Transform.class);
+        if (parentTransform != null)
+        {
+            Vector parentPos = parentTransform.getPosition();
+            Vector parentScale = parentTransform.getScale();
+            this.shape.setBounds(new Rect((int) (parentPos.x - (size.x * parentScale.x * 0.5f)), (int) (parentPos.y - (size.y * parentScale.y * 0.5f)), (int) (parentPos.x + (size.x * parentScale.x * 0.5f)), (int) (parentPos.y + (size.y * parentScale.y * 0.5f))));
+        }
+
+        this.shape.draw(canvas);
+    }
+
+    // OpenGL Version
+    /*@Override
+    public void draw(int vertexBufferPosition, int colorPosition)
+    {
+        super.draw(vertexBufferPosition, colorPosition);
 
         Transform parentTransform = (Transform) parent.getComponentByType(Transform.class);
         if (parentTransform != null)
@@ -57,7 +87,7 @@ public class Graphics extends Component
         }
 
         //this.shape.draw(canvas);
-    }
+    }*/
 
     @Override
     public void destroy()

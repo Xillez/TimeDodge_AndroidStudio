@@ -49,13 +49,10 @@ public class CollisionCircle extends Collision
         {
             return;
         }
-        Log.d(Logging.LOG_DEBUG_TAG, "AAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHH");
 
         Vector pos = parentTransform.getPosition();
         Vector size = parentGraphics.getActualSize();
 
-
-        Log.d(Logging.LOG_DEBUG_TAG, "" + Public.gameManager.getAllComponentsOfType(CollisionCircle.class));
         // Run through all collision components on canvas
         for (Component comp : Public.gameManager.getAllComponentsOfType(CollisionCircle.class))
         {
@@ -72,7 +69,6 @@ public class CollisionCircle extends Collision
             Vector diff = new Vector(otherPos.x - pos.x, otherPos.y - pos.y);
 
             // Distance is less than their combined radius', trigger collision if a Physics component exists.
-            Log.d(Logging.LOG_DEBUG_TAG, String.format("%f | %f | %f", size.x, otherSize.x, diff.length()));
             if (diff.length() < otherSize.x + size.x)
             {
                 Physics otherPhysics = (Physics) comp.getParent().getComponentByType(Physics.class);
@@ -102,9 +98,31 @@ public class CollisionCircle extends Collision
     }
 
     @Override
-    public void draw()
+    public void draw(Canvas canvas)
     {
-        super.draw();
+        super.draw(canvas);
+
+        // Fetch transform and graphics components from parent
+        Transform parentTransform = ((Transform) this.parent.getComponentByType(Transform.class));
+        Graphics parentGraphics = (Graphics) this.parent.getComponentByType(Graphics.class);
+
+        // Not found, abort
+        if (parentTransform == null || parentGraphics == null)
+            return;
+
+        Vector pos = parentTransform.getPosition();
+        Vector size = parentGraphics.getActualSize();
+
+        ShapeDrawable circle = new ShapeDrawable(new RectShape());
+        circle.getPaint().setColor(0xFF98FA8f);
+        circle.setBounds(new Rect((int) (pos.x - ( size.x / 2.0f)), (int)( pos.y - ( size.y / 2.0f)), (int)( pos.x + ( size.x / 2.0f)), (int)( pos.y + ( size.y / 2.0f))));
+    }
+
+    // OpenGL Version
+    /*@Override
+    public void draw(int vertexBufferPosition, int colorPosition)
+    {
+        super.draw(vertexBufferPosition, colorPosition);
 
         // Fetch transform and graphics components from parent
         Transform parentTransform = ((Transform) this.parent.getComponentByType(Transform.class));
@@ -120,8 +138,8 @@ public class CollisionCircle extends Collision
         /*ShapeDrawable circle = new ShapeDrawable(new RectShape());
         circle.getPaint().setColor(0xFF98FA8f);
         circle.setBounds(new Rect((int) (pos.x - ( size.x / 2.0f)), (int)( pos.y - ( size.y / 2.0f)), (int)( pos.x + ( size.x / 2.0f)), (int)( pos.y + ( size.y / 2.0f))));
-        circle.draw(canvas);*/
-    }
+        circle.draw(canvas);*
+    }*/
 
     @Override
     public void destroy()

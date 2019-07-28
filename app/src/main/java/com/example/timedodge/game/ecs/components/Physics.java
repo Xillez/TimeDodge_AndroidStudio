@@ -1,11 +1,9 @@
 package com.example.timedodge.game.ecs.components;
 
 import android.graphics.Canvas;
-import android.hardware.SensorEvent;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
-import com.example.timedodge.game.ecs.Entity;
 import com.example.timedodge.game.event.GameEvent;
 import com.example.timedodge.game.event.GameEventListener;
 import com.example.timedodge.game.event.events.GameEntityCollisionEvent;
@@ -53,10 +51,17 @@ public class Physics extends Component implements GameEventListener
     }
 
     @Override
-    public void draw()
+    public void draw(Canvas canvas)
     {
-        super.draw();
+        super.draw(canvas);
     }
+
+    // OpenGL Version
+    /*@Override
+    public void draw(int vertexBufferPosition, int colorPosition)
+    {
+        super.draw(vertexBufferPosition, colorPosition);
+    }*/
 
     @Override
     public void destroy()

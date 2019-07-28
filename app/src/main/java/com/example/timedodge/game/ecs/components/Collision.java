@@ -34,10 +34,17 @@ public class Collision extends Component
     }
 
     @Override
-    public void draw()
+    public void draw(Canvas canvas)
     {
-        super.draw();
+        super.draw(canvas);
     }
+
+    // OpenGl Version
+    /*@Override
+    public void draw(int vertexBufferPosition, int colorPosition)
+    {
+        super.draw(vertexBufferPosition, colorPosition);
+    }*/
 
     @Override
     public void destroy()
