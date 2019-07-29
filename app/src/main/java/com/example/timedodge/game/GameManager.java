@@ -21,6 +21,7 @@ import com.example.timedodge.game.ecs.components.PlayerController;
 import com.example.timedodge.game.view.GameCanvas;
 import com.example.timedodge.game.view.GameView;
 import com.example.timedodge.utils.Logging;
+import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
 import java.util.ArrayList;
@@ -86,15 +87,14 @@ public class GameManager extends Thread implements SensorEventListener
 
         // DeltaTime calc
         this.currentSysTime = System.nanoTime();
-        float elapsed = (currentSysTime - lastSysTime) / 1000000000.0f;
-        if (this.framesSinceDebugUpdate >= 5) {
-            ((Activity) this.context).runOnUiThread(() -> { ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_fps)).setText(String.format("FPS: %f", (1.0f / elapsed))); });
-            Log.d(Logging.LOG_DEBUG_TAG, "FPS: " + elapsed);
-            this.framesSinceDebugUpdate = 0;
-        }
-        //elapsed *= 0.01f;
+        float elapsed = (this.currentSysTime - this.lastSysTime) / 1000000000.0f;
         this.lastSysTime = currentSysTime;
 
+        // Update debug screen every 5 frames.
+        if (this.framesSinceDebugUpdate >= 25) {
+            ((Activity) this.context).runOnUiThread(() -> { ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_ups)).setText(String.format("UPS: %f", (1.0f / elapsed))); });
+            this.framesSinceDebugUpdate = 0;
+        }
 
         // Skip updating on the first frame due to massive time lag with setup.
         if(this.firstFrame) {
@@ -119,6 +119,12 @@ public class GameManager extends Thread implements SensorEventListener
         } catch (InterruptedException e) {
             e.printStackTrace();
             return;
+        }
+
+        // If running, give up cpu, if not continue for stopping
+        if (running)
+        {
+            Tools.sleepRestOfFrame(elapsed, "Game thread", (Activity) this.context, ((Activity) this.context).findViewById(R.id.game_debuginfo_gamethread_sleeptime));
         }
     }
 
