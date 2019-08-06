@@ -2,7 +2,7 @@ package com.example.timedodge.game.mode;
 
 import android.content.Context;
 
-import com.example.timedodge.game.GameManager;
+import com.example.timedodge.game.thread.GameManager;
 
 public class GameMode
 {

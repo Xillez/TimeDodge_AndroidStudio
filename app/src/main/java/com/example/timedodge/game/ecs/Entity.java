@@ -1,10 +1,11 @@
 package com.example.timedodge.game.ecs;
 
 import android.graphics.Canvas;
-import android.hardware.SensorEvent;
+import android.util.Log;
 
-import com.example.timedodge.game.GameManager;
+import com.example.timedodge.game.thread.GameManager;
 import com.example.timedodge.game.ecs.components.Transform;
+import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Vector;
 
 import java.util.ArrayList;
@@ -85,13 +86,13 @@ public final class Entity implements GameManager.GameLifecycle
             if (component.getClass().equals(clazz))
                 return component;
 
+        Log.e(Logging.LOG_ERR_TAG, String.format("Could not find components type \"%s\" on entity! ", clazz.getName()));
         return null;
     }
 
     public void addComponent(Component component)
     {
         if (component != null) {
-            component.setId(this.nextCompId++);
             component.setParent(this);
             this.components.add(component);
         }

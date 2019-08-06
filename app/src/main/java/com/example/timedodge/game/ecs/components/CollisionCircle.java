@@ -21,12 +21,7 @@ public class CollisionCircle extends Collision
 
     public CollisionCircle()
     {
-        this.id = Component.NO_ID;
-    }
-
-    public CollisionCircle(int id)
-    {
-        this.id = id;
+        super();
     }
 
     @Override
@@ -46,9 +41,7 @@ public class CollisionCircle extends Collision
 
         // Not found, abort
         if (parentTransform == null || parentGraphics == null)
-        {
             return;
-        }
 
         Vector pos = parentTransform.getPosition();
         Vector size = parentGraphics.getActualSize();
@@ -58,23 +51,35 @@ public class CollisionCircle extends Collision
         {
             // If me, skip.
             if (comp.getId() == this.getId())
+            {
                 continue;
+            }
+            //Log.d(Logging.LOG_DEBUG_TAG, "RE_RE_" + (comp.getId() == this.getId()));
+
 
             // Get other's components
             Transform otherTransform = (Transform) comp.getParent().getComponentByType(Transform.class);
             Graphics otherGraphics = (Graphics) comp.getParent().getComponentByType(Graphics.class);
-            Vector otherPos = parentTransform.getPosition();
-            Vector otherSize = parentGraphics.getActualSize();
+            Vector otherPos = otherTransform.getPosition();
+            Vector otherSize = otherGraphics.getActualSize();
 
             Vector diff = new Vector(otherPos.x - pos.x, otherPos.y - pos.y);
+            Log.d(Logging.LOG_DEBUG_TAG, "RE_RE_" + diff.length());
 
             // Distance is less than their combined radius', trigger collision if a Physics component exists.
-            if (diff.length() < otherSize.x + size.x)
+            if (diff.length() < (otherSize.x + size.x) * 0.5f)
             {
+                Log.d(Logging.LOG_DEBUG_TAG, "REE_DEBRIS COLLISION!");
                 Physics otherPhysics = (Physics) comp.getParent().getComponentByType(Physics.class);
                 if (otherPhysics != null)
                 {
-                    this.triggerEntityCollisionEvent(otherPhysics, new Vector(pos.x + (diff.x / 2.0f), pos.y + (diff.y / 2.0f)));
+                    Vector unstuckPosition = pos;
+                    float diffLength = diff.length();
+                    diff.normalize();
+                    diff.multiTo((((otherSize.x + size.x) * 0.5f) - diffLength) + 0.01f);
+                    unstuckPosition.addTo(diff);
+
+                    this.triggerEntityCollisionEvent(otherPhysics, new Vector(pos.x + (diff.x / 2.0f), pos.y + (diff.y / 2.0f)), unstuckPosition);
                 }
             }
         }
@@ -147,12 +152,13 @@ public class CollisionCircle extends Collision
         super.destroy();
     }
 
-    public void triggerEntityCollisionEvent(GameEventListener other, Vector intersectionPoint)
+    public void triggerEntityCollisionEvent(GameEventListener other, Vector intersectionPoint, Vector unstuckPosition)
     {
         GameEntityCollisionEvent collEvent = new GameEntityCollisionEvent();
         collEvent.target = other;
         collEvent.referrer = this;
         collEvent.intersection = intersectionPoint;
+        collEvent.unstuckPosition = unstuckPosition;
         Public.gameEventHandler.registerEvent(collEvent);
     }
 

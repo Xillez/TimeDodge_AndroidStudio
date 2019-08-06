@@ -173,6 +173,13 @@ public class Vector extends PointF
             this.y /= scalar;
     }
 
+    public void normalize()
+    {
+        float length = this.length();
+        this.x /= length;
+        this.y /= length;
+    }
+
     @Override
     public String toString() {
         return "(" + this.x + ", " + this.y + ")";

@@ -3,20 +3,15 @@ package com.example.timedodge.game.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.content.res.AssetManager;
 import android.graphics.Point;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import com.example.timedodge.game.GameManager;
+import com.example.timedodge.game.thread.GameManager;
 import com.example.timedodge.game.Public;
 import com.example.timedodge.utils.Logging;
-import com.example.timedodge.utils.Vector;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

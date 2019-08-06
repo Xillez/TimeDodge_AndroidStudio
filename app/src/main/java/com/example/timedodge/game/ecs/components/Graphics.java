@@ -30,20 +30,6 @@ public class Graphics extends Component
     {
         super();
     }*/
-
-    public Graphics(int id)
-    {
-        super(id);
-        this.shape.setShape(new OvalShape());
-        this.shape.getPaint().setColor(0xffffffff);
-    }
-
-    // OpenGL Version
-    /*public Graphics(int id)
-    {
-        super(id);
-    }*/
-
     @Override
     public void create()
     {

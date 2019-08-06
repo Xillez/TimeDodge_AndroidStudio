@@ -31,7 +31,6 @@ public class SpawnManager
                 spawnEntity();
             cdt.cancel();
             cdt.start();
-            Log.d(Logging.LOG_DEBUG_TAG, "REE_Spawn entity!");
         }
     };
 

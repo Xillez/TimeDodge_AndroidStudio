@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.timedodge.R;
-import com.example.timedodge.game.GameManager;
+import com.example.timedodge.game.thread.GameManager;
 import com.example.timedodge.game.Public;
 import com.example.timedodge.utils.Tools;
 
@@ -51,20 +51,21 @@ public class GameCanvas extends View
         this.lastSysTime = currentSysTime;
 
         // Skip sleeping
-        if (this.firstFrame)
+        if (!this.firstFrame)
         {
+            // Update debug screen every 5 frames.
+            if (this.framesSinceDebugUpdate >= 25) {
+                ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_fps)).setText(String.format("FPS: %f", ( 1.0f / elapsed)));
+                this.framesSinceDebugUpdate = 0;
+            }
+
+            Public.gameManager.triggerDraw(canvas);
+
+            Tools.sleepRestOfFrame(elapsed, "UI Thread", (Activity) this.context, findViewById(R.id.game_debuginfo_uithread_sleeptime));
+        }
+
+        if (this.firstFrame)
             this.firstFrame = false;
-            return;
-        }
 
-        // Update debug screen every 5 frames.
-        if (this.framesSinceDebugUpdate >= 25) {
-            ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_fps)).setText(String.format("FPS: %f", ( 1.0f / elapsed)));
-            this.framesSinceDebugUpdate = 0;
-        }
-
-        Public.gameManager.triggerDraw(canvas);
-
-        Tools.sleepRestOfFrame(elapsed, "UI Thread", (Activity) this.context, findViewById(R.id.game_debuginfo_uithread_sleeptime));
     }
 }

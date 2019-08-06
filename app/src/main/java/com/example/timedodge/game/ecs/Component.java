@@ -2,13 +2,13 @@ package com.example.timedodge.game.ecs;
 
 import android.graphics.Canvas;
 
-import com.example.timedodge.game.GameManager;
+import com.example.timedodge.game.Public;
+import com.example.timedodge.game.thread.GameManager;
+import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
 public class Component implements GameManager.GameLifecycle
     {
-        public static int NO_ID = -1;
-
         protected int id = 0;
         protected Entity parent = null;
 
@@ -16,12 +16,7 @@ public class Component implements GameManager.GameLifecycle
 
         public Component()
         {
-            this.id = Component.NO_ID;
-        }
-
-        public Component(int id)
-        {
-            this.id = id;
+            this.id = Tools.getNewUID();
         }
 
         public void create()
@@ -32,9 +27,9 @@ public class Component implements GameManager.GameLifecycle
 
         public void update(float dt, Vector tiltValues)
         {
+            //Log.i(LOG_INFO_TAG, "Component update");
             if (!this.isCreated())
                 this.create();
-            //Log.i(LOG_INFO_TAG, "Component update");
         }
 
         public void draw(Canvas canvas)
@@ -56,10 +51,6 @@ public class Component implements GameManager.GameLifecycle
         public int getId()
         {
             return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
         }
 
         public Entity getParent()

@@ -5,6 +5,8 @@ import android.widget.TextView;
 
 import com.example.timedodge.game.Public;
 
+import java.util.Random;
+
 public class Tools
 {
     public static int getNanosToSleep(float elapsed)
@@ -30,5 +32,16 @@ public class Tools
         {
             e.printStackTrace();
         }
+    }
+
+    public static int getNewUID()
+    {
+        Random rnd = new Random();
+        String input = "";
+        for (int i = 0; i < rnd.nextInt(236) + 20; i++)
+        {
+            input = input.concat(Character.toString((char)rnd.nextInt(256)));
+        }
+        return input.hashCode();
     }
 }

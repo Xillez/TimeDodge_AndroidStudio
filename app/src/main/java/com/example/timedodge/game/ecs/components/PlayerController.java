@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.hardware.SensorEvent;
 
 import com.example.timedodge.game.ecs.Component;
+import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
 public class PlayerController extends Component
@@ -11,11 +12,6 @@ public class PlayerController extends Component
     public PlayerController()
     {
         super();
-    }
-
-    public PlayerController(int id)
-    {
-        super(id);
     }
 
     @Override

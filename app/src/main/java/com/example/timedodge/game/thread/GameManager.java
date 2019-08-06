@@ -1,6 +1,5 @@
-package com.example.timedodge.game;
+package com.example.timedodge.game.thread;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,6 +11,7 @@ import android.view.SurfaceHolder;
 import android.widget.TextView;
 
 import com.example.timedodge.R;
+import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
 import com.example.timedodge.game.ecs.Entity;
 import com.example.timedodge.game.ecs.components.CollisionCircle;
@@ -26,6 +26,7 @@ import com.example.timedodge.utils.Vector;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
+import java.util.function.Function;
 
 public class GameManager extends Thread implements SensorEventListener
 {
@@ -58,12 +59,12 @@ public class GameManager extends Thread implements SensorEventListener
         ball.addComponent(new PlayerController());
         ball.addComponent(new Physics());
         ball.addComponent(new CollisionCircle());
+        this.addEntity(ball);
 
-        // Update entities
+        // Create entities
         try {
             this.haltUpdating();
 
-            this.entities.add(ball);
 
             for (Entity entity : this.entities)
             {
@@ -80,7 +81,6 @@ public class GameManager extends Thread implements SensorEventListener
         Public.spawnManager.create();
     }
 
-    @SuppressLint("DefaultLocale")
     private void gameUpdate(Vector tiltValues)
     {
         this.framesSinceDebugUpdate++;
@@ -229,7 +229,6 @@ public class GameManager extends Thread implements SensorEventListener
         ArrayList<Component> components = new ArrayList<>();
         for (Entity entity : this.entities)
         {
-            //Log.d(Logging.LOG_DEBUG_TAG, "" + entity.getComponents());
             for (Component comp : entity.getComponents())
                 if (comp.getClass().equals(clazz)) components.add(comp);
         }
@@ -240,7 +239,6 @@ public class GameManager extends Thread implements SensorEventListener
     {
         try {
             this.haltUpdating();
-            Log.d(Logging.LOG_DEBUG_TAG, "DDDDDRRRRRRAAAAWWWWW");
             this.gameDraw(canvas);
             this.continueUpdating();
         } catch (InterruptedException e) {

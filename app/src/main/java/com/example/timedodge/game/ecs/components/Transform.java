@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
 import com.example.timedodge.game.ecs.Entity;
+import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
 public class Transform extends Component
@@ -16,12 +17,7 @@ public class Transform extends Component
 
     public Transform()
     {
-        this.id = Component.NO_ID;
-    }
-
-    public Transform(int id)
-    {
-        this.id = id;
+        super();
     }
 
     @Override

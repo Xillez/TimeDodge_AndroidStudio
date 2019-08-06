@@ -8,6 +8,7 @@ import com.example.timedodge.game.event.GameEvent;
 import com.example.timedodge.game.event.GameEventListener;
 import com.example.timedodge.game.event.events.GameEntityCollisionEvent;
 import com.example.timedodge.game.event.events.GameWallCollisionEvent;
+import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
 public class Physics extends Component implements GameEventListener
@@ -18,11 +19,6 @@ public class Physics extends Component implements GameEventListener
     public Physics()
     {
         super();
-    }
-
-    public Physics(int id)
-    {
-        super(id);
     }
 
     @Override
@@ -89,8 +85,12 @@ public class Physics extends Component implements GameEventListener
             // Add bounce of other entity + removal of energy (hence 0.75 instead of 1)
             Transform otherTransform = (Transform) event.referrer.getParent().getComponentByType(Transform.class);
             if (otherTransform != null)
-                this.velocity.x += (parentTransform.getPosition().x - otherTransform.getPosition().x);// * 0.75f;
-                this.velocity.y += (parentTransform.getPosition().y - otherTransform.getPosition().y);// * 0.75f;
+            {
+                this.velocity.x += (parentTransform.getPosition().x - otherTransform.getPosition().x) * 0.75f;
+                this.velocity.y += (parentTransform.getPosition().y - otherTransform.getPosition().y) * 0.75f;
+            }
+
+            parentTransform.getPosition().set(((GameEntityCollisionEvent) event).unstuckPosition);
         }
         // Entity to wall collision
         else if (event instanceof GameWallCollisionEvent)
@@ -100,10 +100,10 @@ public class Physics extends Component implements GameEventListener
             // Flip velocity for bounce effect + removal of energy (hence 0.75 instead of 1)
             if (wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_LEFT.ordinal() ||
                     wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_RIGHT.ordinal())
-                this.velocity.multiToAxis(Vector.Axis.x, -1.0f); //-0.75f);
+                this.velocity.multiToAxis(Vector.Axis.x, -0.75f);
             if (wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_TOP.ordinal() ||
                     wallCollisionEvent.collisionWithSide.ordinal() == GameWallCollisionEvent.WallSide.WALL_BOTTOM.ordinal())
-                this.velocity.multiToAxis(Vector.Axis.y, -1.0f); //-0.75f);
+                this.velocity.multiToAxis(Vector.Axis.y, -0.75f);
 
             // Unstuck ball
             if (wallCollisionEvent.unstuckPosition != null)
