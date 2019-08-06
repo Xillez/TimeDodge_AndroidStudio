@@ -3,6 +3,7 @@ package com.example.timedodge.game.event;
 import android.support.annotation.NonNull;
 
 import com.example.timedodge.game.ecs.Component;
+import com.example.timedodge.game.ecs.Entity;
 
 public abstract class GameEvent implements Comparable
 {
@@ -11,6 +12,7 @@ public abstract class GameEvent implements Comparable
     public Priority priority = Priority.Medium;
 
     public Component referrer = null;
+    public Entity otherParent = null;
 
     // If target is null, event is for everyone!
     public GameEventListener target = null;

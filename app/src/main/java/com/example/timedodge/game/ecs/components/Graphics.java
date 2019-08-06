@@ -4,12 +4,8 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.hardware.SensorEvent;
-import android.util.Log;
 
 import com.example.timedodge.game.ecs.Component;
-import com.example.timedodge.game.ecs.Entity;
-import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Vector;
 
 public class Graphics extends Component
@@ -17,6 +13,7 @@ public class Graphics extends Component
     // Disable for opengl drawing
     private ShapeDrawable shape = new ShapeDrawable();
     private Vector size = new Vector(10, 10);
+    public boolean isPlayer = false;
 
     public Graphics()
     {
@@ -54,6 +51,9 @@ public class Graphics extends Component
             Vector parentScale = parentTransform.getScale();
             this.shape.setBounds(new Rect((int) (parentPos.x - (size.x * parentScale.x * 0.5f)), (int) (parentPos.y - (size.y * parentScale.y * 0.5f)), (int) (parentPos.x + (size.x * parentScale.x * 0.5f)), (int) (parentPos.y + (size.y * parentScale.y * 0.5f))));
         }
+
+        if (isPlayer)
+            this.shape.getPaint().setColor(0xffff0000);
 
         this.shape.draw(canvas);
     }

@@ -31,7 +31,21 @@ public class Vector extends PointF
         this.y = vector.y;
     }
 
-/*
+    public Vector add(float scalar)
+    {
+        return new Vector(this.x + scalar, this.y + scalar);
+    }
+
+    public Vector add(PointF other)
+    {
+        return new Vector(this.x + other.x, this.y + other.y);
+    }
+
+    public Vector add(Vector other)
+    {
+        return new Vector(this.x + other.x, this.y + other.y);
+    }
+
     public Vector sub(PointF other)
     {
         return new Vector(this.x - other.x, this.y - other.y);
@@ -71,7 +85,7 @@ public class Vector extends PointF
     {
         return new Vector(this.x / other.x, this.y / other.y);
     }
-*/
+
     public void addTo(float scalar)
     {
         this.x += scalar;
@@ -173,7 +187,13 @@ public class Vector extends PointF
             this.y /= scalar;
     }
 
-    public void normalize()
+    public Vector normalize()
+    {
+        float length = this.length();
+        return new Vector(this.x /= length, this.y /= length);
+    }
+
+    public void normalizeTo()
     {
         float length = this.length();
         this.x /= length;

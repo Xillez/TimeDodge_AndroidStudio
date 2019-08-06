@@ -4,11 +4,11 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
-import android.hardware.SensorEvent;
 import android.util.Log;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
+import com.example.timedodge.game.ecs.Entity;
 import com.example.timedodge.game.event.GameEventListener;
 import com.example.timedodge.game.event.events.GameEntityCollisionEvent;
 import com.example.timedodge.game.event.events.GameWallCollisionEvent;
@@ -54,12 +54,14 @@ public class CollisionCircle extends Collision
             {
                 continue;
             }
+
+            Entity otherParent = comp.getParent();
             //Log.d(Logging.LOG_DEBUG_TAG, "RE_RE_" + (comp.getId() == this.getId()));
 
 
             // Get other's components
-            Transform otherTransform = (Transform) comp.getParent().getComponentByType(Transform.class);
-            Graphics otherGraphics = (Graphics) comp.getParent().getComponentByType(Graphics.class);
+            Transform otherTransform = (Transform) otherParent.getComponentByType(Transform.class);
+            Graphics otherGraphics = (Graphics) otherParent.getComponentByType(Graphics.class);
             Vector otherPos = otherTransform.getPosition();
             Vector otherSize = otherGraphics.getActualSize();
 
@@ -70,16 +72,12 @@ public class CollisionCircle extends Collision
             if (diff.length() < (otherSize.x + size.x) * 0.5f)
             {
                 Log.d(Logging.LOG_DEBUG_TAG, "REE_DEBRIS COLLISION!");
-                Physics otherPhysics = (Physics) comp.getParent().getComponentByType(Physics.class);
-                if (otherPhysics != null)
+                Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
+                if (parentPhysics != null)
                 {
-                    Vector unstuckPosition = pos;
-                    float diffLength = diff.length();
-                    diff.normalize();
-                    diff.multiTo((((otherSize.x + size.x) * 0.5f) - diffLength) + 0.01f);
-                    unstuckPosition.addTo(diff);
-
-                    this.triggerEntityCollisionEvent(otherPhysics, new Vector(pos.x + (diff.x / 2.0f), pos.y + (diff.y / 2.0f)), unstuckPosition);
+                    Vector unstuckPosition = pos.sub(otherPos).normalize().multi((size.x + otherSize.x) / 2.0f + 0.001f).add(otherPos);
+                    Vector intersectionPoint = new Vector(pos.x + (diff.x / 2.0f), pos.y + (diff.y / 2.0f));
+                    this.triggerEntityCollisionEvent(parentPhysics, otherParent, intersectionPoint, unstuckPosition);
                 }
             }
         }
@@ -120,7 +118,7 @@ public class CollisionCircle extends Collision
 
         ShapeDrawable circle = new ShapeDrawable(new RectShape());
         circle.getPaint().setColor(0xFF98FA8f);
-        circle.setBounds(new Rect((int) (pos.x - ( size.x / 2.0f)), (int)( pos.y - ( size.y / 2.0f)), (int)( pos.x + ( size.x / 2.0f)), (int)( pos.y + ( size.y / 2.0f))));
+        circle.setBounds(new Rect((int) (pos.x - (size.x / 2.0f)), (int)(pos.y - (size.y / 2.0f)), (int)(pos.x + (size.x / 2.0f)), (int)(pos.y + (size.y / 2.0f))));
     }
 
     // OpenGL Version
@@ -152,20 +150,22 @@ public class CollisionCircle extends Collision
         super.destroy();
     }
 
-    public void triggerEntityCollisionEvent(GameEventListener other, Vector intersectionPoint, Vector unstuckPosition)
+    public void triggerEntityCollisionEvent(GameEventListener target, Entity otherParentEntity, Vector intersectionPoint, Vector unstuckPosition)
     {
         GameEntityCollisionEvent collEvent = new GameEntityCollisionEvent();
-        collEvent.target = other;
+        collEvent.target = target;
         collEvent.referrer = this;
+        collEvent.otherParent = otherParentEntity;
+
         collEvent.intersection = intersectionPoint;
         collEvent.unstuckPosition = unstuckPosition;
         Public.gameEventHandler.registerEvent(collEvent);
     }
 
-    public void triggerWallCollisionEvent(GameEventListener other, GameWallCollisionEvent.WallSide wallSide, Vector unstuckPosition)
+    public void triggerWallCollisionEvent(GameEventListener target, GameWallCollisionEvent.WallSide wallSide, Vector unstuckPosition)
     {
         GameWallCollisionEvent collEvent = new GameWallCollisionEvent();
-        collEvent.target = other;
+        collEvent.target = target;
         collEvent.referrer = this;
         collEvent.collisionWithSide = wallSide;
         collEvent.unstuckPosition = unstuckPosition;

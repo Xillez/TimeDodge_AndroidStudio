@@ -1,6 +1,6 @@
 package com.example.timedodge.game.event.events;
 
-import com.example.timedodge.game.Public;
+import com.example.timedodge.game.ecs.Entity;
 import com.example.timedodge.game.event.GameEvent;
 import com.example.timedodge.utils.Vector;
 

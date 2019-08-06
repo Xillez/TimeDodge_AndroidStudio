@@ -55,7 +55,9 @@ public class GameManager extends Thread implements SensorEventListener
     private void gameCreate()
     {
         Entity ball = new Entity();
-        ball.addComponent(new Graphics());
+        Graphics playerGraphics = new Graphics();
+        playerGraphics.isPlayer = true;
+        ball.addComponent(playerGraphics);
         ball.addComponent(new PlayerController());
         ball.addComponent(new Physics());
         ball.addComponent(new CollisionCircle());
