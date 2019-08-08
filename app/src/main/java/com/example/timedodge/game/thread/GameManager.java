@@ -33,6 +33,7 @@ public class GameManager extends Thread implements SensorEventListener
     private SurfaceHolder surfaceHolder;
     private GameView gameView;
     private volatile boolean running = true;
+    private volatile boolean paused = false;
     private Vector tiltValues = new Vector(0, 0);
 
     private Context context;
@@ -109,6 +110,10 @@ public class GameManager extends Thread implements SensorEventListener
 
         // Handle spawning of entities.
         Public.spawnManager.update(elapsed, tiltValues);
+
+        // Skip updating if game is paused
+        if (!paused)
+            return;
 
         // Update entities
         try {
@@ -198,6 +203,11 @@ public class GameManager extends Thread implements SensorEventListener
     public void shutdown()
     {
         this.running = false;
+    }
+
+    public void pause(boolean pause)
+    {
+        this.paused = pause;
     }
 
     public ArrayList<Entity> getEntities()

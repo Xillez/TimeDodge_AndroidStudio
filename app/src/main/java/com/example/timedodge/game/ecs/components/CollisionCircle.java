@@ -15,6 +15,8 @@ import com.example.timedodge.game.event.events.GameWallCollisionEvent;
 import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Vector;
 
+import java.util.ArrayList;
+
 public class CollisionCircle extends Collision
 {
     private boolean backgroundCollision = true;
@@ -73,11 +75,13 @@ public class CollisionCircle extends Collision
             {
                 Log.d(Logging.LOG_DEBUG_TAG, "REE_DEBRIS COLLISION!");
                 Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
+                Physics otherPhysics = (Physics) otherParent.getComponentByType(Physics.class);
                 if (parentPhysics != null)
                 {
-                    Vector unstuckPosition = pos.sub(otherPos).normalize().multi((size.x + otherSize.x) / 2.0f + 0.001f).add(otherPos);
+                    /*Vector unstuckPosition = pos.sub(otherPos).normalize().multi((size.x + otherSize.x) / 2.0f + 0.001f).add(otherPos);
                     Vector intersectionPoint = new Vector(pos.x + (diff.x / 2.0f), pos.y + (diff.y / 2.0f));
-                    this.triggerEntityCollisionEvent(parentPhysics, otherParent, intersectionPoint, unstuckPosition);
+                    this.triggerEntityCollisionEvent(parentPhysics, otherParent, intersectionPoint, unstuckPosition);*/
+                    this.triggerEntityCollisionEvent(parentPhysics, pos.sub(otherPos).multi(0.95f));
                 }
             }
         }
@@ -150,15 +154,14 @@ public class CollisionCircle extends Collision
         super.destroy();
     }
 
-    public void triggerEntityCollisionEvent(GameEventListener target, Entity otherParentEntity, Vector intersectionPoint, Vector unstuckPosition)
+    public void triggerEntityCollisionEvent(GameEventListener target, Vector deflectionForce)
     {
         GameEntityCollisionEvent collEvent = new GameEntityCollisionEvent();
         collEvent.target = target;
         collEvent.referrer = this;
-        collEvent.otherParent = otherParentEntity;
-
-        collEvent.intersection = intersectionPoint;
-        collEvent.unstuckPosition = unstuckPosition;
+        collEvent.deflecionForce = deflectionForce;
+        //collEvent.intersection = intersectionPoint;
+        //collEvent.unstuckPosition = unstuckPosition;
         Public.gameEventHandler.registerEvent(collEvent);
     }
 

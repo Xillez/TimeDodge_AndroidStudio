@@ -82,17 +82,12 @@ public class Physics extends Component implements GameEventListener
         // Entity to entity collision
         if (event instanceof GameEntityCollisionEvent)
         {
+            GameEntityCollisionEvent entityCollisionEvent = (GameEntityCollisionEvent) event;
             // Unstuck my self
-            parentTransform.getPosition().set(((GameEntityCollisionEvent) event).unstuckPosition);
+           //parentTransform.getPosition().set(((GameEntityCollisionEvent) event).unstuckPosition);
 
             // Add bounce of other entity + removal of energy (hence 0.75 instead of 1)
-            Transform otherTransform = (Transform) event.otherParent.getComponentByType(Transform.class);
-            if (otherTransform != null)
-            {
-                this.velocity.addTo(parentTransform.getPosition().sub(otherTransform.getPosition()));
-                this.velocity.multiTo(0.75f);
-            }
-
+            this.velocity.addTo(entityCollisionEvent.deflecionForce);
         }
         // Entity to wall collision
         else if (event instanceof GameWallCollisionEvent)

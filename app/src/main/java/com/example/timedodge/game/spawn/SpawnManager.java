@@ -2,7 +2,6 @@ package com.example.timedodge.game.spawn;
 
 import android.graphics.Canvas;
 import android.os.CountDownTimer;
-import android.util.Log;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Entity;
@@ -10,7 +9,6 @@ import com.example.timedodge.game.ecs.components.CollisionCircle;
 import com.example.timedodge.game.ecs.components.Graphics;
 import com.example.timedodge.game.ecs.components.Physics;
 import com.example.timedodge.game.ecs.components.Transform;
-import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Vector;
 
 import java.util.Random;
@@ -27,7 +25,7 @@ public class SpawnManager
 
         @Override
         public void onFinish() {
-            if (shouldSpawn)
+            if (shouldSpawn && Public.gameManager.getEntities().size() < 2)
                 spawnEntity();
             cdt.cancel();
             cdt.start();
@@ -65,6 +63,11 @@ public class SpawnManager
     public void destroy()
     {
         //
+    }
+
+    public void pause(boolean pause)
+    {
+        this.shouldSpawn = pause;
     }
 
     private void spawnEntity()
