@@ -128,7 +128,7 @@ public class GameActivity extends AppCompatActivity
 /*
 TODO: List below!
 X- Fix broken player.
-- Fix broken debris to debris collision detection or handling.
+X- Fix broken debris to debris collision detection or handling.
 - Remove debris wall collision.
 - Re-enable vibration and sound for player-wall collision.
 - Add points giving, pick-up-able points and close-encounter bonuses!
