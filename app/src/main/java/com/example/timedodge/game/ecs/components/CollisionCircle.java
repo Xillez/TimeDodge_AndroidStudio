@@ -56,7 +56,7 @@ public class CollisionCircle extends Collision
             return;
         }
 
-        Log.d(Logging.LOG_DEBUG_TAG, "Nr interactions this frame: " + comps.size());
+        Log.d(Logging.LOG_DEBUG_TAG, "Nr interactions for component: " + comps.size());
 
         // Run through all collision components on canvas
         for (Component comp : comps)
