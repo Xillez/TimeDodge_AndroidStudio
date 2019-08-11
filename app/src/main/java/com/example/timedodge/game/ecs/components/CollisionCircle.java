@@ -88,10 +88,11 @@ public class CollisionCircle extends Collision
                 Physics otherPhysics = (Physics) otherParent.getComponentByType(Physics.class);
                 if (parentPhysics != null)
                 {
-                    /*Vector unstuckPosition = pos.sub(otherPos).normalize().multi((size.x + otherSize.x) / 2.0f + 0.001f).add(otherPos);
-                    Vector intersectionPoint = new Vector(pos.x + (diff.x / 2.0f), pos.y + (diff.y / 2.0f));
-                    this.triggerEntityCollisionEvent(parentPhysics, otherParent, intersectionPoint, unstuckPosition);*/
-                    this.triggerEntityCollisionEvent(parentPhysics, pos.sub(otherPos).multi(0.95f));
+                    // Get direction of deflection
+                    Vector deflectionForce = pos.sub(otherPos).normalize();
+                    // Set the energy of the bounce collision - 25%
+                    deflectionForce.multiTo(parentPhysics.getVelocity().add(otherPhysics.getVelocity().multi(-1.0f)).length() * 0.75f);
+                    this.triggerEntityCollisionEvent(parentPhysics, deflectionForce);
                 }
             }
         }
