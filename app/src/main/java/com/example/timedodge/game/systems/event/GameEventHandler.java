@@ -1,8 +1,4 @@
-package com.example.timedodge.game.event;
-
-import android.util.Log;
-
-import com.example.timedodge.utils.Logging;
+package com.example.timedodge.game.systems.event;
 
 import java.util.ArrayList;
 import java.util.PriorityQueue;

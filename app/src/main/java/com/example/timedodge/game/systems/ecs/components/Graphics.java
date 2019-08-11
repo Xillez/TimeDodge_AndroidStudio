@@ -1,11 +1,11 @@
-package com.example.timedodge.game.ecs.components;
+package com.example.timedodge.game.systems.ecs.components;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 
-import com.example.timedodge.game.ecs.Component;
+import com.example.timedodge.game.systems.ecs.Component;
 import com.example.timedodge.utils.Vector;
 
 public class Graphics extends Component

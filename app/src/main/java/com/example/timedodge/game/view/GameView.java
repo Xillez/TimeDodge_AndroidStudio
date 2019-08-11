@@ -9,7 +9,7 @@ import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import com.example.timedodge.game.thread.GameManager;
+import com.example.timedodge.game.systems.thread.GameManager;
 import com.example.timedodge.game.Public;
 import com.example.timedodge.utils.Logging;
 

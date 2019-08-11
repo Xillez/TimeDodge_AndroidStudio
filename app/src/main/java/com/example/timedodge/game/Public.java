@@ -1,8 +1,8 @@
 package com.example.timedodge.game;
 
-import com.example.timedodge.game.event.GameEventHandler;
-import com.example.timedodge.game.spawn.SpawnManager;
-import com.example.timedodge.game.thread.GameManager;
+import com.example.timedodge.game.systems.event.GameEventHandler;
+import com.example.timedodge.game.systems.spawn.SpawnManager;
+import com.example.timedodge.game.systems.thread.GameManager;
 import com.example.timedodge.utils.Vector;
 
 public class Public

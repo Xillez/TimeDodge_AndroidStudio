@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.timedodge.R;
-import com.example.timedodge.game.thread.GameManager;
+import com.example.timedodge.game.systems.thread.GameManager;
 import com.example.timedodge.game.Public;
 import com.example.timedodge.utils.Tools;
 

@@ -1,4 +1,4 @@
-package com.example.timedodge.game.thread;
+package com.example.timedodge.game.systems.thread;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,13 +12,13 @@ import android.widget.TextView;
 
 import com.example.timedodge.R;
 import com.example.timedodge.game.Public;
-import com.example.timedodge.game.ecs.Component;
-import com.example.timedodge.game.ecs.Entity;
-import com.example.timedodge.game.ecs.components.CollisionCircle;
-import com.example.timedodge.game.ecs.components.Graphics;
-import com.example.timedodge.game.ecs.components.Physics;
-import com.example.timedodge.game.ecs.components.PlayerController;
-import com.example.timedodge.game.ecs.components.Transform;
+import com.example.timedodge.game.systems.ecs.Component;
+import com.example.timedodge.game.systems.ecs.Entity;
+import com.example.timedodge.game.systems.ecs.components.CollisionCircle;
+import com.example.timedodge.game.systems.ecs.components.Graphics;
+import com.example.timedodge.game.systems.ecs.components.Physics;
+import com.example.timedodge.game.systems.ecs.components.PlayerController;
+import com.example.timedodge.game.systems.ecs.components.Transform;
 import com.example.timedodge.game.view.GameCanvas;
 import com.example.timedodge.game.view.GameView;
 import com.example.timedodge.utils.Logging;
@@ -27,14 +27,14 @@ import com.example.timedodge.utils.Vector;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
-import java.util.function.Function;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameManager extends Thread implements SensorEventListener
 {
     private int nextEntityId = 0;
     private SurfaceHolder surfaceHolder;
     private GameView gameView;
-    private volatile boolean running = true;
+    private volatile AtomicBoolean running = new AtomicBoolean(true);
     private volatile boolean paused = false;
     private Vector tiltValues = new Vector(0, 0);
 
@@ -107,12 +107,14 @@ public class GameManager extends Thread implements SensorEventListener
             return;
         }
 
+        // Skip updating if game is paused
+        if (paused) {
+            Log.d(Logging.LOG_DEBUG_TAG, "GAMEMANAGER PAUSED");
+            return;
+        }
+
         // Handle spawning of entities.
         Public.spawnManager.update(elapsed, tiltValues);
-
-        // Skip updating if game is paused
-        if (!paused)
-            return;
 
         // Update entities
         try {
@@ -131,7 +133,7 @@ public class GameManager extends Thread implements SensorEventListener
         Public.gameEventHandler.handleEvents();
 
         // If running, give up cpu, if not continue for stopping
-        if (running)
+        if (running.get())
         {
             Tools.sleepRestOfFrame(elapsed, "Game thread", (Activity) this.context, ((Activity) this.context).findViewById(R.id.game_debuginfo_gamethread_sleeptime));
         }
@@ -193,7 +195,7 @@ public class GameManager extends Thread implements SensorEventListener
 
         this.gameCreate();
 
-        while (running)
+        while (running.get())
         {
             this.gameUpdate(tiltValues);
             //this.gameDraw();
@@ -204,7 +206,7 @@ public class GameManager extends Thread implements SensorEventListener
 
     public void shutdown()
     {
-        this.running = false;
+        this.running.set(false);
     }
 
     public void pause(boolean pause)

@@ -1,4 +1,4 @@
-package com.example.timedodge.game.event;
+package com.example.timedodge.game.systems.event;
 
 public interface GameEventListener
 {

@@ -1,12 +1,9 @@
-package com.example.timedodge.game.ecs.components;
+package com.example.timedodge.game.systems.ecs.components;
 
 import android.graphics.Canvas;
-import android.hardware.SensorEvent;
 
 import com.example.timedodge.game.Public;
-import com.example.timedodge.game.ecs.Component;
-import com.example.timedodge.game.ecs.Entity;
-import com.example.timedodge.utils.Tools;
+import com.example.timedodge.game.systems.ecs.Component;
 import com.example.timedodge.utils.Vector;
 
 public class Transform extends Component

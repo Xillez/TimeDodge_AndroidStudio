@@ -1,14 +1,14 @@
-package com.example.timedodge.game.spawn;
+package com.example.timedodge.game.systems.spawn;
 
 import android.graphics.Canvas;
 import android.os.CountDownTimer;
 
 import com.example.timedodge.game.Public;
-import com.example.timedodge.game.ecs.Entity;
-import com.example.timedodge.game.ecs.components.CollisionCircle;
-import com.example.timedodge.game.ecs.components.Graphics;
-import com.example.timedodge.game.ecs.components.Physics;
-import com.example.timedodge.game.ecs.components.Transform;
+import com.example.timedodge.game.systems.ecs.Entity;
+import com.example.timedodge.game.systems.ecs.components.CollisionCircle;
+import com.example.timedodge.game.systems.ecs.components.Graphics;
+import com.example.timedodge.game.systems.ecs.components.Physics;
+import com.example.timedodge.game.systems.ecs.components.Transform;
 import com.example.timedodge.utils.Vector;
 
 import java.util.Random;
@@ -17,15 +17,19 @@ public class SpawnManager
 {
     private float spawnDelaySec = 5.0f;
     private boolean shouldSpawn = true;
-    private CountDownTimer cdt = new CountDownTimer((long) this.spawnDelaySec * 1000, 1000) {
+    private final int MAX_ENTITY_COUNT = 50;
+    private CountDownTimer cdt = new CountDownTimer((long) this.spawnDelaySec * 1000, 1000)
+    {
         @Override
-        public void onTick(long millisUntilFinished) {
+        public void onTick(long millisUntilFinished)
+        {
 
         }
 
         @Override
-        public void onFinish() {
-            if (shouldSpawn && Public.gameManager.getEntities().size() < 2)
+        public void onFinish()
+        {
+            if (shouldSpawn && Public.gameManager.getEntities().size() < MAX_ENTITY_COUNT)
                 spawnEntity();
             cdt.cancel();
             cdt.start();
@@ -79,7 +83,7 @@ public class SpawnManager
         Physics entityPhysics = new Physics();
         entity.addComponent(entityPhysics);
         CollisionCircle collision = new CollisionCircle();
-        collision.setBackgroundCollision(true);
+        collision.setBackgroundCollision(false);
         entity.addComponent(collision);
 
         float radius = 250;//Public.screenSize.x;

@@ -1,15 +1,15 @@
-package com.example.timedodge.game.ecs.components;
+package com.example.timedodge.game.systems.ecs.components;
 
 import android.graphics.Canvas;
-import android.hardware.SensorEvent;
 
-import com.example.timedodge.game.ecs.Component;
-import com.example.timedodge.utils.Tools;
+import com.example.timedodge.game.systems.ecs.Component;
 import com.example.timedodge.utils.Vector;
 
-public class PlayerController extends Component
+public class Collision extends Component
 {
-    public PlayerController()
+    // TODO: Make this use compute shaders! https://arm-software.github.io/opengl-es-sdk-for-android/compute_intro.html
+
+    public Collision()
     {
         super();
     }
@@ -24,14 +24,6 @@ public class PlayerController extends Component
     public void update(float dt, Vector tiltValues)
     {
         super.update(dt, tiltValues);
-
-        // Find parent physics, fail if none
-        Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
-        if (parentPhysics == null)
-            return;
-
-        // Set acceleration
-        parentPhysics.setAcceleration(tiltValues);
     }
 
     @Override
@@ -40,14 +32,13 @@ public class PlayerController extends Component
         super.draw(canvas);
     }
 
-    // OpenGL Version
+    // OpenGl Version
     /*@Override
     public void draw(int vertexBufferPosition, int colorPosition)
     {
         super.draw(vertexBufferPosition, colorPosition);
     }*/
 
-    @Override
     public void destroy()
     {
         super.destroy();

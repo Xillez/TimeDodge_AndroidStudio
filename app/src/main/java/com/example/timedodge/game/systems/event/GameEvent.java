@@ -1,9 +1,9 @@
-package com.example.timedodge.game.event;
+package com.example.timedodge.game.systems.event;
 
 import android.support.annotation.NonNull;
 
-import com.example.timedodge.game.ecs.Component;
-import com.example.timedodge.game.ecs.Entity;
+import com.example.timedodge.game.systems.ecs.Component;
+import com.example.timedodge.game.systems.ecs.Entity;
 
 public abstract class GameEvent implements Comparable
 {

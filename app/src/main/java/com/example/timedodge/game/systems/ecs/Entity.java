@@ -1,10 +1,10 @@
-package com.example.timedodge.game.ecs;
+package com.example.timedodge.game.systems.ecs;
 
 import android.graphics.Canvas;
 import android.util.Log;
 
-import com.example.timedodge.game.thread.GameManager;
-import com.example.timedodge.game.ecs.components.Transform;
+import com.example.timedodge.game.systems.thread.GameManager;
+import com.example.timedodge.game.systems.ecs.components.Transform;
 import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
@@ -15,6 +15,7 @@ public final class Entity implements GameManager.GameLifecycle
 {
     private int entityID = 0;
     private volatile ArrayList<Component> components = new ArrayList<>();
+    //private ArrayList<Tag>
 
     public Entity()
     {

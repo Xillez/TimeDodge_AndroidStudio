@@ -14,6 +14,7 @@ import com.example.timedodge.R;
 import com.example.timedodge.game.view.GameCanvas;
 import com.example.timedodge.game.Public;
 
+import static com.example.timedodge.utils.Logging.LOG_DEBUG_TAG;
 import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
 
 public class GameActivity extends AppCompatActivity
@@ -77,9 +78,26 @@ public class GameActivity extends AppCompatActivity
     }
 
     @Override
+    public void onBackPressed()
+    {
+        Public.spawnManager.destroy();
+        Public.gameManager.shutdown();
+
+        // Un-register sensor listener
+        Log.i(LOG_INFO_TAG, "App paused, un-registering sensor listener");
+        sensorManager.unregisterListener(Public.gameManager);
+
+        // Un-register sensor listener
+        /*Log.i(LOG_INFO_TAG, "App paused, releasing media listener");
+        mediaPlayer.release();*/
+
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onPause()
     {
-        super.onPause();
+        Log.d(LOG_DEBUG_TAG, "APP PAUSED");
 
         Public.spawnManager.pause(true);
         Public.gameManager.pause(true);
@@ -93,12 +111,13 @@ public class GameActivity extends AppCompatActivity
         mediaPlayer.release();*/
 
         //gameCanvas.stopPointGiving();
+        super.onPause();
     }
 
     @Override
     protected void onResume()
     {
-        super.onResume();
+        Log.d(LOG_DEBUG_TAG, "APP RESUMED");
 
         // Re-register sensor listener
         Log.i(LOG_INFO_TAG, "App un-paused, registering sensor listener");
@@ -108,11 +127,12 @@ public class GameActivity extends AppCompatActivity
         /*Log.i(LOG_INFO_TAG, "App un-paused, trying to get media player!");
         mediaPlayer = MediaPlayer.create(this, R.raw.boop);*/
 
-        Public.spawnManager.pause(true);
-        Public.gameManager.pause(true);
+        Public.spawnManager.pause(false);
+        Public.gameManager.pause(false);
 
         //canvas.setPrevTime(System.currentTimeMillis());
         //canvas.startPointGiving();
+        super.onResume();
     }
 
     @Override
@@ -129,7 +149,8 @@ public class GameActivity extends AppCompatActivity
 TODO: List below!
 X- Fix broken player.
 X- Fix broken debris to debris collision detection or handling.
-- Remove debris wall collision.
+X- Remove debris wall collision.
+X- Fix game thread shutdown on app exit.
 - Re-enable vibration and sound for player-wall collision.
 - Add points giving, pick-up-able points and close-encounter bonuses!
 - Implement RequiresComponent and ExecuteAfter annotation for better control over component dependencies and execution control.

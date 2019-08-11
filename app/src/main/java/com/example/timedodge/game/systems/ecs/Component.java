@@ -1,9 +1,8 @@
-package com.example.timedodge.game.ecs;
+package com.example.timedodge.game.systems.ecs;
 
 import android.graphics.Canvas;
 
-import com.example.timedodge.game.Public;
-import com.example.timedodge.game.thread.GameManager;
+import com.example.timedodge.game.systems.thread.GameManager;
 import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
