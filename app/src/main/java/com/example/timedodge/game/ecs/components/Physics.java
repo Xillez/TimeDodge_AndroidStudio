@@ -1,6 +1,7 @@
 package com.example.timedodge.game.ecs.components;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.ecs.Component;
@@ -8,7 +9,6 @@ import com.example.timedodge.game.event.GameEvent;
 import com.example.timedodge.game.event.GameEventListener;
 import com.example.timedodge.game.event.events.GameEntityCollisionEvent;
 import com.example.timedodge.game.event.events.GameWallCollisionEvent;
-import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
 public class Physics extends Component implements GameEventListener
@@ -50,6 +50,23 @@ public class Physics extends Component implements GameEventListener
     public void draw(Canvas canvas)
     {
         super.draw(canvas);
+
+        if (Public.DEBUG_MODE)
+        {
+            // Find parent transform, fail if none
+            Transform parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
+            if (parentTransform == null)
+                return;
+
+            Vector pos = parentTransform.getPosition();
+            Paint debugVelocityPaint = new Paint();
+            debugVelocityPaint.setColor(0xFFF5D040);
+            canvas.drawLine(pos.x, pos.y, pos.x + velocity.x, pos.y + velocity.y, debugVelocityPaint);
+
+            Paint debugAccPaint = new Paint();
+            debugAccPaint.setColor(0xFF0010BA);
+            canvas.drawLine(pos.x, pos.y, pos.x + (acceleration.x * 100.0f), pos.y + (acceleration.y * 100.0f), debugAccPaint);
+        }
     }
 
     // OpenGL Version
@@ -82,17 +99,12 @@ public class Physics extends Component implements GameEventListener
         // Entity to entity collision
         if (event instanceof GameEntityCollisionEvent)
         {
+            GameEntityCollisionEvent entityCollisionEvent = (GameEntityCollisionEvent) event;
             // Unstuck my self
-            parentTransform.getPosition().set(((GameEntityCollisionEvent) event).unstuckPosition);
+           //parentTransform.getPosition().set(((GameEntityCollisionEvent) event).unstuckPosition);
 
             // Add bounce of other entity + removal of energy (hence 0.75 instead of 1)
-            Transform otherTransform = (Transform) event.otherParent.getComponentByType(Transform.class);
-            if (otherTransform != null)
-            {
-                this.velocity.addTo(parentTransform.getPosition().sub(otherTransform.getPosition()));
-                this.velocity.multiTo(0.75f);
-            }
-
+            this.velocity.addTo(entityCollisionEvent.deflecionForce);
         }
         // Entity to wall collision
         else if (event instanceof GameWallCollisionEvent)

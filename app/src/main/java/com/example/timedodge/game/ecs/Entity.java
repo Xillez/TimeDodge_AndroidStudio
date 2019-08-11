@@ -6,18 +6,19 @@ import android.util.Log;
 import com.example.timedodge.game.thread.GameManager;
 import com.example.timedodge.game.ecs.components.Transform;
 import com.example.timedodge.utils.Logging;
+import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
 import java.util.ArrayList;
 
 public final class Entity implements GameManager.GameLifecycle
 {
-    private int nextCompId = 0;
+    private int entityID = 0;
     private volatile ArrayList<Component> components = new ArrayList<>();
 
     public Entity()
     {
-        //
+        this.entityID = Tools.getNewUID();
     }
 
     @Override
@@ -68,6 +69,11 @@ public final class Entity implements GameManager.GameLifecycle
         {
             component.destroy();
         }
+    }
+
+    public int getID()
+    {
+        return entityID;
     }
 
     public ArrayList<Component> getComponents()

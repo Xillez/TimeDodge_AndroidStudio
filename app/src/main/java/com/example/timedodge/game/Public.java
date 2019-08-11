@@ -7,6 +7,8 @@ import com.example.timedodge.utils.Vector;
 
 public class Public
 {
+    public static final boolean DEBUG_MODE = true;
+
     public static Vector screenSize = new Vector(0, 0);
     public final static int MARGIN = 5;
     public static GameManager gameManager = null;

@@ -18,6 +18,7 @@ import com.example.timedodge.game.ecs.components.CollisionCircle;
 import com.example.timedodge.game.ecs.components.Graphics;
 import com.example.timedodge.game.ecs.components.Physics;
 import com.example.timedodge.game.ecs.components.PlayerController;
+import com.example.timedodge.game.ecs.components.Transform;
 import com.example.timedodge.game.view.GameCanvas;
 import com.example.timedodge.game.view.GameView;
 import com.example.timedodge.utils.Logging;
@@ -30,9 +31,11 @@ import java.util.function.Function;
 
 public class GameManager extends Thread implements SensorEventListener
 {
+    private int nextEntityId = 0;
     private SurfaceHolder surfaceHolder;
     private GameView gameView;
     private volatile boolean running = true;
+    private volatile boolean paused = false;
     private Vector tiltValues = new Vector(0, 0);
 
     private Context context;
@@ -104,11 +107,12 @@ public class GameManager extends Thread implements SensorEventListener
             return;
         }
 
-        // Handle events
-        Public.gameEventHandler.handleEvents();
-
         // Handle spawning of entities.
         Public.spawnManager.update(elapsed, tiltValues);
+
+        // Skip updating if game is paused
+        if (!paused)
+            return;
 
         // Update entities
         try {
@@ -122,6 +126,9 @@ public class GameManager extends Thread implements SensorEventListener
             e.printStackTrace();
             return;
         }
+
+        // Handle events
+        Public.gameEventHandler.handleEvents();
 
         // If running, give up cpu, if not continue for stopping
         if (running)
@@ -200,6 +207,11 @@ public class GameManager extends Thread implements SensorEventListener
         this.running = false;
     }
 
+    public void pause(boolean pause)
+    {
+        this.paused = pause;
+    }
+
     public ArrayList<Entity> getEntities()
     {
         return this.entities;
@@ -226,14 +238,47 @@ public class GameManager extends Thread implements SensorEventListener
         }
     }
 
-    public ArrayList<Component> getAllComponentsOfType(Class<CollisionCircle> clazz)
+    public ArrayList<Component> getAllComponentsOfType(Class<CollisionCircle> clazz, Entity exclude)
     {
         ArrayList<Component> components = new ArrayList<>();
         for (Entity entity : this.entities)
         {
+            // Entity to exclude
+            if (exclude != null)
+                if (entity.getID() == exclude.getID())
+                    continue;
             for (Component comp : entity.getComponents())
                 if (comp.getClass().equals(clazz)) components.add(comp);
         }
+        return components;
+    }
+
+    public ArrayList<Component> getAllComponentsOfTypeNearEntity(Class<CollisionCircle> clazz, Entity exclude, Vector pos, float distance)
+    {
+        // Can't get components from invalid position or distance
+        if (pos == null || distance <= 0.0f)
+             return null;
+
+        ArrayList<Component> components = new ArrayList<>();
+        for (Entity other : this.entities)
+        {
+            // Entity to exclude
+            if (exclude != null)
+                if (other.getID() == exclude.getID())
+                    continue;
+
+            Vector otherPos = ((Transform) other.getComponentByType(Transform.class)).getPosition();
+            if (otherPos == null)
+                return null;
+
+            // If other entity is close to pos
+            if (pos.sub(otherPos).length() <= distance)
+            {
+                for (Component comp : other.getComponents())
+                    if (comp.getClass().equals(clazz)) components.add(comp);
+            }
+        }
+
         return components;
     }
 

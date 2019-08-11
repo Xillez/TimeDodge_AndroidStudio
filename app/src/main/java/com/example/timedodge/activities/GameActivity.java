@@ -81,9 +81,8 @@ public class GameActivity extends AppCompatActivity
     {
         super.onPause();
 
-
-        Public.gameManager.shutdown();
-        Public.spawnManager.destroy();
+        Public.spawnManager.pause(true);
+        Public.gameManager.pause(true);
 
         // Un-register sensor listener
         Log.i(LOG_INFO_TAG, "App paused, un-registering sensor listener");
@@ -108,6 +107,9 @@ public class GameActivity extends AppCompatActivity
         // Make a media play to play bloop sound
         /*Log.i(LOG_INFO_TAG, "App un-paused, trying to get media player!");
         mediaPlayer = MediaPlayer.create(this, R.raw.boop);*/
+
+        Public.spawnManager.pause(true);
+        Public.gameManager.pause(true);
 
         //canvas.setPrevTime(System.currentTimeMillis());
         //canvas.startPointGiving();

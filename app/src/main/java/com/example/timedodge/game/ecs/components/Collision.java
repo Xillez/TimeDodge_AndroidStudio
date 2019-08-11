@@ -1,7 +1,6 @@
 package com.example.timedodge.game.ecs.components;
 
 import android.graphics.Canvas;
-import android.hardware.SensorEvent;
 
 import com.example.timedodge.game.ecs.Component;
 import com.example.timedodge.utils.Vector;
@@ -40,7 +39,6 @@ public class Collision extends Component
         super.draw(vertexBufferPosition, colorPosition);
     }*/
 
-    @Override
     public void destroy()
     {
         super.destroy();
