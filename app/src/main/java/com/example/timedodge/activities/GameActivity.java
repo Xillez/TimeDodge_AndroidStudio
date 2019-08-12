@@ -151,45 +151,14 @@ X- Fix broken player.
 X- Fix broken debris to debris collision detection or handling.
 X- Remove debris wall collision.
 X- Fix game thread shutdown on app exit.
-- Re-enable vibration and sound for player-wall collision.
+- Add debris re-spawn on screen exit.
 - Add points giving, pick-up-able points and close-encounter bonuses!
 - Implement RequiresComponent and ExecuteAfter annotation for better control over component dependencies and execution control.
 - Implement game layer and entity tags on entities to allow for customizable sorting/filtering (XML configuration for layer name????).
 - Add spawn behaviour configuration xmls to resources and implement loading of these.
+- Re-enable vibration and sound for player-wall collision.
 
 New Features:
-- Effects:
-    - Limit to x amount at a time????
-    - non-distinguishable vs. distinguishable??
-    - Types:
-        - Good:
-            - Free:
-                - Shield (blocks debris but not walls).
-                - Smaller debris.
-                - Bouncy-ness decrease for debris.
-            - Paid:
-                - SLOW-MO!!
-                - Radar (spawn prediction, RARE).
-                - Safe walls (timed effect where walls are safe to bounce off).
-                - Additional helper ball:
-                    - Picks up:
-                        - Points
-                        - Pick-up-points
-                        - Bonuses
-                    - Ignores:
-                        - Walls (death)
-                        - Effects
-                    - Controlled by the player
-        - Bad:
-            - Free:
-                - Bigger debris.
-                - Bouncy-ness increase for debris
-                - Increased spawn rate of debris!
-                - Debris magnet (attracts nearby debris).
-            - Paid:
-                - FAST-MO (time speed-up)!
-                - Inverse controls (RARE).
-                - Fog of war (view blockade (circular) blocking for view of effects and debris).
 - Free version:
     - Saving of game state on exit and pause.
         - Database?? SharePreferences?? XML?? YAML?? JSON??
@@ -224,6 +193,38 @@ New Features:
         - Add and implement loading game mode configuration xmls.
     - Multiple maps:
         - Add and implement loading map configuration xmls.
+- Effects:
+    - Limit to x amount at a time????
+    - non-distinguishable vs. distinguishable??
+    - Types:
+        - Good:
+            - Free:
+                - Shield (blocks debris but not walls).
+                - Smaller debris.
+                - Bouncy-ness decrease for debris.
+            - Paid:
+                - SLOW-MO!!
+                - Radar (spawn prediction, RARE).
+                - Safe walls (timed effect where walls are safe to bounce off).
+                - Additional helper ball:
+                    - Picks up:
+                        - Points
+                        - Pick-up-points
+                        - Bonuses
+                    - Ignores:
+                        - Walls (death)
+                        - Effects
+                    - Controlled by the player
+        - Bad:
+            - Free:
+                - Bigger debris.
+                - Bouncy-ness increase for debris
+                - Increased spawn rate of debris!
+                - Debris magnet (attracts nearby debris).
+            - Paid:
+                - FAST-MO (time speed-up)!
+                - Inverse controls (RARE).
+                - Fog of war (view blockade (circular) blocking for view of effects and debris).
 
 Optimizations:
 - Have collision detections use compute shaders (https://arm-software.github.io/opengl-es-sdk-for-android/compute_intro.html).
