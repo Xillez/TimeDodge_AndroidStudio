@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.timedodge.R;
 import com.example.timedodge.game.Public;
+import com.example.timedodge.game.layers.Layers;
 import com.example.timedodge.game.systems.ecs.Component;
 import com.example.timedodge.game.systems.ecs.Entity;
 import com.example.timedodge.game.systems.ecs.components.CollisionCircle;
@@ -19,6 +20,7 @@ import com.example.timedodge.game.systems.ecs.components.Graphics;
 import com.example.timedodge.game.systems.ecs.components.Physics;
 import com.example.timedodge.game.systems.ecs.components.PlayerController;
 import com.example.timedodge.game.systems.ecs.components.Transform;
+import com.example.timedodge.game.tags.Tags;
 import com.example.timedodge.game.view.GameCanvas;
 import com.example.timedodge.game.view.GameView;
 import com.example.timedodge.utils.Logging;
@@ -58,6 +60,8 @@ public class GameManager extends Thread implements SensorEventListener
     private void gameCreate()
     {
         Entity ball = new Entity();
+        ball.addTag(Tags.PLAYER_TAG);
+        ball.addLayer(Layers.PLAYER_LAYER);
         Graphics playerGraphics = new Graphics();
         playerGraphics.isPlayer = true;
         ball.addComponent(playerGraphics);
@@ -282,6 +286,48 @@ public class GameManager extends Thread implements SensorEventListener
         }
 
         return components;
+    }
+
+    public ArrayList<Entity> getAllEntitiesWithTag(String tag, Entity exclude)
+    {
+        ArrayList<Entity> entitiesResult = new ArrayList<>();
+        for (Entity entity : this.entities)
+        {
+            // Entity to exclude
+            if (exclude != null)
+                if (entity.getID() == exclude.getID())
+                    continue;
+            if (entity.hasTag(tag)) entitiesResult.add(entity);
+        }
+        return entitiesResult;
+    }
+
+    public ArrayList<Entity> getAllEntitiesInLayer(int layer, Entity exclude)
+    {
+        ArrayList<Entity> entitiesResult = new ArrayList<>();
+        for (Entity entity : this.entities)
+        {
+            // Entity to exclude
+            if (exclude != null)
+                if (entity.getID() == exclude.getID())
+                    continue;
+            if (entity.inLayer(layer)) entitiesResult.add(entity);
+        }
+        return entitiesResult;
+    }
+
+    public ArrayList<Entity> getAllEntitiesInLayerWithTag(String tag, int layer, Entity exclude)
+    {
+        ArrayList<Entity> entitiesResult = new ArrayList<>();
+        for (Entity entity : this.entities)
+        {
+            // Entity to exclude
+            if (exclude != null)
+                if (entity.getID() == exclude.getID())
+                    continue;
+            if (entity.inLayer(layer) && entity.hasTag(tag)) entitiesResult.add(entity);
+        }
+        return entitiesResult;
     }
 
     public void triggerDraw(Canvas canvas)

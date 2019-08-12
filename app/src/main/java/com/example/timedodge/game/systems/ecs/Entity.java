@@ -15,7 +15,8 @@ public final class Entity implements GameManager.GameLifecycle
 {
     private int entityID = 0;
     private volatile ArrayList<Component> components = new ArrayList<>();
-    //private ArrayList<Tag>
+    private ArrayList<String> tags = new ArrayList<>();
+    private ArrayList<Integer> layers = new ArrayList<>();
 
     public Entity()
     {
@@ -110,5 +111,47 @@ public final class Entity implements GameManager.GameLifecycle
         Transform transform = (Transform) this.getComponentByType(Transform.class);
         if (transform != null)
             transform.setPosition(pos);
+    }
+
+    public boolean hasTag(String tag)
+    {
+        return tags.contains(tag);
+    }
+
+    public ArrayList<String> getTags()
+    {
+        return this.tags;
+    }
+
+    public void addTag(String tag)
+    {
+        if (this.tags.contains(tag))
+            this.tags.add(tag);
+    }
+
+    public void removeTag(String tag)
+    {
+        this.tags.remove(tag);
+    }
+
+    public boolean inLayer(int layer)
+    {
+        return layers.contains(layer);
+    }
+
+    public ArrayList<Integer> getLayers()
+    {
+        return this.layers;
+    }
+
+    public void addLayer(int layer)
+    {
+        if (this.layers.contains(layer))
+            this.layers.add(layer);
+    }
+
+    public void removeLayer(int layer)
+    {
+        this.layers.remove(layer);
     }
 }

@@ -4,11 +4,13 @@ import android.graphics.Canvas;
 import android.os.CountDownTimer;
 
 import com.example.timedodge.game.Public;
+import com.example.timedodge.game.layers.Layers;
 import com.example.timedodge.game.systems.ecs.Entity;
 import com.example.timedodge.game.systems.ecs.components.CollisionCircle;
 import com.example.timedodge.game.systems.ecs.components.Graphics;
 import com.example.timedodge.game.systems.ecs.components.Physics;
 import com.example.timedodge.game.systems.ecs.components.Transform;
+import com.example.timedodge.game.tags.Tags;
 import com.example.timedodge.utils.Vector;
 
 import java.util.Random;
@@ -77,6 +79,9 @@ public class SpawnManager
     private void spawnEntity()
     {
         Entity entity = new Entity();
+        entity.addTag(Tags.DEBRIS_TAG);
+        entity.addLayer(Layers.DEBRIS_LAYER);
+
         Transform entityTransform = new Transform();
         entity.addComponent(entityTransform);
         entity.addComponent(new Graphics());
