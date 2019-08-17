@@ -2,6 +2,7 @@ package com.example.timedodge.game.systems.ecs.components;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.systems.ecs.Component;
@@ -9,12 +10,16 @@ import com.example.timedodge.game.systems.event.GameEvent;
 import com.example.timedodge.game.systems.event.GameEventListener;
 import com.example.timedodge.game.systems.event.events.GameEntityCollisionEvent;
 import com.example.timedodge.game.systems.event.events.GameWallCollisionEvent;
+import com.example.timedodge.utils.Logging;
+import com.example.timedodge.utils.Time;
 import com.example.timedodge.utils.Vector;
 
 public class Physics extends Component implements GameEventListener
 {
     private Vector velocity = new Vector(0,0);
     private Vector acceleration = new Vector(0,0);
+
+    private Transform parentTransform = null;
 
     public Physics()
     {
@@ -26,24 +31,25 @@ public class Physics extends Component implements GameEventListener
     {
         super.create();
 
+        this.parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
+
         Public.gameEventHandler.registerListener(this);
     }
 
     @Override
-    public void update(float dt, Vector tiltValues)
+    public void update()
     {
-        super.update(dt, tiltValues);
+        super.update();
 
-        // Find parent transform, fail if none
-        Transform parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
-        if (parentTransform == null)
+        // No parent transform found, abort
+        if (this.parentTransform == null)
             return;
 
         // Update velocity
         this.velocity.addTo(this.acceleration);
 
         // Update position
-        parentTransform.setPosition(parentTransform.getPosition().x + this.velocity.x * dt, parentTransform.getPosition().y + this.velocity.y * dt);
+        this.parentTransform.getPosition().addTo(this.velocity.multi(Time.getDeltaTime()));
     }
 
     @Override
@@ -53,19 +59,18 @@ public class Physics extends Component implements GameEventListener
 
         if (Public.DEBUG_MODE)
         {
-            // Find parent transform, fail if none
-            Transform parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
-            if (parentTransform == null)
+            // No parent transform found, abort
+            if (this.parentTransform == null)
                 return;
 
-            Vector pos = parentTransform.getPosition();
+            Vector pos = this.parentTransform.getPosition();
             Paint debugVelocityPaint = new Paint();
             debugVelocityPaint.setColor(0xFFF5D040);
-            canvas.drawLine(pos.x, pos.y, pos.x + velocity.x, pos.y + velocity.y, debugVelocityPaint);
+            canvas.drawLine(pos.x, pos.y, pos.x + this.velocity.x, pos.y + this.velocity.y, debugVelocityPaint);
 
             Paint debugAccPaint = new Paint();
             debugAccPaint.setColor(0xFF0010BA);
-            canvas.drawLine(pos.x, pos.y, pos.x + (acceleration.x * 100.0f), pos.y + (acceleration.y * 100.0f), debugAccPaint);
+            canvas.drawLine(pos.x, pos.y, pos.x + (this.acceleration.x * 100.0f), pos.y + (this.acceleration.y * 100.0f), debugAccPaint);
         }
     }
 
@@ -91,9 +96,8 @@ public class Physics extends Component implements GameEventListener
     @Override
     public void onEvent(GameEvent event)
     {
-        // Find parent transform, fail if none
-        Transform parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
-        if (parentTransform == null)
+        // No parent transform found, abort
+        if (this.parentTransform == null)
             return;
 
         // Entity to entity collision

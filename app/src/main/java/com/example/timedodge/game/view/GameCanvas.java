@@ -5,12 +5,15 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.timedodge.R;
 import com.example.timedodge.game.systems.thread.GameManager;
 import com.example.timedodge.game.Public;
+import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Tools;
 
 public class GameCanvas extends View
@@ -51,21 +54,25 @@ public class GameCanvas extends View
         this.lastSysTime = currentSysTime;
 
         // Skip sleeping
-        if (!this.firstFrame)
+        if (this.firstFrame)
         {
-            // Update debug screen every 5 frames.
-            if (this.framesSinceDebugUpdate >= 25) {
-                ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_fps)).setText(String.format("FPS: %f", ( 1.0f / elapsed)));
-                this.framesSinceDebugUpdate = 0;
-            }
-
-            Public.gameManager.triggerDraw(canvas);
-
-            Tools.sleepRestOfFrame(elapsed, "UI Thread", (Activity) this.context, findViewById(R.id.game_debuginfo_uithread_sleeptime));
+            this.firstFrame = false;
+            return;
         }
 
-        if (this.firstFrame)
-            this.firstFrame = false;
+            // Update debug screen every 5 frames.
+        if (this.framesSinceDebugUpdate >= 5) {
+            ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_fps)).setText(String.format("FPS: %f", ( 1.0f / elapsed)));
+            Log.d(Logging.LOG_DEBUG_TAG, String.format("FPS: %f", ( 1.0f / elapsed)));
+            this.framesSinceDebugUpdate = 0;
+        }
 
+        Public.gameManager.triggerDraw(canvas);
+
+
+        Log.d(Logging.LOG_DEBUG_TAG, "DefaultDensity: " + DisplayMetrics.DENSITY_DEFAULT);
+        Log.d(Logging.LOG_DEBUG_TAG, "PixelDensity: " + Public.screenPixelDensity);
+
+        Tools.sleepRestOfFrame(elapsed, "UI thread", (Activity) this.context, ((Activity) this.context).findViewById(R.id.game_debuginfo_uithread_sleeptime));
     }
 }

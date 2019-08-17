@@ -24,7 +24,7 @@ public class Component implements GameManager.GameLifecycle
             this.created = true;
         }
 
-        public void update(float dt, Vector tiltValues)
+        public void update()
         {
             //Log.i(LOG_INFO_TAG, "Component update");
             if (!this.isCreated())

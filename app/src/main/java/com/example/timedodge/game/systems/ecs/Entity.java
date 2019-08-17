@@ -21,13 +21,12 @@ public final class Entity implements GameManager.GameLifecycle
     public Entity()
     {
         this.entityID = Tools.getNewUID();
+        this.addComponent(new Transform());
     }
 
     @Override
     public void create()
     {
-        this.addComponent(new Transform());
-
         for (Component component : this.components)
         {
             component.create();
@@ -35,13 +34,13 @@ public final class Entity implements GameManager.GameLifecycle
     }
 
     @Override
-    public void update(float dt, Vector tiltValues)
+    public void update()
     {
         for (Component component : this.components)
         {
             if (!component.isCreated())
                 component.create();
-            component.update(dt, tiltValues);
+            component.update();
         }
     }
 
@@ -125,7 +124,7 @@ public final class Entity implements GameManager.GameLifecycle
 
     public void addTag(String tag)
     {
-        if (this.tags.contains(tag))
+        if (!this.tags.contains(tag))
             this.tags.add(tag);
     }
 
@@ -146,7 +145,7 @@ public final class Entity implements GameManager.GameLifecycle
 
     public void addLayer(int layer)
     {
-        if (this.layers.contains(layer))
+        if (!this.layers.contains(layer))
             this.layers.add(layer);
     }
 

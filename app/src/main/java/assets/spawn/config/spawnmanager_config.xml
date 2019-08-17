@@ -1,0 +1,6 @@
+<config>
+    <spawn_behaviours>
+        <item name="spawn_player" />
+        <item name="spawn_debris"/>
+    </spawn_behaviours>
+</config>

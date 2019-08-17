@@ -1,62 +1,77 @@
 package com.example.timedodge.game.systems.spawn;
 
 import android.graphics.Canvas;
-import android.os.CountDownTimer;
+import android.util.Log;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.layers.Layers;
 import com.example.timedodge.game.systems.ecs.Entity;
 import com.example.timedodge.game.systems.ecs.components.CollisionCircle;
 import com.example.timedodge.game.systems.ecs.components.Graphics;
+import com.example.timedodge.game.systems.ecs.components.RespawnTrigger;
 import com.example.timedodge.game.systems.ecs.components.Physics;
 import com.example.timedodge.game.systems.ecs.components.Transform;
 import com.example.timedodge.game.tags.Tags;
+import com.example.timedodge.utils.Logging;
+import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
-import java.util.Random;
+import java.util.ArrayList;
 
-public class SpawnManager
-{
-    private float spawnDelaySec = 5.0f;
+public class SpawnManager {
+    private class SpawnedEntityInfo {
+        boolean enteredScreen = false;
+        Entity entity = null;
+
+        public SpawnedEntityInfo(Entity entity) {
+            this.entity = entity;
+        }
+    }
+
+    //private SpawnConfigLoader configLoader = null;
     private boolean shouldSpawn = true;
-    private final int MAX_ENTITY_COUNT = 50;
-    private CountDownTimer cdt = new CountDownTimer((long) this.spawnDelaySec * 1000, 1000)
+    public static final int MAX_ENTITY_COUNT = 2;
+    ArrayList<RespawnTrigger> respawnTriggers = new ArrayList<>();
+    private Transform playerTransform = null;
+
+    public SpawnManager(/*Context context*/)
     {
-        @Override
-        public void onTick(long millisUntilFinished)
-        {
-
-        }
-
-        @Override
-        public void onFinish()
-        {
-            if (shouldSpawn && Public.gameManager.getEntities().size() < MAX_ENTITY_COUNT)
-                spawnEntity();
-            cdt.cancel();
-            cdt.start();
-        }
-    };
-
-    private Random rnd = new Random();
-
-    public SpawnManager()
-    {
-        //
+        //this.configLoader = new SpawnConfigLoader(context);
     }
 
     public void create()
     {
-        cdt.start();
+        // TODO: Load spawn manager configuration xml !!NOT IMPLEMENTED, FUTURE UPDATE!!
+
+
+        ArrayList<Entity> players = Public.gameManager.getAllEntitiesWithTag(Tags.PLAYER_TAG, null);
+        this.playerTransform = (Transform) players.get(0).getComponentByType(Transform.class);
+
+        Public.timerManager.registerTimer(250, () -> spawnEntity());
     }
 
-    public void update(float dt, Vector tiltValues) // CANVAS SYSTEM --> , SensorEvent event)
+    public void update()
     {
-        //
+        Transform entityTransform = null;
+        Physics entityPhysics = null;
+        for (RespawnTrigger detector : this.respawnTriggers)
+        {
+            entityTransform = (Transform) detector.getParent().getComponentByType(Transform.class);
+            entityPhysics = (Physics) detector.getParent().getComponentByType(Physics.class);
+
+            Vector pos = entityTransform.getPosition();
+            //Log.d(Logging.LOG_DEBUG_TAG, String.format("%s | %s | %s", detector.hasEnteredScreen(), detector.isVisible(), detector.hasTimeExpired()));
+
+            if ((detector.hasEnteredScreen() && !detector.isVisible()) || detector.hasTimeExpired())
+            {
+                entityPhysics.setVelocity(this.playerTransform.getPosition().sub(pos).multi(0.75f));
+                entityTransform.setPosition(Tools.getRandomPointOnCircumference(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f), Public.screenSize.x));
+                detector.reset();
+            }
+        }
     }
 
-    public void draw(Canvas canvas)
-    {
+    public void draw(Canvas canvas) {
         //
     }
 
@@ -66,18 +81,20 @@ public class SpawnManager
         //
     }*/
 
-    public void destroy()
-    {
+    public void destroy() {
         //
     }
 
-    public void pause(boolean pause)
-    {
+    public void pause(boolean pause) {
         this.shouldSpawn = pause;
     }
 
-    private void spawnEntity()
-    {
+    public void spawnEntity() {
+        if (!(Public.gameManager.getEntities().size() < SpawnManager.MAX_ENTITY_COUNT))
+            return;
+
+        Log.d(Logging.LOG_DEBUG_TAG, "SPAWNED AN ENTITY!");
+
         Entity entity = new Entity();
         entity.addTag(Tags.DEBRIS_TAG);
         entity.addLayer(Layers.DEBRIS_LAYER);
@@ -90,12 +107,34 @@ public class SpawnManager
         CollisionCircle collision = new CollisionCircle();
         collision.setBackgroundCollision(false);
         entity.addComponent(collision);
+        RespawnTrigger respawnTrigger = new RespawnTrigger();
+        entity.addComponent(respawnTrigger);
 
-        float radius = 250;//Public.screenSize.x;
-        float angle = (rnd.nextInt(360) + 1) * (180.0f / (float) Math.PI);
-        Vector pos = new Vector((radius * (float) Math.cos(angle)) + (Public.screenSize.x / 2.0f), (radius * (float) Math.sin(angle)) + (Public.screenSize.y / 2.0f));
+        float radius = Public.screenSize.x;
+        Vector pos = Tools.getRandomPointOnCircumference(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f), radius);
         entityTransform.setPosition(pos);
-        entityPhysics.setVelocity((Public.screenSize.x / 2.0f) - pos.x, (Public.screenSize.y / 2.0f) - pos.y);
-        Public.gameManager.addEntity(entity);
+
+
+        if (Public.gameManager.getNrEntitiesWithTag(Tags.PLAYER_TAG, null) > 0) {
+            entityPhysics.setVelocity(this.playerTransform.getPosition().sub(pos).multi(0.75f));
+            Public.gameManager.addEntity(entity);
+            this.respawnTriggers.add(respawnTrigger);
+        }
+        /*else
+        {
+            entityPhysics.setVelocity(Tools.getRandomPointOnScreen().sub(pos));
+        }*/
     }
 }
+
+/*
+
+Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
+ArrayList<Entity> players = Public.gameManager.getAllEntitiesWithTag(Tags.PLAYER_TAG, null);
+Vector playerPos = ((Transform) players.get(0).getComponentByType(Transform.class)).getPosition();
+parentPhysics.setVelocity(playerPos.sub(pos).multi(0.75f));
+parentTransform.setPosition(Tools.getRandomPointOnCircumference(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f), Public.screenSize.x));
+this.enteredScreen = false;
+Log.d(Logging.LOG_DEBUG_TAG, "Exited SCREEN!");
+
+*/

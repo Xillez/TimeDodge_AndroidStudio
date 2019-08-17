@@ -13,6 +13,8 @@ import android.util.Log;
 import com.example.timedodge.R;
 import com.example.timedodge.game.view.GameCanvas;
 import com.example.timedodge.game.Public;
+import com.example.timedodge.utils.Logging;
+import com.example.timedodge.utils.Tools;
 
 import static com.example.timedodge.utils.Logging.LOG_DEBUG_TAG;
 import static com.example.timedodge.utils.Logging.LOG_INFO_TAG;
@@ -40,7 +42,9 @@ public class GameActivity extends AppCompatActivity
         Log.i(LOG_INFO_TAG, "Setting screen orientation!");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Public.screenSize.set(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
-        //Public.gameManager = new GameManager(this);
+        Public.screenRect.set(0, 0, (int) Public.screenSize.x, (int) Public.screenSize.y);
+        Public.screenPixelDensity = getResources().getDisplayMetrics().density;
+        Public.MARGIN_PIXEL = Tools.fromDPtoDevicePixels(Public.MARGIN_DP);
 
         super.onCreate(savedInstanceState);
 
@@ -48,6 +52,8 @@ public class GameActivity extends AppCompatActivity
         Log.i(LOG_INFO_TAG, "Setting view!");
         setContentView(R.layout.activity_game);         // TODO: exception thrown on screen blackout. FIX THIS!.
         this.gameCanvas = findViewById(R.id.game_gamecanvas);
+
+        findViewById(R.id.game_gamecanvas_enableDebugInfo).setOnClickListener(v -> Public.DEBUG_MODE = !Public.DEBUG_MODE);
 
         // OpenGL Version
         /*this.gameView = new GameView(this);
@@ -72,7 +78,7 @@ public class GameActivity extends AppCompatActivity
 
         // Register the sensor listener
         Log.i(LOG_INFO_TAG, "Tying to register sensor!");
-        sensorManager.registerListener(Public.gameManager, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(Public.input, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         findViewById(R.id.game_debuginfo_panel).setOnClickListener(v -> v.setActivated(false));
     }
@@ -85,7 +91,7 @@ public class GameActivity extends AppCompatActivity
 
         // Un-register sensor listener
         Log.i(LOG_INFO_TAG, "App paused, un-registering sensor listener");
-        sensorManager.unregisterListener(Public.gameManager);
+        sensorManager.unregisterListener(Public.input);
 
         // Un-register sensor listener
         /*Log.i(LOG_INFO_TAG, "App paused, releasing media listener");
@@ -97,14 +103,14 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onPause()
     {
-        Log.d(LOG_DEBUG_TAG, "APP PAUSED");
+        Log.i(LOG_INFO_TAG, "APP PAUSED");
 
         Public.spawnManager.pause(true);
         Public.gameManager.pause(true);
 
         // Un-register sensor listener
         Log.i(LOG_INFO_TAG, "App paused, un-registering sensor listener");
-        sensorManager.unregisterListener(Public.gameManager);
+        sensorManager.unregisterListener(Public.input);
 
         // Un-register sensor listener
         /*Log.i(LOG_INFO_TAG, "App paused, releasing media listener");
@@ -117,11 +123,11 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onResume()
     {
-        Log.d(LOG_DEBUG_TAG, "APP RESUMED");
+        Log.i(LOG_INFO_TAG, "APP RESUMED");
 
         // Re-register sensor listener
         Log.i(LOG_INFO_TAG, "App un-paused, registering sensor listener");
-        sensorManager.registerListener(Public.gameManager, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(Public.input, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         // Make a media play to play bloop sound
         /*Log.i(LOG_INFO_TAG, "App un-paused, trying to get media player!");
@@ -151,6 +157,7 @@ X- Fix broken player.
 X- Fix broken debris to debris collision detection or handling.
 X- Remove debris wall collision.
 X- Fix game thread shutdown on app exit.
+X- Fix broken spawn timer for debris.
 - Add debris re-spawn on screen exit.
 - Add points giving, pick-up-able points and close-encounter bonuses!
 - Implement RequiresComponent and ExecuteAfter annotation for better control over component dependencies and execution control.

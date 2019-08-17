@@ -10,7 +10,7 @@ public class Transform extends Component
 {
     private Vector position = new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f);
     private float rotation = 0.0f;
-    private Vector scale = new Vector(3, 3);
+    private Vector scale = new Vector(1, 1);
 
     public Transform()
     {
@@ -24,9 +24,9 @@ public class Transform extends Component
     }
 
     @Override
-    public void update(float dt, Vector tiltValues)
+    public void update()
     {
-        super.update(dt, tiltValues);
+        super.update();
     }
 
     @Override

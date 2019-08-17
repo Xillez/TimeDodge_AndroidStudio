@@ -3,10 +3,6 @@ package com.example.timedodge.game.systems.thread;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.widget.TextView;
 
@@ -21,9 +17,8 @@ import com.example.timedodge.game.systems.ecs.components.Physics;
 import com.example.timedodge.game.systems.ecs.components.PlayerController;
 import com.example.timedodge.game.systems.ecs.components.Transform;
 import com.example.timedodge.game.tags.Tags;
-import com.example.timedodge.game.view.GameCanvas;
 import com.example.timedodge.game.view.GameView;
-import com.example.timedodge.utils.Logging;
+import com.example.timedodge.utils.Time;
 import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
@@ -31,22 +26,16 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class GameManager extends Thread implements SensorEventListener
+public class GameManager extends Thread
 {
-    private int nextEntityId = 0;
     private SurfaceHolder surfaceHolder;
     private GameView gameView;
     private volatile AtomicBoolean running = new AtomicBoolean(true);
     private volatile boolean paused = false;
-    private Vector tiltValues = new Vector(0, 0);
 
     private Context context;
-    private GameCanvas gameCanvas;
 
     private int framesSinceDebugUpdate = 0;
-
-    private long lastSysTime = 0L;
-    private long currentSysTime = 0L;
     private boolean firstFrame = true;
 
     private volatile ArrayList<Entity> entities = new ArrayList<>();
@@ -74,7 +63,6 @@ public class GameManager extends Thread implements SensorEventListener
         try {
             this.haltUpdating();
 
-
             for (Entity entity : this.entities)
             {
                 entity.create();
@@ -86,22 +74,18 @@ public class GameManager extends Thread implements SensorEventListener
             return;
         }
 
-
         Public.spawnManager.create();
     }
 
-    private void gameUpdate(Vector tiltValues)
+    private void gameUpdate()
     {
+        // Update time since last frame.
+        Time.updateDeltaTime();
+
         this.framesSinceDebugUpdate++;
-
-        // DeltaTime calc
-        this.currentSysTime = System.nanoTime();
-        float elapsed = (this.currentSysTime - this.lastSysTime) / 1000000000.0f;
-        this.lastSysTime = currentSysTime;
-
         // Update debug screen every 5 frames.
         if (this.framesSinceDebugUpdate >= 25) {
-            ((Activity) this.context).runOnUiThread(() -> { ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_ups)).setText(String.format("UPS: %f", (1.0f / elapsed))); });
+            ((Activity) this.context).runOnUiThread(() -> { ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_ups)).setText(String.format("UPS: %f", (1.0f / Time.getDeltaTime()))); });
             this.framesSinceDebugUpdate = 0;
         }
 
@@ -113,19 +97,21 @@ public class GameManager extends Thread implements SensorEventListener
 
         // Skip updating if game is paused
         if (paused) {
-            Log.d(Logging.LOG_DEBUG_TAG, "GAMEMANAGER PAUSED");
             return;
         }
 
         // Handle spawning of entities.
-        Public.spawnManager.update(elapsed, tiltValues);
+        Public.spawnManager.update();
+
+        // Update TimerManager
+        Public.timerManager.update();
 
         // Update entities
         try {
             this.haltUpdating();
             for (Entity entity : this.entities)
             {
-                entity.update(elapsed, tiltValues);
+                entity.update();
             }
             this.continueUpdating();
         } catch (InterruptedException e) {
@@ -139,7 +125,7 @@ public class GameManager extends Thread implements SensorEventListener
         // If running, give up cpu, if not continue for stopping
         if (running.get())
         {
-            Tools.sleepRestOfFrame(elapsed, "Game thread", (Activity) this.context, ((Activity) this.context).findViewById(R.id.game_debuginfo_gamethread_sleeptime));
+            Tools.sleepRestOfFrame(Time.getDeltaTime(), "Game thread", (Activity) this.context, ((Activity) this.context).findViewById(R.id.game_debuginfo_gamethread_sleeptime));
         }
     }
 
@@ -180,17 +166,7 @@ public class GameManager extends Thread implements SensorEventListener
         }
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent)
-    {
-        this.tiltValues.set(sensorEvent.values[1], sensorEvent.values[0]);
-    }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i)
-    {
-
-    }
 
     @Override
     public void run()
@@ -201,7 +177,7 @@ public class GameManager extends Thread implements SensorEventListener
 
         while (running.get())
         {
-            this.gameUpdate(tiltValues);
+            this.gameUpdate();
             //this.gameDraw();
         }
 
@@ -288,6 +264,11 @@ public class GameManager extends Thread implements SensorEventListener
         return components;
     }
 
+    public int getNrEntitiesWithTag(String tag, Entity exclude)
+    {
+        return this.getAllEntitiesWithTag(tag, exclude).size();
+    }
+
     public ArrayList<Entity> getAllEntitiesWithTag(String tag, Entity exclude)
     {
         ArrayList<Entity> entitiesResult = new ArrayList<>();
@@ -302,6 +283,11 @@ public class GameManager extends Thread implements SensorEventListener
         return entitiesResult;
     }
 
+    public int getNrEntitiesInLayer(int layer, Entity exclude)
+    {
+        return this.getAllEntitiesInLayer(layer, exclude).size();
+    }
+
     public ArrayList<Entity> getAllEntitiesInLayer(int layer, Entity exclude)
     {
         ArrayList<Entity> entitiesResult = new ArrayList<>();
@@ -314,6 +300,11 @@ public class GameManager extends Thread implements SensorEventListener
             if (entity.inLayer(layer)) entitiesResult.add(entity);
         }
         return entitiesResult;
+    }
+
+    public int getNrEntitiesInLayerWithTag(String tag, int layer, Entity exclude)
+    {
+        return this.getAllEntitiesInLayerWithTag(tag, layer, exclude).size();
     }
 
     public ArrayList<Entity> getAllEntitiesInLayerWithTag(String tag, int layer, Entity exclude)
@@ -369,7 +360,7 @@ public class GameManager extends Thread implements SensorEventListener
     public interface GameLifecycle
     {
         void create();
-        void update(float dt, Vector tiltValues);
+        void update();
         void draw(Canvas canvas);
         //OpenGL Version --> void draw(int vertexBufferPosition, int colorPosition);
         void destroy();

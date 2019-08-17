@@ -1,19 +1,23 @@
 package com.example.timedodge.game.systems.ecs.components;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 
 import com.example.timedodge.game.systems.ecs.Component;
+import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
 public class Graphics extends Component
 {
     // Disable for opengl drawing
     private ShapeDrawable shape = new ShapeDrawable();
-    private Vector size = new Vector(10, 10);
+    private Vector size = new Vector(Tools.fromDPtoDevicePixels(15), Tools.fromDPtoDevicePixels(15));
     public boolean isPlayer = false;
+
+    Transform parentTransform = null;
 
     public Graphics()
     {
@@ -31,12 +35,14 @@ public class Graphics extends Component
     public void create()
     {
         super.create();
+
+        this.parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
     }
 
     @Override
-    public void update(float dt, Vector tiltValues)
+    public void update()
     {
-        super.update(dt, tiltValues);
+        super.update();
     }
 
     @Override
@@ -44,7 +50,7 @@ public class Graphics extends Component
     {
         super.draw(canvas);
 
-        Transform parentTransform = (Transform) parent.getComponentByType(Transform.class);
+        // No parent transform found, abort
         if (parentTransform != null)
         {
             Vector parentPos = parentTransform.getPosition();
@@ -86,8 +92,7 @@ public class Graphics extends Component
     }
 
     public Vector getActualSize() {
-        Transform parentTransform = (Transform) parent.getComponentByType(Transform.class);
-        if (parentTransform != null) {
+        if (this.parentTransform != null) {
             Vector parentScale = parentTransform.getScale();
             return new Vector(size.x * parentScale.x, size.y * parentScale.y);
         }

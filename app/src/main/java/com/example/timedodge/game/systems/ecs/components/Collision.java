@@ -21,9 +21,9 @@ public class Collision extends Component
     }
 
     @Override
-    public void update(float dt, Vector tiltValues)
+    public void update()
     {
-        super.update(dt, tiltValues);
+        super.update();
     }
 
     @Override

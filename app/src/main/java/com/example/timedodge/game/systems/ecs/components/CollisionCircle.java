@@ -13,6 +13,7 @@ import com.example.timedodge.game.systems.event.GameEventListener;
 import com.example.timedodge.game.systems.event.events.GameEntityCollisionEvent;
 import com.example.timedodge.game.systems.event.events.GameWallCollisionEvent;
 import com.example.timedodge.utils.Logging;
+import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
 import java.util.ArrayList;
@@ -21,6 +22,10 @@ public class CollisionCircle extends Collision
 {
     private boolean backgroundCollision = true;
     private float DETECTION_RANGE = 100.0f;
+
+    private Transform parentTransform = null;
+    private Graphics parentGraphics = null;
+    private Physics parentPhysics = null;
 
     public CollisionCircle()
     {
@@ -31,31 +36,30 @@ public class CollisionCircle extends Collision
     public void create()
     {
         super.create();
+
+        // Fetch transform and graphics components from parent
+        this.parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
+        this.parentGraphics = (Graphics) this.parent.getComponentByType(Graphics.class);
+        this.parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
     }
 
     @Override
-    public void update(float dt, Vector tiltValues)
+    public void update()
     {
-        super.update(dt, tiltValues);
+        super.update();
 
-        // Fetch transform and graphics components from parent
-        Transform parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
-        Graphics parentGraphics = (Graphics) this.parent.getComponentByType(Graphics.class);
-
-        // Not found, abort
-        if (parentTransform == null || parentGraphics == null)
+        // No parent transform nor graphics found, abort
+        if (this.parentTransform == null || this.parentGraphics == null)
             return;
 
-        Vector pos = parentTransform.getPosition();
-        Vector size = parentGraphics.getActualSize();
+        Vector pos = this.parentTransform.getPosition();
+        Vector size = this.parentGraphics.getActualSize();
 
-        ArrayList<Component> comps = Public.gameManager.getAllComponentsOfTypeNearEntity(CollisionCircle.class, this.parent, parentTransform.getPosition(), this.DETECTION_RANGE);
+        ArrayList<Component> comps = Public.gameManager.getAllComponentsOfTypeNearEntity(CollisionCircle.class, this.parent, this.parentTransform.getPosition(), this.DETECTION_RANGE);
         if (comps == null) {
-            Log.d(Logging.LOG_DEBUG_TAG, "Failed to fetch collision components!");
+            Log.i(Logging.LOG_DEBUG_TAG, "Failed to fetch collision components!");
             return;
         }
-
-        Log.d(Logging.LOG_DEBUG_TAG, "Nr interactions for component: " + comps.size());
 
         // Run through all collision components on canvas
         for (Component comp : comps)
@@ -67,8 +71,6 @@ public class CollisionCircle extends Collision
             }
 
             Entity otherParent = comp.getParent();
-            //Log.d(Logging.LOG_DEBUG_TAG, "RE_RE_" + (comp.getId() == this.getId()));
-
 
             // Get other's components
             Transform otherTransform = (Transform) otherParent.getComponentByType(Transform.class);
@@ -77,21 +79,18 @@ public class CollisionCircle extends Collision
             Vector otherSize = otherGraphics.getActualSize();
 
             Vector diff = new Vector(otherPos.x - pos.x, otherPos.y - pos.y);
-            Log.d(Logging.LOG_DEBUG_TAG, "RE_RE_" + diff.length());
 
             // Distance is less than their combined radius', trigger collision if a Physics component exists.
             if (diff.length() < (otherSize.x + size.x) * 0.5f)
             {
-                Log.d(Logging.LOG_DEBUG_TAG, "REE_DEBRIS COLLISION!");
-                Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
                 Physics otherPhysics = (Physics) otherParent.getComponentByType(Physics.class);
-                if (parentPhysics != null)
+                if (otherPhysics != null)
                 {
                     // Get direction of deflection
                     Vector deflectionForce = pos.sub(otherPos).normalize();
                     // Set the energy of the bounce collision - 25%
-                    deflectionForce.multiTo(parentPhysics.getVelocity().add(otherPhysics.getVelocity().multi(-1.0f)).length() * 0.75f);
-                    this.triggerEntityCollisionEvent(parentPhysics, deflectionForce);
+                    deflectionForce.multiTo(this.parentPhysics.getVelocity().add(otherPhysics.getVelocity().multi(-1.0f)).length() * 0.65f);
+                    this.triggerEntityCollisionEvent(this.parentPhysics, deflectionForce);
                 }
             }
         }
@@ -99,18 +98,20 @@ public class CollisionCircle extends Collision
         // Handle background wall collision
         if (backgroundCollision)
         {
-            Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
-            if (parentPhysics == null)
+            if (this.parentPhysics == null)
                 return;
 
-            if ((pos.x - (size.x / 2.0f)) <= (0.0f + Public.MARGIN))
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_LEFT, new Vector((size.x / 2.0f) + Public.MARGIN + 0.01f, pos.y));
-            if ((pos.y - (size.y / 2.0f)) <= (0.0f + Public.MARGIN))
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_TOP, new Vector(pos.x, (size.y / 2.0f) + Public.MARGIN + 0.01f));
-            if ((pos.x + (size.x / 2.0f)) >= (Public.screenSize.x - Public.MARGIN))
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_RIGHT, new Vector(Public.screenSize.x - (size.x / 2.0f) - Public.MARGIN - 0.01f, pos.y));
-            if ((pos.y + (size.y / 2.0f)) >= (Public.screenSize.y - Public.MARGIN))
-                this.triggerWallCollisionEvent(parentPhysics, GameWallCollisionEvent.WallSide.WALL_BOTTOM, new Vector(pos.x, Public.screenSize.y - (size.y / 2.0f) - Public.MARGIN - 0.01f));
+            float margin = Public.MARGIN_PIXEL;
+            Log.d(Logging.LOG_DEBUG_TAG, "MARGIN: " + margin);
+
+            if ((pos.x - (size.x / 2.0f)) <= (0.0f + margin))
+                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_LEFT, new Vector((size.x / 2.0f) + margin + 0.01f, pos.y));
+            if ((pos.y - (size.y / 2.0f)) <= (0.0f + margin))
+                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_TOP, new Vector(pos.x, (size.y / 2.0f) + margin + 0.01f));
+            if ((pos.x + (size.x / 2.0f)) >= (Public.screenSize.x - margin))
+                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_RIGHT, new Vector(Public.screenSize.x - (size.x / 2.0f) - margin - 0.01f, pos.y));
+            if ((pos.y + (size.y / 2.0f)) >= (Public.screenSize.y - margin))
+                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_BOTTOM, new Vector(pos.x, Public.screenSize.y - (size.y / 2.0f) - margin - 0.01f));
         }
     }
 
@@ -121,14 +122,11 @@ public class CollisionCircle extends Collision
 
         if (Public.DEBUG_MODE)
         {
-            // Fetch transform and graphics components from parent
-            Transform parentTransform = ((Transform) this.parent.getComponentByType(Transform.class));
-
-            // Not found, abort
-            if (parentTransform == null)
+            // No parent transform found, abort
+            if (this.parentTransform == null)
                 return;
 
-            Vector pos = parentTransform.getPosition();
+            Vector pos = this.parentTransform.getPosition();
 
             ShapeDrawable detectCircle = new ShapeDrawable(new OvalShape());
             detectCircle.getPaint().setColor(0x8800ff00);

@@ -1,0 +1,50 @@
+<behaviour>
+    <entity name="Debris"> <!-- "name" attrib is ignored, just for easier identification -->
+        <tags> <!--List of tags-->
+            <item name="Tags.DEBRIS_TAG" />
+        </tags>
+        <layers> <!--List of layers-->
+            <item name="Layers.DEBRIS_LAYER" />
+        </layers>
+        <components> <!--List of components-->
+            <Transform position="DEBRIS_SPAWN_LOCATION"/>
+            <Graphics/>
+            <Physics velocity="TO_PLAYER"/>
+            <CollisionCircle backgroundcollision="false"/>
+			<OnScreenDetector />
+        </components>
+    </entity>
+    <total_to_spawn>1</total_to_spawn>
+    <start_time_millis>0</start_time_millis> <!--Time from game start the SpawnManager should start spawning in milliseconds-->
+    <spawn_delay_millis>0</spawn_delay_millis> <!-- Delay in between spawns in milliseconds -->
+</behaviour>
+
+<!--
+
+Entity entity = new Entity();
+    entity.addTag(Tags.DEBRIS_TAG);
+    entity.addLayer(Layers.DEBRIS_LAYER);
+
+    Transform entityTransform = new Transform();
+    entity.addComponent(entityTransform);
+    entity.addComponent(new Graphics());
+    Physics entityPhysics = new Physics();
+    entity.addComponent(entityPhysics);
+    CollisionCircle collision = new CollisionCircle();
+    collision.setBackgroundCollision(false);
+    entity.addComponent(collision);
+    //entity.addComponent(new RespawnTrigger());
+
+    float radius = Public.screenSize.x;
+    Vector pos = Tools.getRandomPointOnCircumference(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f), radius);
+    entityTransform.setPosition(pos);
+
+
+    if (Public.gameManager.getNrEntitiesWithTag(Tags.PLAYER_TAG, null) > 0)
+    {
+    ArrayList<Entity> players = Public.gameManager.getAllEntitiesWithTag(Tags.PLAYER_TAG, null);
+    Vector playerPos = ((Transform)players.get(0).getComponentByType(Transform.class)).getPosition();
+    entityPhysics.setVelocity(playerPos.sub(pos).multi(0.75f));
+    Public.gameManager.addEntity(entity);
+
+    -->
