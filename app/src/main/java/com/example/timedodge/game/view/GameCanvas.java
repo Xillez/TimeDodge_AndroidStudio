@@ -69,10 +69,6 @@ public class GameCanvas extends View
 
         Public.gameManager.triggerDraw(canvas);
 
-
-        Log.d(Logging.LOG_DEBUG_TAG, "DefaultDensity: " + DisplayMetrics.DENSITY_DEFAULT);
-        Log.d(Logging.LOG_DEBUG_TAG, "PixelDensity: " + Public.screenPixelDensity);
-
         Tools.sleepRestOfFrame(elapsed, "UI thread", (Activity) this.context, ((Activity) this.context).findViewById(R.id.game_debuginfo_uithread_sleeptime));
     }
 }

@@ -17,6 +17,9 @@ public class Public
     public static Rect screenRect = new Rect(0, 0, 0, 0);
     public static float screenPixelDensity = 0.0f;
 
+    public static Vector gameBoard = new Vector(0, 0);
+    public static Rect gameBoardRect = new Rect(0, 0, 0, 0);
+
     public final static int MARGIN_DP = 5;
     public static int MARGIN_PIXEL = 0;
 

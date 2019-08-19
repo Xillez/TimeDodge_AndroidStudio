@@ -31,6 +31,16 @@ public class Vector extends PointF
         this.y = vector.y;
     }
 
+    public void setAxis(Axis axis, float value)
+    {
+        if (axis.ordinal() == Axis.x.ordinal()) {
+            this.x = value;
+        }
+        else if (axis.ordinal() == Axis.y.ordinal()) {
+            this.y = value;
+        }
+    }
+
     public Vector add(float scalar)
     {
         return new Vector(this.x + scalar, this.y + scalar);
@@ -44,6 +54,11 @@ public class Vector extends PointF
     public Vector add(Vector other)
     {
         return new Vector(this.x + other.x, this.y + other.y);
+    }
+
+    public Vector sub(float scalar)
+    {
+        return new Vector(this.x - scalar, this.y - scalar);
     }
 
     public Vector sub(PointF other)

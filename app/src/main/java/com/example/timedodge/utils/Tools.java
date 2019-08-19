@@ -2,6 +2,7 @@ package com.example.timedodge.utils;
 
 import android.app.Activity;
 import android.graphics.Rect;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.timedodge.game.Public;
@@ -70,6 +71,37 @@ public class Tools
     public static Vector getRandomPointOnScreen()
     {
         return new Vector(rnd.nextFloat() * Public.screenSize.x, rnd.nextFloat() * Public.screenSize.y);
+    }
+
+    public static Vector findClosestScreenUnstuckPosition(Vector pos, Vector size)
+    {
+        Vector unstuckPos = new Vector(pos.x, pos.y);
+
+        // Collision with left
+        if ((pos.x - (size.x / 2.0f)) <= Public.gameBoardRect.left)
+        {
+            unstuckPos.setAxis(Vector.Axis.x, Public.gameBoardRect.left + (size.x / 2.0f) + 0.01f);
+        }
+
+        // Collision with top
+        if ((pos.y - (size.y / 2.0f)) <= Public.gameBoardRect.top)
+        {
+            unstuckPos.setAxis(Vector.Axis.y, Public.gameBoardRect.top + (size.y / 2.0f) + 0.01f);
+        }
+
+        // Collision with right
+        if ((pos.x + (size.x / 2.0f)) >= Public.gameBoardRect.right)
+        {
+            unstuckPos.setAxis(Vector.Axis.x, Public.gameBoardRect.right - (size.x / 2.0f) - 0.01f);
+        }
+
+        // Collision with bottom
+        if ((pos.y + (size.y / 2.0f)) >= Public.gameBoardRect.bottom)
+        {
+            unstuckPos.setAxis(Vector.Axis.y, Public.gameBoardRect.bottom - (size.y / 2.0f) - 0.01f);
+        }
+
+        return unstuckPos;
     }
 
     public static boolean intersectsScreenRect(Rect otherRect)

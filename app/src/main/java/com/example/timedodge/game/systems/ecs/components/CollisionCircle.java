@@ -101,17 +101,16 @@ public class CollisionCircle extends Collision
             if (this.parentPhysics == null)
                 return;
 
-            float margin = Public.MARGIN_PIXEL;
-            Log.d(Logging.LOG_DEBUG_TAG, "MARGIN: " + margin);
+            Vector unstuckPos = Tools.findClosestScreenUnstuckPosition(pos, size);
 
-            if ((pos.x - (size.x / 2.0f)) <= (0.0f + margin))
-                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_LEFT, new Vector((size.x / 2.0f) + margin + 0.01f, pos.y));
-            if ((pos.y - (size.y / 2.0f)) <= (0.0f + margin))
-                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_TOP, new Vector(pos.x, (size.y / 2.0f) + margin + 0.01f));
-            if ((pos.x + (size.x / 2.0f)) >= (Public.screenSize.x - margin))
-                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_RIGHT, new Vector(Public.screenSize.x - (size.x / 2.0f) - margin - 0.01f, pos.y));
-            if ((pos.y + (size.y / 2.0f)) >= (Public.screenSize.y - margin))
-                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_BOTTOM, new Vector(pos.x, Public.screenSize.y - (size.y / 2.0f) - margin - 0.01f));
+            if ((pos.x - (size.x / 2.0f)) <= Public.gameBoardRect.left)
+                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_LEFT, unstuckPos);
+            if ((pos.y - (size.y / 2.0f)) <= Public.gameBoardRect.top)
+                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_TOP, unstuckPos);
+            if ((pos.x + (size.x / 2.0f)) >= Public.gameBoardRect.right)
+                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_RIGHT, unstuckPos);
+            if ((pos.y + (size.y / 2.0f)) >= Public.gameBoardRect.bottom)
+                this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_BOTTOM, unstuckPos);
         }
     }
 

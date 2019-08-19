@@ -2,6 +2,7 @@ package com.example.timedodge.activities;
 
 import android.app.Service;
 import android.content.pm.ActivityInfo;
+import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
@@ -45,6 +46,8 @@ public class GameActivity extends AppCompatActivity
         Public.screenRect.set(0, 0, (int) Public.screenSize.x, (int) Public.screenSize.y);
         Public.screenPixelDensity = getResources().getDisplayMetrics().density;
         Public.MARGIN_PIXEL = Tools.fromDPtoDevicePixels(Public.MARGIN_DP);
+        Public.gameBoard = Public.screenSize.sub((float) Public.MARGIN_PIXEL);
+        Public.gameBoardRect = new Rect(Public.MARGIN_PIXEL, Public.MARGIN_PIXEL, (int) Public.screenSize.x - Public.MARGIN_PIXEL, (int) Public.screenSize.y - Public.MARGIN_PIXEL);
 
         super.onCreate(savedInstanceState);
 
