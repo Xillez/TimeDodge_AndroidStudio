@@ -104,9 +104,9 @@ public class Tools
         return unstuckPos;
     }
 
-    public static boolean intersectsScreenRect(Rect otherRect)
+    public static boolean isVisibleOnScreen(Rect otherRect)
     {
-        return Public.screenRect.intersect(otherRect);
+        return (Public.screenRect.intersect(otherRect) || Public.screenRect.contains(otherRect));
     }
 
     public static int fromDPtoDevicePixels(float dp)

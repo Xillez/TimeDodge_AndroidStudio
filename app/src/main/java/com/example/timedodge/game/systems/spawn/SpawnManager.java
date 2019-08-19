@@ -60,11 +60,12 @@ public class SpawnManager {
             entityPhysics = (Physics) detector.getParent().getComponentByType(Physics.class);
 
             Vector pos = entityTransform.getPosition();
-            //Log.d(Logging.LOG_DEBUG_TAG, String.format("%s | %s | %s", detector.hasEnteredScreen(), detector.isVisible(), detector.hasTimeExpired()));
+            Log.d(Logging.LOG_DEBUG_TAG, String.format("SPAWNMANAGER: %s | %s | %s", detector.hasEnteredScreen(), detector.isVisible(), detector.hasTimeExpired()));
 
-            if ((detector.hasEnteredScreen() && !detector.isVisible()) || detector.hasTimeExpired())
+            if ((detector.hasEnteredScreen() || detector.hasTimeExpired()) && !detector.isVisible())
             {
-                entityPhysics.setVelocity(this.playerTransform.getPosition().sub(pos).multi(0.75f));
+                //entityPhysics.setVelocity(this.playerTransform.getPosition().sub(pos).multi(0.75f));
+                entityPhysics.setVelocity(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f).sub(pos).multi(0.75f));
                 entityTransform.setPosition(Tools.getRandomPointOnCircumference(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f), Public.screenSize.x));
                 detector.reset();
             }
@@ -105,18 +106,18 @@ public class SpawnManager {
         Physics entityPhysics = new Physics();
         entity.addComponent(entityPhysics);
         CollisionCircle collision = new CollisionCircle();
-        collision.setBackgroundCollision(false);
+        collision.setBackgroundCollision(true);
         entity.addComponent(collision);
         RespawnTrigger respawnTrigger = new RespawnTrigger();
         entity.addComponent(respawnTrigger);
 
-        float radius = Public.screenSize.x;
-        Vector pos = Tools.getRandomPointOnCircumference(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f), radius);
+        Vector pos = Tools.getRandomPointOnCircumference(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f), Public.screenSize.x);
         entityTransform.setPosition(pos);
 
 
         if (Public.gameManager.getNrEntitiesWithTag(Tags.PLAYER_TAG, null) > 0) {
-            entityPhysics.setVelocity(this.playerTransform.getPosition().sub(pos).multi(0.75f));
+            //entityPhysics.setVelocity(this.playerTransform.getPosition().sub(pos).multi(0.75f));
+            entityPhysics.setVelocity(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f).sub(pos).multi(0.5f)); //0.75f));
             Public.gameManager.addEntity(entity);
             this.respawnTriggers.add(respawnTrigger);
         }

@@ -2,7 +2,6 @@ package com.example.timedodge.game.systems.ecs.components;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.example.timedodge.game.Public;
 import com.example.timedodge.game.systems.ecs.Component;
@@ -10,7 +9,6 @@ import com.example.timedodge.game.systems.event.GameEvent;
 import com.example.timedodge.game.systems.event.GameEventListener;
 import com.example.timedodge.game.systems.event.events.GameEntityCollisionEvent;
 import com.example.timedodge.game.systems.event.events.GameWallCollisionEvent;
-import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Time;
 import com.example.timedodge.utils.Vector;
 

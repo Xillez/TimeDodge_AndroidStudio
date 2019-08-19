@@ -2,15 +2,21 @@ package com.example.timedodge.game.systems.ecs.components;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RectShape;
+import android.util.Log;
 
+import com.example.timedodge.game.Public;
 import com.example.timedodge.game.systems.ecs.Component;
+import com.example.timedodge.utils.Logging;
 import com.example.timedodge.utils.Time;
 import com.example.timedodge.utils.Tools;
 import com.example.timedodge.utils.Vector;
 
 public final class RespawnTrigger extends Component
 {
-    private final float RESPAWN_TIME_SEC = 3.0f;
+    private final float RESPAWN_TIME_SEC = 5.0f;
 
     private boolean visible = false;
     private boolean enteredScreen = false;
@@ -49,14 +55,17 @@ public final class RespawnTrigger extends Component
         Rect objRect = new Rect((int) (pos.x - (size.x / 2.0f)), (int) (pos.y - (size.y / 2.0f)), (int) (pos.x + (size.x / 2.0f)), (int) (pos.y + (size.y / 2.0f)));
 
         // Continuously track whether visible or not
-        this.visible = Tools.intersectsScreenRect(objRect);
+        this.visible = (Public.screenRect.intersect(objRect) || Public.screenRect.contains(objRect));//Tools.isVisibleOnScreen(objRect);
+        Log.d(Logging.LOG_DEBUG_TAG, "VISIBLE: " + this.visible);
 
         // Entered screen once visible
         if (this.visible)
+        {
             this.enteredScreen = true;
+        }
 
         this.timeSoFar += Time.getDeltaTime();
-
+        
         this.timeExpiration = (this.timeSoFar >= this.RESPAWN_TIME_SEC);
     }
 
@@ -64,6 +73,21 @@ public final class RespawnTrigger extends Component
     public void draw(Canvas canvas)
     {
         super.draw(canvas);
+
+        // No parent transform nor graphics found, abort
+        if (this.parentTransform == null || this.parentGraphics == null)
+            return;
+
+        if (Public.DEBUG_MODE)
+        {
+            Vector pos = this.parentTransform.getPosition();
+            Vector size = this.parentGraphics.getActualSize();
+
+            ShapeDrawable detectCircle = new ShapeDrawable(new RectShape());
+            detectCircle.getPaint().setColor(0x880000FF);
+            detectCircle.setBounds(new Rect((int) (pos.x - (size.x / 2.0f)), (int) (pos.y - (size.y / 2.0f)), (int) (pos.x + (size.x / 2.0f)), (int) (pos.y + (size.y / 2.0f))));
+            detectCircle.draw(canvas);
+        }
     }
 
     @Override
