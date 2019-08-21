@@ -1,15 +1,15 @@
 package com.bulletpointgames.timedodge.game.systems.ecs.components;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
-import android.util.Log;
 
 import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.systems.ecs.Component;
-import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Time;
+import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
 
 public final class RespawnTrigger extends Component
@@ -53,8 +53,7 @@ public final class RespawnTrigger extends Component
         Rect objRect = new Rect((int) (pos.x - (size.x / 2.0f)), (int) (pos.y - (size.y / 2.0f)), (int) (pos.x + (size.x / 2.0f)), (int) (pos.y + (size.y / 2.0f)));
 
         // Continuously track whether visible or not
-        this.visible = (Public.screenRect.intersect(objRect) || Public.screenRect.contains(objRect));//Tools.isVisibleOnScreen(objRect);
-        Log.d(Logging.LOG_DEBUG_TAG, "VISIBLE: " + this.visible);
+        this.visible = Tools.isVisibleOnScreen(objRect);
 
         // Entered screen once visible
         if (this.visible)
@@ -85,6 +84,10 @@ public final class RespawnTrigger extends Component
             detectCircle.getPaint().setColor(0x880000FF);
             detectCircle.setBounds(new Rect((int) (pos.x - (size.x / 2.0f)), (int) (pos.y - (size.y / 2.0f)), (int) (pos.x + (size.x / 2.0f)), (int) (pos.y + (size.y / 2.0f))));
             detectCircle.draw(canvas);
+
+            Paint paint = new Paint();
+            paint.setColor(0xFFCC7832);
+            canvas.drawLine(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f, pos.x, pos.y, paint);
         }
     }
 

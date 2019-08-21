@@ -105,7 +105,7 @@ public class Tools
 
     public static boolean isVisibleOnScreen(Rect otherRect)
     {
-        return (Public.screenRect.intersect(otherRect) || Public.screenRect.contains(otherRect));
+        return (Rect.intersects(Public.screenRect, otherRect) || Public.screenRect.contains(otherRect));
     }
 
     public static int fromDPtoDevicePixels(float dp)
