@@ -69,7 +69,7 @@ public class Tools
 
     public static Vector getRandomPointOnScreen()
     {
-        return new Vector(rnd.nextFloat() * Public.screenSize.x, rnd.nextFloat() * Public.screenSize.y);
+        return new Vector((rnd.nextFloat() * Public.screenRect.width()) + Public.screenRect.left, (rnd.nextFloat() * Public.screenRect.height()) + Public.screenRect.top);
     }
 
     public static Vector findClosestScreenUnstuckPosition(Vector pos, Vector size)

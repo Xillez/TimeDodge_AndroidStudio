@@ -8,7 +8,7 @@ import com.bulletpointgames.timedodge.utils.Vector;
 
 public class Transform extends Component
 {
-    private Vector position = new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f);
+    private Vector position = new Vector(Public.screenRect.centerX(), Public.screenRect.centerY());
     private float rotation = 0.0f;
     private Vector scale = new Vector(1, 1);
 

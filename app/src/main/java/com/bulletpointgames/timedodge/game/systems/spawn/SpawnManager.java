@@ -8,8 +8,8 @@ import com.bulletpointgames.timedodge.game.layers.Layers;
 import com.bulletpointgames.timedodge.game.systems.ecs.Entity;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.CollisionCircle;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Graphics;
-import com.bulletpointgames.timedodge.game.systems.ecs.components.RespawnTrigger;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Physics;
+import com.bulletpointgames.timedodge.game.systems.ecs.components.RespawnTrigger;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Transform;
 import com.bulletpointgames.timedodge.game.tags.Tags;
 import com.bulletpointgames.timedodge.utils.Logging;
@@ -30,7 +30,7 @@ public class SpawnManager {
 
     //private SpawnConfigLoader configLoader = null;
     private boolean shouldSpawn = true;
-    public static final int MAX_ENTITY_COUNT = 2;
+    public static final int MAX_ENTITY_COUNT = 11;
     ArrayList<RespawnTrigger> respawnTriggers = new ArrayList<>();
     private Transform playerTransform = null;
 
@@ -59,14 +59,11 @@ public class SpawnManager {
             entityTransform = (Transform) detector.getParent().getComponentByType(Transform.class);
             entityPhysics = (Physics) detector.getParent().getComponentByType(Physics.class);
 
-            Vector pos = entityTransform.getPosition();
             Log.d(Logging.LOG_DEBUG_TAG, String.format("SPAWNMANAGER: %s | %s | %s", detector.hasEnteredScreen(), detector.isVisible(), detector.hasTimeExpired()));
 
             if ((detector.hasEnteredScreen() || detector.hasTimeExpired()) && !detector.isVisible())
             {
-                //entityPhysics.setVelocity(this.playerTransform.getPosition().sub(pos).multi(0.75f));
-                entityPhysics.setVelocity(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f).sub(pos).multi(0.75f));
-                entityTransform.setPosition(Tools.getRandomPointOnCircumference(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f), Public.screenSize.x));
+                this.placeEntity(entityTransform, entityPhysics);
                 detector.reset();
             }
         }
@@ -106,18 +103,13 @@ public class SpawnManager {
         Physics entityPhysics = new Physics();
         entity.addComponent(entityPhysics);
         CollisionCircle collision = new CollisionCircle();
-        collision.setBackgroundCollision(true);
+        collision.setBackgroundCollision(false);
         entity.addComponent(collision);
         RespawnTrigger respawnTrigger = new RespawnTrigger();
         entity.addComponent(respawnTrigger);
 
-        Vector pos = Tools.getRandomPointOnCircumference(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f), Public.screenSize.x);
-        entityTransform.setPosition(pos);
-
-
         if (Public.gameManager.getNrEntitiesWithTag(Tags.PLAYER_TAG, null) > 0) {
-            //entityPhysics.setVelocity(this.playerTransform.getPosition().sub(pos).multi(0.75f));
-            entityPhysics.setVelocity(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f).sub(pos).multi(0.5f)); //0.75f));
+            this.placeEntity(entityTransform, entityPhysics);
             Public.gameManager.addEntity(entity);
             this.respawnTriggers.add(respawnTrigger);
         }
@@ -125,6 +117,15 @@ public class SpawnManager {
         {
             entityPhysics.setVelocity(Tools.getRandomPointOnScreen().sub(pos));
         }*/
+    }
+
+    private void placeEntity(Transform transform, Physics physics)
+    {
+        Vector pos = this.playerTransform.getPosition();
+
+        transform.setPosition(Tools.getRandomPointOnCircumference(new Vector(Public.screenRect.centerX(), Public.screenRect.centerY()), (Public.screenRect.width() * 0.65f)));
+        //entityPhysics.setVelocity(this.playerTransform.getPosition().sub(pos).multi(0.75f));
+        physics.setVelocity(pos.sub(transform.getPosition()).multi(0.65f));
     }
 }
 

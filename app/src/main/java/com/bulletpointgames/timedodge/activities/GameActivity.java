@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.bulletpointgames.timedodge.R;
 import com.bulletpointgames.timedodge.game.view.GameCanvas;
@@ -45,7 +46,7 @@ public class GameActivity extends AppCompatActivity
         Public.screenPixelDensity = getResources().getDisplayMetrics().density;
         Public.MARGIN_PIXEL = Tools.fromDPtoDevicePixels(Public.MARGIN_DP);
         Public.gameBoard = Public.screenSize.sub((float) Public.MARGIN_PIXEL);
-        Public.gameBoardRect = new Rect(Public.MARGIN_PIXEL, Public.MARGIN_PIXEL, (int) Public.screenSize.x - Public.MARGIN_PIXEL, (int) Public.screenSize.y - Public.MARGIN_PIXEL);
+        Public.gameBoardRect = new Rect(Public.MARGIN_PIXEL, Public.MARGIN_PIXEL, (int) Public.screenRect.right - Public.MARGIN_PIXEL, (int) Public.screenRect.bottom - Public.MARGIN_PIXEL);
 
         super.onCreate(savedInstanceState);
 
@@ -55,6 +56,8 @@ public class GameActivity extends AppCompatActivity
         this.gameCanvas = findViewById(R.id.game_gamecanvas);
 
         findViewById(R.id.game_gamecanvas_enableDebugInfo).setOnClickListener(v -> Public.DEBUG_MODE = !Public.DEBUG_MODE);
+        ImageView debugScreenshot = findViewById(R.id.game_gamecanvas_debugScreenShot_view);
+        findViewById(R.id.game_gamecanvas_debugScreenShot).setOnClickListener(v -> this.gameCanvas.dumpOnDebugImageView(debugScreenshot));
 
         // OpenGL Version
         /*this.gameView = new GameView(this);

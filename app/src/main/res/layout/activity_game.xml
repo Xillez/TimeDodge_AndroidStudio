@@ -65,6 +65,25 @@
             android:layout_toEndOf="@+id/game_debuginfo_panel"
             android:text="Debug Info" />
 
+        <Button
+            android:id="@+id/game_gamecanvas_debugScreenShot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="21dp"
+            android:layout_toEndOf="@+id/game_debuginfo_panel"
+            android:text="Canvas screenshot" />
+
+        <ImageView
+            android:id="@+id/game_gamecanvas_debugScreenShot_view"
+            android:layout_width="348dp"
+            android:layout_height="188dp"
+            android:layout_alignStart="@+id/game_gamecanvas"
+            android:layout_alignBottom="@+id/game_gamecanvas"
+            android:layout_marginStart="25dp"
+            android:layout_marginBottom="26dp" />
+
 
         <!--<FrameLayout
             android:id="@+id/game_framelayout01"

@@ -87,7 +87,7 @@ public final class RespawnTrigger extends Component
 
             Paint paint = new Paint();
             paint.setColor(0xFFCC7832);
-            canvas.drawLine(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f, pos.x, pos.y, paint);
+            canvas.drawLine(Public.screenRect.centerX(), Public.screenRect.centerY(), pos.x, pos.y, paint);
         }
     }
 

@@ -2,11 +2,15 @@ package com.bulletpointgames.timedodge.game.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bulletpointgames.timedodge.R;
@@ -69,5 +73,33 @@ public class GameCanvas extends View
         Public.gameManager.triggerDraw(canvas);
 
         Tools.sleepRestOfFrame(elapsed, "UI thread", (Activity) this.context, ((Activity) this.context).findViewById(R.id.game_debuginfo_uithread_sleeptime));
+
+    }
+
+    public void dumpOnDebugImageView(ImageView imageView)
+    {
+        int addOffset = 750;
+
+        Rect tempScreenRect = new Rect(Public.screenRect.left, Public.screenRect.top, Public.screenRect.right, Public.screenRect.bottom);
+        Rect tempGameBoardRect = new Rect(Public.gameBoardRect.left, Public.gameBoardRect.top, Public.gameBoardRect.right, Public.gameBoardRect.bottom);
+
+        Rect drawRect = new Rect(0, 0, 0, 0);
+        this.getDrawingRect(drawRect);
+
+        Public.dumpGameCanvas = true;
+        Bitmap bitmap = Bitmap.createBitmap(drawRect.width() + (addOffset * 2), drawRect.height() + (addOffset * 2), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.translate(addOffset, addOffset);
+
+        Paint paint = new Paint();
+        paint.setColor(0x88000000);
+        canvas.drawRect(drawRect, paint);
+
+        this.draw(canvas);
+        imageView.setImageBitmap(bitmap);
+        Public.dumpGameCanvas = false;
+
+        Public.screenRect.set(tempScreenRect);
+        Public.gameBoardRect.set(tempGameBoardRect);
     }
 }
