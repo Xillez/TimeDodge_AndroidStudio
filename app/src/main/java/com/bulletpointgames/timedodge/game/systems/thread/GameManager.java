@@ -55,9 +55,11 @@ public class GameManager extends Thread
         playerGraphics.isPlayer = true;
         ball.addComponent(playerGraphics);
         ball.addComponent(new PlayerController());
-        ball.addComponent(new Physics());
+        Physics physics = new Physics();
+        ball.addComponent(physics);
         ball.addComponent(new CollisionCircle());
         this.addEntity(ball);
+        Time.playerPhysics = physics;
 
         // Create entities
         try {

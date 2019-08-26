@@ -9,6 +9,7 @@ import com.bulletpointgames.timedodge.game.systems.event.GameEvent;
 import com.bulletpointgames.timedodge.game.systems.event.GameEventListener;
 import com.bulletpointgames.timedodge.game.systems.event.events.GameEntityCollisionEvent;
 import com.bulletpointgames.timedodge.game.systems.event.events.GameWallCollisionEvent;
+import com.bulletpointgames.timedodge.game.tags.Tags;
 import com.bulletpointgames.timedodge.utils.Time;
 import com.bulletpointgames.timedodge.utils.Vector;
 
@@ -47,7 +48,10 @@ public class Physics extends Component implements GameEventListener
         this.velocity.addTo(this.acceleration);
 
         // Update position
-        this.parentTransform.getPosition().addTo(this.velocity.multi(Time.getDeltaTime()));
+        if (this.parent.hasTag(Tags.PLAYER_TAG))
+            this.parentTransform.getPosition().addTo(this.velocity.multi(Time.getDeltaTime()));
+        else if (this.parent.hasTag(Tags.DEBRIS_TAG))
+            this.parentTransform.getPosition().addTo(this.velocity.multi(Time.getPlayerAffectedDeltaTime()));
     }
 
     @Override
