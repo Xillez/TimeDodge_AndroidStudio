@@ -14,12 +14,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bulletpointgames.timedodge.R;
+import com.bulletpointgames.timedodge.game.systems.event.GameEvent;
+import com.bulletpointgames.timedodge.game.systems.event.GameEventListener;
+import com.bulletpointgames.timedodge.game.systems.event.events.GameEntityCollisionEvent;
+import com.bulletpointgames.timedodge.game.systems.event.events.GameWallCollisionEvent;
+import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
 import com.bulletpointgames.timedodge.game.systems.thread.GameManager;
 import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Tools;
 
-public class GameCanvas extends View
+public class GameCanvas extends View implements GameEventListener
 {
     private Context context;
 
@@ -36,6 +41,7 @@ public class GameCanvas extends View
         this.context = context;
         Public.gameManager = new GameManager(context);
         Public.gameManager.start();
+        Public.gameEventHandler.registerListener(this);
     }
 
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
@@ -43,6 +49,8 @@ public class GameCanvas extends View
         this.context = context;
         Public.gameManager = new GameManager(context);
         Public.gameManager.start();
+        Public.gameEventHandler.registerListener(this);
+
     }
 
     @Override
@@ -63,7 +71,7 @@ public class GameCanvas extends View
             return;
         }
 
-            // Update debug screen every 5 frames.
+        // Update debug screen every 5 frames.
         if (this.framesSinceDebugUpdate >= 5) {
             ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_fps)).setText(String.format("FPS: %f", ( 1.0f / elapsed)));
             Log.d(Logging.LOG_DEBUG_TAG, String.format("FPS: %f", ( 1.0f / elapsed)));
@@ -101,5 +109,21 @@ public class GameCanvas extends View
 
         Public.screenRect.set(tempScreenRect);
         Public.gameBoardRect.set(tempGameBoardRect);
+    }
+
+    @Override
+    public boolean isListeningFor(GameEvent event) {
+        return (event instanceof GameOverUIEvent);
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+        ((Activity) this.context).runOnUiThread(()->{
+            if (event instanceof GameOverUIEvent)
+            {
+                // TODO: Make the GameOver fragment visible
+            }
+            //else if (event instanceof AAAAAA)
+        });
     }
 }

@@ -1,5 +1,10 @@
 package com.bulletpointgames.timedodge.game.systems.event;
 
+import com.bulletpointgames.timedodge.game.Public;
+import com.bulletpointgames.timedodge.game.systems.event.events.GameWallCollisionEvent;
+import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
+import com.bulletpointgames.timedodge.game.systems.score.ScoreManager;
+
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -29,6 +34,8 @@ public class GameEventHandler
 
     public void handleEvents()
     {
+        this.eventQueue.forEach((object)->{ if (object instanceof GameWallCollisionEvent) triggerGameOverEvent(); });
+
         for (GameEvent event : this.eventQueue)
         {
             // Event is not for everyone, handle and continue.
@@ -46,5 +53,14 @@ public class GameEventHandler
             }
         }
         this.eventQueue.clear();
+    }
+
+    private void triggerGameOverEvent() {
+        GameOverUIEvent goEvent = new GameOverUIEvent();
+        goEvent.target = null;
+        goEvent.referrer = null;
+        goEvent.points = ScoreManager.GetPoints();
+        goEvent.bonuses = ScoreManager.GetBonuses();
+        Public.gameEventHandler.registerEvent(goEvent);
     }
 }
