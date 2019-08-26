@@ -34,7 +34,8 @@ public class GameEventHandler
 
     public void handleEvents()
     {
-        this.eventQueue.forEach((object)->{ if (object instanceof GameWallCollisionEvent) triggerGameOverEvent(); });
+        // TODO: This causes ConcurrectModificationexception, Add GameOverUIEvent if wall collision event is present !!MOVE TO GAMEMANAGER!!.
+        // this.eventQueue.forEach((object)->{ if (object instanceof GameWallCollisionEvent) triggerGameOverEvent(); });
 
         for (GameEvent event : this.eventQueue)
         {
