@@ -25,6 +25,7 @@ public class Time
 
     public static float getPlayerAffectedDeltaTime()
     {
-        return Time.getDeltaTime() * playerPhysics.getVelocity().length() * 0.0025f;
+        // If player is moving too slow, ensure time moves at 15%.
+        return Math.max(Time.getDeltaTime() * playerPhysics.getVelocity().length() * 0.0025f, Time.getDeltaTime() * 0.15f);
     }
 }

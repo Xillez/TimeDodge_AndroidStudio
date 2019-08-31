@@ -63,7 +63,7 @@ public class Tools
 
     public static Vector getRandomPointOnCircumference(Vector pos, float radius)
     {
-        float angle = (rnd.nextInt(360) + 1) * (180.0f / (float) java.lang.Math.PI);
+        float angle = (rnd.nextInt(360) + 1) * ((float) (java.lang.Math.PI) / 180.0f);
         return new Vector((radius * (float) java.lang.Math.cos(angle)) + pos.x, (radius * (float) java.lang.Math.sin(angle)) + pos.y);
     }
 

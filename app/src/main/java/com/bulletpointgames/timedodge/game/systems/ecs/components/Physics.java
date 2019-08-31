@@ -15,8 +15,8 @@ import com.bulletpointgames.timedodge.utils.Vector;
 
 public class Physics extends Component implements GameEventListener
 {
-    private Vector velocity = new Vector(0,0);
-    private Vector acceleration = new Vector(0,0);
+    private Vector velocity;
+    private Vector acceleration;
 
     private Transform parentTransform = null;
 
@@ -29,6 +29,8 @@ public class Physics extends Component implements GameEventListener
     public void create()
     {
         super.create();
+        this.velocity = new Vector(0,0);
+        this.acceleration = new Vector(0,0);
 
         this.parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
 

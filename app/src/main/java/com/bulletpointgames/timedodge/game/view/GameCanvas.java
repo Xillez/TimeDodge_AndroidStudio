@@ -14,13 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bulletpointgames.timedodge.R;
+import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.systems.event.GameEvent;
 import com.bulletpointgames.timedodge.game.systems.event.GameEventListener;
-import com.bulletpointgames.timedodge.game.systems.event.events.GameEntityCollisionEvent;
-import com.bulletpointgames.timedodge.game.systems.event.events.GameWallCollisionEvent;
 import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
 import com.bulletpointgames.timedodge.game.systems.thread.GameManager;
-import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Tools;
 
@@ -86,7 +84,7 @@ public class GameCanvas extends View implements GameEventListener
 
     public void dumpOnDebugImageView(ImageView imageView)
     {
-        int addOffset = 750;
+        int addOffset = 100;
 
         Rect tempScreenRect = new Rect(Public.screenRect.left, Public.screenRect.top, Public.screenRect.right, Public.screenRect.bottom);
         Rect tempGameBoardRect = new Rect(Public.gameBoardRect.left, Public.gameBoardRect.top, Public.gameBoardRect.right, Public.gameBoardRect.bottom);

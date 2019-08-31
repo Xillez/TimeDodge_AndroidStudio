@@ -1,7 +1,6 @@
 package com.bulletpointgames.timedodge.game.systems.spawn;
 
 import android.graphics.Canvas;
-import android.util.Log;
 
 import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.layers.Layers;
@@ -12,7 +11,6 @@ import com.bulletpointgames.timedodge.game.systems.ecs.components.Physics;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.RespawnTrigger;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Transform;
 import com.bulletpointgames.timedodge.game.tags.Tags;
-import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
 
@@ -30,7 +28,7 @@ public class SpawnManager {
 
     //private SpawnConfigLoader configLoader = null;
     private boolean shouldSpawn = true;
-    public static final int MAX_ENTITY_COUNT = 11;
+    public static final int MAX_ENTITY_COUNT = 2;
     ArrayList<RespawnTrigger> respawnTriggers = new ArrayList<>();
     private Transform playerTransform = null;
 
@@ -43,11 +41,10 @@ public class SpawnManager {
     {
         // TODO: Load spawn manager configuration xml !!NOT IMPLEMENTED, FUTURE UPDATE!!
 
-
         ArrayList<Entity> players = Public.gameManager.getAllEntitiesWithTag(Tags.PLAYER_TAG, null);
         this.playerTransform = (Transform) players.get(0).getComponentByType(Transform.class);
 
-        Public.timerManager.registerTimer(250, () -> spawnEntity());
+        Public.timerManager.registerTimer(750, () -> spawnEntity());
     }
 
     public void update()
@@ -58,8 +55,6 @@ public class SpawnManager {
         {
             entityTransform = (Transform) detector.getParent().getComponentByType(Transform.class);
             entityPhysics = (Physics) detector.getParent().getComponentByType(Physics.class);
-
-            Log.d(Logging.LOG_DEBUG_TAG, String.format("SPAWNMANAGER: %s | %s | %s", detector.hasEnteredScreen(), detector.isVisible(), detector.hasTimeExpired()));
 
             if ((detector.hasEnteredScreen() || detector.hasTimeExpired()) && !detector.isVisible())
             {
@@ -91,14 +86,10 @@ public class SpawnManager {
         if (!(Public.gameManager.getEntities().size() < SpawnManager.MAX_ENTITY_COUNT))
             return;
 
-        Log.d(Logging.LOG_DEBUG_TAG, "SPAWNED AN ENTITY!");
-
         Entity entity = new Entity();
         entity.addTag(Tags.DEBRIS_TAG);
         entity.addLayer(Layers.DEBRIS_LAYER);
-
-        Transform entityTransform = new Transform();
-        entity.addComponent(entityTransform);
+        Transform entityTransform = (Transform) entity.getComponentByType(Transform.class);
         entity.addComponent(new Graphics());
         Physics entityPhysics = new Physics();
         entity.addComponent(entityPhysics);
@@ -121,11 +112,9 @@ public class SpawnManager {
 
     private void placeEntity(Transform transform, Physics physics)
     {
-        Vector pos = this.playerTransform.getPosition();
-
+        Vector playerPos = this.playerTransform.getPosition();
         transform.setPosition(Tools.getRandomPointOnCircumference(new Vector(Public.screenRect.centerX(), Public.screenRect.centerY()), (Public.screenRect.width() * 0.65f)));
-        //entityPhysics.setVelocity(this.playerTransform.getPosition().sub(pos).multi(0.75f));
-        physics.setVelocity(pos.sub(transform.getPosition()).multi(0.65f));
+        physics.setVelocity(playerPos.sub(transform.getPosition()).multi(0.65f));
     }
 }
 

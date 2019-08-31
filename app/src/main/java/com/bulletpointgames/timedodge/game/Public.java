@@ -34,6 +34,4 @@ public class Public
     public static final int TARGET_FPS = 60;
     public static final float MAX_FRAME_TIME_SEC = 1.0f / TARGET_FPS;
     public static final int MAX_FRAME_TIME_NANO = (int) Math.floor(1000000000.0f * MAX_FRAME_TIME_SEC);
-
-
 }
