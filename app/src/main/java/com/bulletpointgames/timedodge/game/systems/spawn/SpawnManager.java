@@ -28,7 +28,7 @@ public class SpawnManager {
 
     //private SpawnConfigLoader configLoader = null;
     private boolean shouldSpawn = true;
-    public static final int MAX_ENTITY_COUNT = 2;
+    public static final int MAX_ENTITY_COUNT = 11;
     ArrayList<RespawnTrigger> respawnTriggers = new ArrayList<>();
     private Transform playerTransform = null;
 
@@ -44,7 +44,7 @@ public class SpawnManager {
         ArrayList<Entity> players = Public.gameManager.getAllEntitiesWithTag(Tags.PLAYER_TAG, null);
         this.playerTransform = (Transform) players.get(0).getComponentByType(Transform.class);
 
-        Public.timerManager.registerTimer(750, () -> spawnEntity());
+        Public.timerManager.registerTimer(1000, 750, () -> spawnEntity());
     }
 
     public void update()

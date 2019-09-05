@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class CollisionCircle extends Collision
 {
     private boolean backgroundCollision = true;
-    private float DETECTION_RANGE = 100.0f;
+    private float DETECTION_RANGE = 75.0f;
 
     private Transform parentTransform = null;
     private Graphics parentGraphics = null;
