@@ -84,7 +84,7 @@ public class GameCanvas extends View implements GameEventListener
 
     public void dumpOnDebugImageView(ImageView imageView)
     {
-        int addOffset = 100;
+        int addOffset = 500;
 
         Rect tempScreenRect = new Rect(Public.screenRect.left, Public.screenRect.top, Public.screenRect.right, Public.screenRect.bottom);
         Rect tempGameBoardRect = new Rect(Public.gameBoardRect.left, Public.gameBoardRect.top, Public.gameBoardRect.right, Public.gameBoardRect.bottom);
