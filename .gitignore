@@ -1,6 +1,9 @@
 ### USER DEFINED ###
 
-####### REMOVE
+.idea/codeStyles/codeStyleConfig.xml
+.idea/inspectionProfiles/
+
+# REMOVE
 app/src/main/java/com/bulletpointgames/timedodge/game/systems/ecs/components/LerpTest.java
 app/src/main/java/com/bulletpointgames/timedodge/game/systems/event/events/GameCloseCallEvent.java
 
