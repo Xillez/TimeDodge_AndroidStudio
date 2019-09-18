@@ -99,15 +99,12 @@ public class SpawnManager {
         RespawnTrigger respawnTrigger = new RespawnTrigger();
         entity.addComponent(respawnTrigger);
 
-        if (Public.gameManager.getNrEntitiesWithTag(Tags.PLAYER_TAG, null) > 0) {
+        if (Public.gameManager.getNrEntitiesWithTag(Tags.PLAYER_TAG, null) > 0)
+        {
             this.placeEntity(entityTransform, entityPhysics);
             Public.gameManager.addEntity(entity);
             this.respawnTriggers.add(respawnTrigger);
         }
-        /*else
-        {
-            entityPhysics.setVelocity(Tools.getRandomPointOnScreen().sub(pos));
-        }*/
     }
 
     private void placeEntity(Transform transform, Physics physics)
@@ -117,15 +114,3 @@ public class SpawnManager {
         physics.setVelocity(playerPos.sub(transform.getPosition()).multi(0.65f));
     }
 }
-
-/*
-
-Physics parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
-ArrayList<Entity> players = Public.gameManager.getAllEntitiesWithTag(Tags.PLAYER_TAG, null);
-Vector playerPos = ((Transform) players.get(0).getComponentByType(Transform.class)).getPosition();
-parentPhysics.setVelocity(playerPos.sub(pos).multi(0.75f));
-parentTransform.setPosition(Tools.getRandomPointOnCircumference(new Vector(Public.screenSize.x / 2.0f, Public.screenSize.y / 2.0f), Public.screenSize.x));
-this.enteredScreen = false;
-Log.d(Logging.LOG_DEBUG_TAG, "Exited SCREEN!");
-
-*/
