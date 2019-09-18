@@ -1,3 +1,9 @@
+### USER DEFINED ###
+
+####### REMOVE
+app/src/main/java/com/bulletpointgames/timedodge/game/systems/ecs/components/LerpTest.java
+app/src/main/java/com/bulletpointgames/timedodge/game/systems/event/events/GameCloseCallEvent.java
+
 
 # Created by https://www.gitignore.io/api/linux,android,windows,sublimetext,visualstudio,androidstudio,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=linux,android,windows,sublimetext,visualstudio,androidstudio,visualstudiocode
