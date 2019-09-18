@@ -17,14 +17,14 @@ import com.bulletpointgames.timedodge.utils.Vector;
 import java.util.ArrayList;
 
 public class SpawnManager {
-    private class SpawnedEntityInfo {
+    /*private class SpawnedEntityInfo {
         boolean enteredScreen = false;
         Entity entity = null;
 
         public SpawnedEntityInfo(Entity entity) {
             this.entity = entity;
         }
-    }
+    }*/
 
     //private SpawnConfigLoader configLoader = null;
     private boolean shouldSpawn = true;
@@ -78,7 +78,8 @@ public class SpawnManager {
         //
     }
 
-    public void pause(boolean pause) {
+    public void pause(boolean pause)
+    {
         this.shouldSpawn = pause;
     }
 
