@@ -1,5 +1,12 @@
 package com.bulletpointgames.timedodge.game.systems.event;
 
+import android.util.Log;
+
+import com.bulletpointgames.timedodge.game.Public;
+import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
+import com.bulletpointgames.timedodge.game.systems.score.ScoreManager;
+import com.bulletpointgames.timedodge.utils.Logging;
+
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -32,6 +39,8 @@ public class GameEventHandler
         // TODO: This causes ConcurrectModificationexception, Add GameOverUIEvent if wall collision event is present !!MOVE TO GAMEMANAGER!!.
         // this.eventQueue.forEach((object)->{ if (object instanceof GameWallCollisionEvent) triggerGameOverEvent(); });
 
+        Log.d(Logging.LOG_DEBUG_TAG, this.listeners.toString());
+
         for (GameEvent event : this.eventQueue)
         {
             // Event is not for everyone, handle and continue.
@@ -50,13 +59,4 @@ public class GameEventHandler
         }
         this.eventQueue.clear();
     }
-
-    /*private void triggerGameOverEvent() {
-        GameOverUIEvent goEvent = new GameOverUIEvent();
-        goEvent.target = null;
-        goEvent.referrer = null;
-        goEvent.points = ScoreManager.GetPoints();
-        goEvent.bonuses = ScoreManager.GetBonuses();
-        Public.gameEventHandler.registerEvent(goEvent);
-    }*/
 }

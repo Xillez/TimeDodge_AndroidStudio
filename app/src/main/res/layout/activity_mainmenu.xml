@@ -39,4 +39,5 @@
             android:layout_marginBottom="10dp"
             android:text="@string/mainmenu_btn_quit" />
     </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

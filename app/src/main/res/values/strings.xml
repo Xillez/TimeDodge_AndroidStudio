@@ -9,4 +9,10 @@
     <string name="sharedpref_name">timedodge</string>
     <string name="settings_text_music">Music</string>
     <string name="settings_text_sensorsensitivity">Tilt sensitivity</string>
+    <string name="gameover_text_gameover">Game Over</string>
+    <string name="gameover_text_gameover_subtext">aaahh maaaan…</string>
+    <string name="gameover_text_points">Points:</string>
+    <string name="gameover_text_bonuses">Bonuses:</string>
+    <string name="gameover_btn_text_menu">Menu</string>
+    <string name="gameover_btn_text_replay">Replay</string>
 </resources>

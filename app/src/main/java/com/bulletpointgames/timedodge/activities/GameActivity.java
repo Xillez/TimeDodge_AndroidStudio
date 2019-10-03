@@ -8,18 +8,25 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bulletpointgames.timedodge.R;
-import com.bulletpointgames.timedodge.game.view.GameCanvas;
+import com.bulletpointgames.timedodge.activities.fragments.GameOverFragment;
 import com.bulletpointgames.timedodge.game.Public;
+import com.bulletpointgames.timedodge.game.systems.event.GameEvent;
+import com.bulletpointgames.timedodge.game.systems.event.GameEventListener;
+import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
+import com.bulletpointgames.timedodge.game.view.GameCanvas;
+import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Tools;
 
 import static com.bulletpointgames.timedodge.utils.Logging.LOG_INFO_TAG;
 
-public class GameActivity extends AppCompatActivity
+public class GameActivity extends AppCompatActivity implements GameOverFragment.GameOverFragmentInteractionListener, GameEventListener
 {
     GameCanvas gameCanvas;
     // OpenGl Version --> private GameView gameView;
@@ -59,6 +66,8 @@ public class GameActivity extends AppCompatActivity
         ImageView debugScreenshot = findViewById(R.id.game_gamecanvas_debugScreenShot_view);
         findViewById(R.id.game_gamecanvas_debugScreenShot).setOnClickListener(v -> this.gameCanvas.dumpOnDebugImageView(debugScreenshot));
 
+        Public.gameEventHandler.registerListener(this);
+
         // OpenGL Version
         /*this.gameView = new GameView(this);
         setContentView(this.gameView);*/
@@ -84,7 +93,7 @@ public class GameActivity extends AppCompatActivity
         Log.i(LOG_INFO_TAG, "Tying to register sensor!");
         sensorManager.registerListener(Public.input, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
-        findViewById(R.id.game_debuginfo_panel).setOnClickListener(v -> v.setActivated(false));
+        //findViewById(R.id.game_debuginfo_panel).setOnClickListener(v -> v.setActivated(false));
     }
 
     @Override
@@ -152,6 +161,40 @@ public class GameActivity extends AppCompatActivity
         Public.spawnManager.destroy();
 
         super.onDestroy();
+    }
+
+    @Override
+    public void onGameOverMenuButtonPressed()
+    {
+        Log.d(Logging.LOG_DEBUG_TAG, "MENU BUTTON PRESSED!");
+        finish();
+    }
+
+    @Override
+    public void onGameOverReplayButtonPressed()
+    {
+        Log.d(Logging.LOG_DEBUG_TAG, "REPLAY BUTTON PRESSED!");
+        super.recreate();
+    }
+
+    @Override
+    public boolean isListeningFor(GameEvent event)
+    {
+        // TODO:                      v--- make PlayerDeathEvent
+        return (event instanceof GameOverUIEvent);
+    }
+
+    @Override
+    public void onEvent(GameEvent event)
+    {
+        // TODO:                      v--- make PlayerDeathEvent
+        if (event instanceof GameOverUIEvent)
+        {
+            runOnUiThread(()->{
+                ConstraintLayout gameoverFragment = findViewById(R.id.frag_gameover);
+                gameoverFragment.setVisibility(View.VISIBLE);
+            });
+        }
     }
 }
 

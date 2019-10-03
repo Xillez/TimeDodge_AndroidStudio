@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.fragments.GameOverFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/frag_gameover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/frag_gameover_vertical_left_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/frag_gameover_horizontal_top_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.25" />
+        <android.support.constraint.Guideline
+            android:id="@+id/frag_gameover_vertical_right_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.75" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/frag_gameover_horizontal_bottom_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.75" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/gamepanel_background"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="@id/frag_gameover_vertical_left_guideline"
+            app:layout_constraintTop_toTopOf="@id/frag_gameover_horizontal_top_guideline"
+            app:layout_constraintEnd_toEndOf="@id/frag_gameover_vertical_right_guideline"
+            app:layout_constraintBottom_toBottomOf="@id/frag_gameover_horizontal_bottom_guideline">
+
+            <TextView
+                android:id="@+id/frag_gameover_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gameover_text_gameover"
+                android:textSize="32sp"
+                android:textColor="@color/text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/frag_gameover_subtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gameover_text_gameover_subtext"
+                android:textColor="@color/text_color"
+                app:layout_constraintEnd_toEndOf="@+id/frag_gameover_text"
+                app:layout_constraintTop_toBottomOf="@+id/frag_gameover_text" />
+
+            <TextView
+                android:id="@+id/frag_gameover_text_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gameover_text_points"
+                android:textColor="@color/text_color"
+                app:layout_constraintStart_toStartOf="@+id/frag_gameover_text"
+                app:layout_constraintTop_toBottomOf="@+id/frag_gameover_subtext" />
+
+            <TextView
+                android:id="@+id/frag_gameover_text_bonuses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gameover_text_bonuses"
+                android:textColor="@color/text_color"
+                app:layout_constraintStart_toStartOf="@+id/frag_gameover_text"
+                app:layout_constraintTop_toBottomOf="@+id/frag_gameover_text_points" />
+
+            <Button
+                android:id="@+id/frag_gameover_btn_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="2.5dp"
+                android:text="@string/gameover_btn_text_menu"
+                app:layout_constraintEnd_toStartOf="@id/frag_gameover_btn_replay"
+                app:layout_constraintStart_toStartOf="@+id/frag_gameover_text"
+                app:layout_constraintTop_toBottomOf="@id/frag_gameover_text_bonuses" />
+
+            <Button
+                android:id="@+id/frag_gameover_btn_replay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gameover_btn_text_replay"
+                app:layout_constraintEnd_toEndOf="@+id/frag_gameover_text"
+                app:layout_constraintStart_toEndOf="@id/frag_gameover_btn_menu"
+                app:layout_constraintTop_toTopOf="@id/frag_gameover_btn_menu" />
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

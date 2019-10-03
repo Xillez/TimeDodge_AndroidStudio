@@ -6,6 +6,7 @@
     <color name="gameBackground">#FF444444</color>
     <color name="gameDebugBackground">#CF353535</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="ball_inner">#00930C</color>
-    <color name="ball_edge">#005106</color>
+    <color name="light_green">#00930C</color>
+    <color name="dark_green">#005106</color>
+    <color name="text_color">#DDDDDD</color>
 </resources>

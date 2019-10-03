@@ -3,6 +3,7 @@ package com.bulletpointgames.timedodge.game.systems.thread;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.bulletpointgames.timedodge.game.systems.ecs.components.PlayerControll
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Transform;
 import com.bulletpointgames.timedodge.game.tags.Tags;
 import com.bulletpointgames.timedodge.game.view.GameView;
+import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Time;
 import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
@@ -65,10 +67,12 @@ public class GameManager extends Thread
         try {
             this.haltUpdating();
 
+            Log.i(Logging.LOG_INFO_TAG, "GameManager creating game entities");
             for (Entity entity : this.entities)
             {
                 entity.create();
             }
+            Log.i(Logging.LOG_INFO_TAG, "GameManager finished creating game entities");
 
             this.continueUpdating();
         } catch (InterruptedException e) {
@@ -158,6 +162,7 @@ public class GameManager extends Thread
 
     private void gameDestroy()
     {
+        Log.i(Logging.LOG_INFO_TAG, "GameManager started destruction");
         // Destroy for SpawnManager
         Public.spawnManager.destroy();
 
@@ -166,16 +171,20 @@ public class GameManager extends Thread
         {
             entity.destroy();
         }
+        Log.i(Logging.LOG_INFO_TAG, "GameManager finished destruction");
     }
-
-
 
     @Override
     public void run()
     {
+        Log.i(Logging.LOG_INFO_TAG, "GameManager thread started construction");
         super.run();
+        Log.i(Logging.LOG_INFO_TAG, "GameManager thread finished construction");
 
+        Log.i(Logging.LOG_INFO_TAG, "GameManager started game creation/setup");
         this.gameCreate();
+        Log.i(Logging.LOG_INFO_TAG, "GameManager finished game creation/setup");
+
 
         while (running.get())
         {

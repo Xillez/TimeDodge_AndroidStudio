@@ -1,11 +1,13 @@
 package com.bulletpointgames.timedodge.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 
 import com.bulletpointgames.timedodge.R;
+import com.bulletpointgames.timedodge.activities.fragments.GameOverFragment;
 
 public class MainMenu extends AppCompatActivity
 {

@@ -35,23 +35,27 @@
                     android:id="@+id/game_debuginfo_fps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color" />
 
                 <TextView
                     android:id="@+id/game_debuginfo_ups"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color" />
                 <TextView
                     android:id="@+id/game_debuginfo_uithread_sleeptime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color" />
                 <TextView
                     android:id="@+id/game_debuginfo_gamethread_sleeptime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color" />
             </LinearLayout>
         </FrameLayout>
 
@@ -106,5 +110,11 @@
         </FrameLayout>-->
 
     </RelativeLayout>
+
+    <fragment class="com.bulletpointgames.timedodge.activities.fragments.GameOverFragment"
+        android:id="@+id/mainmenu_frag_gameover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 
 </android.support.constraint.ConstraintLayout>

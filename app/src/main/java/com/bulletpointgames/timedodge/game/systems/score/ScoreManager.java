@@ -22,16 +22,16 @@ public class ScoreManager
 
     public static long GetBonuses()
     {
-        return points;
+        return bonuses;
     }
 
     public static void AddBonuses(long pointsToAdd)
     {
-        points += pointsToAdd;
+        bonuses += pointsToAdd;
     }
 
     public static void RemoveBonuses(long pointsToRemove)
     {
-        points -= pointsToRemove;
+        bonuses -= pointsToRemove;
     }
 }

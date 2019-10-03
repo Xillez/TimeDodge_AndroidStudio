@@ -12,6 +12,8 @@ import com.bulletpointgames.timedodge.game.systems.ecs.Entity;
 import com.bulletpointgames.timedodge.game.systems.event.GameEventListener;
 import com.bulletpointgames.timedodge.game.systems.event.events.GameEntityCollisionEvent;
 import com.bulletpointgames.timedodge.game.systems.event.events.GameWallCollisionEvent;
+import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
+import com.bulletpointgames.timedodge.game.systems.score.ScoreManager;
 import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
@@ -104,13 +106,25 @@ public class CollisionCircle extends Collision
             Vector unstuckPos = Tools.findClosestScreenUnstuckPosition(pos, size);
 
             if ((pos.x - (size.x / 2.0f)) <= Public.gameBoardRect.left)
+            {
                 this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_LEFT, unstuckPos);
+                this.triggerGameOverEvent();
+            }
             if ((pos.y - (size.y / 2.0f)) <= Public.gameBoardRect.top)
+            {
                 this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_TOP, unstuckPos);
+                this.triggerGameOverEvent();
+            }
             if ((pos.x + (size.x / 2.0f)) >= Public.gameBoardRect.right)
+            {
                 this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_RIGHT, unstuckPos);
+                this.triggerGameOverEvent();
+            }
             if ((pos.y + (size.y / 2.0f)) >= Public.gameBoardRect.bottom)
+            {
                 this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_BOTTOM, unstuckPos);
+                this.triggerGameOverEvent();
+            }
         }
     }
 
@@ -182,6 +196,16 @@ public class CollisionCircle extends Collision
         collEvent.collisionWithSide = wallSide;
         collEvent.unstuckPosition = unstuckPosition;
         Public.gameEventHandler.registerEvent(collEvent);
+    }
+
+    private void triggerGameOverEvent()
+    {
+        GameOverUIEvent goEvent = new GameOverUIEvent();
+        goEvent.target = null;
+        goEvent.referrer = null;
+        goEvent.points = ScoreManager.GetPoints();
+        goEvent.bonuses = ScoreManager.GetBonuses();
+        Public.gameEventHandler.registerEvent(goEvent);
     }
 
     public boolean isBackgroundCollision()

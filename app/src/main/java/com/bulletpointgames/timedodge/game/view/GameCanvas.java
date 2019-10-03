@@ -15,14 +15,11 @@ import android.widget.TextView;
 
 import com.bulletpointgames.timedodge.R;
 import com.bulletpointgames.timedodge.game.Public;
-import com.bulletpointgames.timedodge.game.systems.event.GameEvent;
-import com.bulletpointgames.timedodge.game.systems.event.GameEventListener;
-import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
 import com.bulletpointgames.timedodge.game.systems.thread.GameManager;
 import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Tools;
 
-public class GameCanvas extends View implements GameEventListener
+public class GameCanvas extends View
 {
     private Context context;
 
@@ -39,7 +36,6 @@ public class GameCanvas extends View implements GameEventListener
         this.context = context;
         Public.gameManager = new GameManager(context);
         Public.gameManager.start();
-        Public.gameEventHandler.registerListener(this);
     }
 
     public GameCanvas(Context context, @Nullable AttributeSet attrs) {
@@ -47,8 +43,6 @@ public class GameCanvas extends View implements GameEventListener
         this.context = context;
         Public.gameManager = new GameManager(context);
         Public.gameManager.start();
-        Public.gameEventHandler.registerListener(this);
-
     }
 
     @Override
@@ -107,21 +101,5 @@ public class GameCanvas extends View implements GameEventListener
 
         Public.screenRect.set(tempScreenRect);
         Public.gameBoardRect.set(tempGameBoardRect);
-    }
-
-    @Override
-    public boolean isListeningFor(GameEvent event) {
-        return (event instanceof GameOverUIEvent);
-    }
-
-    @Override
-    public void onEvent(GameEvent event) {
-        ((Activity) this.context).runOnUiThread(()->{
-            if (event instanceof GameOverUIEvent)
-            {
-                // TODO: Make the GameOver fragment visible
-            }
-            //else if (event instanceof AAAAAA)
-        });
     }
 }
