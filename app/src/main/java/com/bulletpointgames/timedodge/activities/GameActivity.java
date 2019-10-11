@@ -19,6 +19,7 @@ import com.bulletpointgames.timedodge.activities.fragments.GameOverFragment;
 import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.systems.event.GameEvent;
 import com.bulletpointgames.timedodge.game.systems.event.GameEventListener;
+import com.bulletpointgames.timedodge.game.systems.event.events.PlayerDeathEvent;
 import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
 import com.bulletpointgames.timedodge.game.view.GameCanvas;
 import com.bulletpointgames.timedodge.utils.Logging;
@@ -48,12 +49,14 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
         // Set screen orientation
         Log.i(LOG_INFO_TAG, "Setting screen orientation!");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        Public.gameActivity = this;
         Public.screenSize.set(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
         Public.screenRect.set(0, 0, (int) Public.screenSize.x, (int) Public.screenSize.y);
         Public.screenPixelDensity = getResources().getDisplayMetrics().density;
         Public.MARGIN_PIXEL = Tools.fromDPtoDevicePixels(Public.MARGIN_DP);
         Public.gameBoard = Public.screenSize.sub((float) Public.MARGIN_PIXEL);
         Public.gameBoardRect = new Rect(Public.MARGIN_PIXEL, Public.MARGIN_PIXEL, (int) Public.screenRect.right - Public.MARGIN_PIXEL, (int) Public.screenRect.bottom - Public.MARGIN_PIXEL);
+        Public.gameEventHandler.registerListener(this);
 
         super.onCreate(savedInstanceState);
 
@@ -66,7 +69,6 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
         ImageView debugScreenshot = findViewById(R.id.game_gamecanvas_debugScreenShot_view);
         findViewById(R.id.game_gamecanvas_debugScreenShot).setOnClickListener(v -> this.gameCanvas.dumpOnDebugImageView(debugScreenshot));
 
-        Public.gameEventHandler.registerListener(this);
 
         // OpenGL Version
         /*this.gameView = new GameView(this);
@@ -99,6 +101,7 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
     @Override
     public void onBackPressed()
     {
+        Public.gameActivity = null;
         Public.spawnManager.destroy();
         Public.gameManager.shutdown();
 
@@ -118,6 +121,7 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
     {
         Log.i(LOG_INFO_TAG, "APP PAUSED");
 
+        Public.gameActivity = null;
         Public.spawnManager.pause(true);
         Public.gameManager.pause(true);
 
@@ -148,6 +152,7 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
 
         Public.spawnManager.pause(false);
         Public.gameManager.pause(false);
+        Public.gameActivity = this;
 
         //canvas.setPrevTime(System.currentTimeMillis());
         //canvas.startPointGiving();
@@ -157,6 +162,7 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
     @Override
     protected void onDestroy()
     {
+        Public.gameActivity = null;
         Public.gameManager.shutdown();
         Public.spawnManager.destroy();
 
@@ -167,6 +173,7 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
     public void onGameOverMenuButtonPressed()
     {
         Log.d(Logging.LOG_DEBUG_TAG, "MENU BUTTON PRESSED!");
+        Public.gameActivity = this;
         finish();
     }
 
@@ -180,15 +187,13 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
     @Override
     public boolean isListeningFor(GameEvent event)
     {
-        // TODO:                      v--- make PlayerDeathEvent
-        return (event instanceof GameOverUIEvent);
+        return (event instanceof PlayerDeathEvent);
     }
 
     @Override
     public void onEvent(GameEvent event)
     {
-        // TODO:                      v--- make PlayerDeathEvent
-        if (event instanceof GameOverUIEvent)
+        if (event instanceof PlayerDeathEvent)
         {
             runOnUiThread(()->{
                 ConstraintLayout gameoverFragment = findViewById(R.id.frag_gameover);

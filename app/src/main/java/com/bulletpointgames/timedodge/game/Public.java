@@ -1,7 +1,9 @@
 package com.bulletpointgames.timedodge.game;
 
+import android.app.Activity;
 import android.graphics.Rect;
 
+import com.bulletpointgames.timedodge.activities.GameActivity;
 import com.bulletpointgames.timedodge.game.systems.event.GameEventHandler;
 import com.bulletpointgames.timedodge.game.systems.spawn.SpawnManager;
 import com.bulletpointgames.timedodge.game.systems.thread.GameManager;
@@ -12,6 +14,7 @@ import com.bulletpointgames.timedodge.utils.Vector;
 public class Public
 {
     public static boolean DEBUG_MODE = false;
+
 
     public static Vector screenSize = new Vector(0, 0);
     public static Rect screenRect = new Rect(0, 0, 0, 0);
@@ -25,6 +28,7 @@ public class Public
     public final static int MARGIN_DP = 5;
     public static int MARGIN_PIXEL = 0;
 
+    public static GameActivity gameActivity = null;
     public static GameManager gameManager = null;
     public static GameEventHandler gameEventHandler = new GameEventHandler();
     public static SpawnManager spawnManager = new SpawnManager();

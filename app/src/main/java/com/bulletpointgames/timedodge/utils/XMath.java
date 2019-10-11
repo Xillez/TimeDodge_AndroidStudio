@@ -33,6 +33,11 @@ public class XMath
         return new Vector(((x * x * (3 - 2 * x)) * (to.x - from.x)) + from.x , ((y * y * (3 - 2 * y)) * (to.y - from.y)) + from.y);
     }*/
 
+    public static int clamp(int value, int max, int min)
+    {
+        return Math.max(min, Math.min(max, value));
+    }
+
     public static float clamp(float value, float max, float min)
     {
         return Math.max(min, Math.min(max, value));

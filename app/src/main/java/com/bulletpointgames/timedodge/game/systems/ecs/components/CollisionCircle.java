@@ -14,6 +14,7 @@ import com.bulletpointgames.timedodge.game.systems.event.events.GameEntityCollis
 import com.bulletpointgames.timedodge.game.systems.event.events.GameWallCollisionEvent;
 import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
 import com.bulletpointgames.timedodge.game.systems.score.ScoreManager;
+import com.bulletpointgames.timedodge.game.tags.Tags;
 import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
@@ -180,7 +181,7 @@ public class CollisionCircle extends Collision
     public void triggerEntityCollisionEvent(GameEventListener target, Vector deflectionForce)
     {
         GameEntityCollisionEvent collEvent = new GameEntityCollisionEvent();
-        collEvent.target = target;
+        collEvent.targets.add(target);
         collEvent.referrer = this;
         collEvent.deflecionForce = deflectionForce;
         //collEvent.intersection = intersectionPoint;
@@ -188,10 +189,16 @@ public class CollisionCircle extends Collision
         Public.gameEventHandler.registerEvent(collEvent);
     }
 
-    public void triggerWallCollisionEvent(GameEventListener target, GameWallCollisionEvent.WallSide wallSide, Vector unstuckPosition)
+    public void triggerWallCollisionEvent(Physics target, GameWallCollisionEvent.WallSide wallSide, Vector unstuckPosition)
     {
         GameWallCollisionEvent collEvent = new GameWallCollisionEvent();
-        collEvent.target = target;
+        collEvent.targets.add(target);
+
+        if (target.getParent().hasTag(Tags.PLAYER_TAG))
+        {
+            collEvent.targets.add((HealthManager) target.getParent().getComponentByType(HealthManager.class));
+        }
+
         collEvent.referrer = this;
         collEvent.collisionWithSide = wallSide;
         collEvent.unstuckPosition = unstuckPosition;
@@ -201,7 +208,6 @@ public class CollisionCircle extends Collision
     private void triggerGameOverEvent()
     {
         GameOverUIEvent goEvent = new GameOverUIEvent();
-        goEvent.target = null;
         goEvent.referrer = null;
         goEvent.points = ScoreManager.GetPoints();
         goEvent.bonuses = ScoreManager.GetBonuses();

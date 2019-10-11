@@ -2,19 +2,20 @@ package com.bulletpointgames.timedodge.game.systems.event;
 
 import android.util.Log;
 
-import com.bulletpointgames.timedodge.game.Public;
-import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
-import com.bulletpointgames.timedodge.game.systems.score.ScoreManager;
 import com.bulletpointgames.timedodge.utils.Logging;
 
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.Semaphore;
 
 public class GameEventHandler
 {
     private ArrayList<GameEventListener> listeners = new ArrayList<>();
     private Queue<GameEvent> eventQueue = new PriorityQueue<>();
+    private Queue<GameEvent> busyQueue = new PriorityQueue<>();
+
+    private Semaphore handlingEvents = new Semaphore(1, true);
 
     public void registerListener(GameEventListener listener)
     {
@@ -31,32 +32,56 @@ public class GameEventHandler
     public void registerEvent(GameEvent event)
     {
         if (event != null)
-            this.eventQueue.add(event);
+            if (this.handlingEvents.availablePermits() == 1)
+                this.eventQueue.add(event);
+            else
+                this.busyQueue.add(event);
     }
 
     public void handleEvents()
     {
-        // TODO: This causes ConcurrectModificationexception, Add GameOverUIEvent if wall collision event is present !!MOVE TO GAMEMANAGER!!.
-        // this.eventQueue.forEach((object)->{ if (object instanceof GameWallCollisionEvent) triggerGameOverEvent(); });
+        try {
+            this.handlingEvents.acquire();
 
-        Log.d(Logging.LOG_DEBUG_TAG, this.listeners.toString());
+            this.handleEvents(this.eventQueue);
 
-        for (GameEvent event : this.eventQueue)
+            // Handle events registered from other events.
+            this.handleEvents(this.busyQueue);
+
+            // Removed handled events
+            this.eventQueue.clear();
+            this.busyQueue.clear();
+
+            // Done handling events
+            this.handlingEvents.release();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
+        }
+    }
+
+    private void handleEvents(Queue<GameEvent> queue)
+    {
+        for (GameEvent event : queue)
         {
-            // Event is not for everyone, handle and continue.
-            if (event.target != null)
+            // Event is not for everyone, handle for specified targets and continue.
+            if (event.targets.size() > 0)
             {
-                if (event.target.isListeningFor(event))
-                    event.target.onEvent(event);
+                for (GameEventListener target : event.targets)
+                {
+                    Log.d(Logging.LOG_DEBUG_TAG, event.getClass().getName());
+                    if (target.isListeningFor(event))
+                        target.onEvent(event);
+                }
                 continue;
             }
 
+            // Event doesn't have a target, apply for everyone
             for (GameEventListener listener : this.listeners)
             {
                 if (listener.isListeningFor(event))
                     listener.onEvent(event);
             }
         }
-        this.eventQueue.clear();
     }
 }

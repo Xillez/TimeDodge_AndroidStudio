@@ -14,6 +14,7 @@ import com.bulletpointgames.timedodge.game.systems.ecs.Component;
 import com.bulletpointgames.timedodge.game.systems.ecs.Entity;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.CollisionCircle;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Graphics;
+import com.bulletpointgames.timedodge.game.systems.ecs.components.HealthManager;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Physics;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.PlayerController;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Transform;
@@ -60,6 +61,7 @@ public class GameManager extends Thread
         Physics physics = new Physics();
         ball.addComponent(physics);
         ball.addComponent(new CollisionCircle());
+        ball.addComponent(new HealthManager());
         this.addEntity(ball);
         Time.playerPhysics = physics;
 
