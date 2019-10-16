@@ -69,7 +69,6 @@ public class GameEventHandler
             {
                 for (GameEventListener target : event.targets)
                 {
-                    Log.d(Logging.LOG_DEBUG_TAG, event.getClass().getName());
                     if (target.isListeningFor(event))
                         target.onEvent(event);
                 }
