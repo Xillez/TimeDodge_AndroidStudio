@@ -9,6 +9,8 @@ import android.util.Log;
 import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.systems.ecs.Component;
 import com.bulletpointgames.timedodge.game.systems.ecs.Entity;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.RequiresComponent;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.Singleton;
 import com.bulletpointgames.timedodge.game.systems.event.GameEventListener;
 import com.bulletpointgames.timedodge.game.systems.event.events.GameEntityCollisionEvent;
 import com.bulletpointgames.timedodge.game.systems.event.events.GameWallCollisionEvent;
@@ -21,6 +23,10 @@ import com.bulletpointgames.timedodge.utils.Vector;
 
 import java.util.ArrayList;
 
+@Singleton
+@RequiresComponent(component = Transform.class)
+@RequiresComponent(component = Graphics.class)
+@RequiresComponent(component = Physics.class)
 public class CollisionCircle extends Collision
 {
     private boolean backgroundCollision = true;

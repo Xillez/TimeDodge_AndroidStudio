@@ -3,12 +3,15 @@ package com.bulletpointgames.timedodge.game.systems.ecs;
 import android.graphics.Canvas;
 import android.util.Log;
 
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.RequiresComponent;
 import com.bulletpointgames.timedodge.game.systems.thread.GameManager;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Transform;
 import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public final class Entity implements GameManager.GameLifecycle
@@ -27,6 +30,40 @@ public final class Entity implements GameManager.GameLifecycle
     @Override
     public void create()
     {
+        //TODO: ADD SORTING BASED ON ExecuteAfter ANNOTATION HERE BEFORE CREATION!
+
+        // Handle component dependencies
+        for (int i = 0; i < this.components.size(); i++)
+        {
+            ArrayList<Class> requiredComponentClazzes = Component.getRequiredComponents(this.components.get(i).getClass());
+            for (Class clazz : requiredComponentClazzes)
+            {
+                try
+                {
+                    Component newComponent = (Component) clazz.newInstance();
+                    // Component is singleton
+                    if (Component.isSingleton(newComponent.getClass()))
+                    {
+                        // Not already added, add it BEFORE DEPENDENT COMPONENT
+                        if (!this.hasComponentOfType(newComponent.getClass()))
+                        {
+                            newComponent.setParent(this);
+                            this.components.add(i, newComponent);
+                        }
+                    }
+                    else    // Not singleton, duplicates allowed, add it BEFORE DEPENDENT COMPONENT
+                    {
+                        newComponent.setParent(this);
+                        this.components.add(i, newComponent);
+                    }
+                } catch (InstantiationException | IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Create components
         for (Component component : this.components)
         {
             component.create();
@@ -97,11 +134,41 @@ public final class Entity implements GameManager.GameLifecycle
         return null;
     }
 
-    public void addComponent(Component component)
+    public int nrComponentByType(Class clazz)
     {
-        if (component != null) {
-            component.setParent(this);
-            this.components.add(component);
+        int nrComp = 0;
+        for (Component component : this.components)
+            if (component.getClass().equals(clazz))
+                nrComp++;
+
+        return nrComp;
+    }
+
+    public boolean hasComponentOfType(Class clazz)
+    {
+        return (this.getComponentByType(clazz) != null);
+    }
+
+    public void addComponent(Component inputComponent)
+    {
+        // Validate component
+        if (inputComponent != null)
+        {
+            // Component is singleton
+            if (Component.isSingleton(inputComponent.getClass()))
+            {
+                // Not already added, add it
+                if (!this.hasComponentOfType(inputComponent.getClass()))
+                {
+                    inputComponent.setParent(this);
+                    this.components.add(inputComponent);
+                }
+            }
+            else    // Not singleton, duplicates allowed
+            {
+                inputComponent.setParent(this);
+                this.components.add(inputComponent);
+            }
         }
     }
 

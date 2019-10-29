@@ -57,9 +57,9 @@ public class GameManager extends Thread
         Graphics playerGraphics = new Graphics();
         playerGraphics.isPlayer = true;
         ball.addComponent(playerGraphics);
-        ball.addComponent(new PlayerController());
         Physics physics = new Physics();
         ball.addComponent(physics);
+        ball.addComponent(new PlayerController());
         ball.addComponent(new CollisionCircle());
         ball.addComponent(new HealthManager());
         this.addEntity(ball);

@@ -2,6 +2,8 @@ package com.bulletpointgames.timedodge.utils;
 
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Physics;
 
+import org.jetbrains.annotations.Contract;
+
 public class Time
 {
     private static long lastSysTime = 0L;
@@ -18,6 +20,7 @@ public class Time
         Time.lastSysTime = currentSysTime;
     }
 
+    @Contract(pure = true)
     public static float getDeltaTime()
     {
         return Time.elapsed;

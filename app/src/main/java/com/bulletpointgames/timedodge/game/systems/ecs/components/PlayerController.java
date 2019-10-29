@@ -3,8 +3,12 @@ package com.bulletpointgames.timedodge.game.systems.ecs.components;
 import android.graphics.Canvas;
 
 import com.bulletpointgames.timedodge.game.systems.ecs.Component;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.RequiresComponent;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.Singleton;
 import com.bulletpointgames.timedodge.utils.Input;
 
+@Singleton
+@RequiresComponent(component = Physics.class)
 public class PlayerController extends Component
 {
     private Physics parentPhysics = null;

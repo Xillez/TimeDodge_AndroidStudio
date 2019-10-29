@@ -5,6 +5,8 @@ import android.graphics.Paint;
 
 import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.systems.ecs.Component;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.RequiresComponent;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.Singleton;
 import com.bulletpointgames.timedodge.game.systems.event.GameEvent;
 import com.bulletpointgames.timedodge.game.systems.event.GameEventListener;
 import com.bulletpointgames.timedodge.game.systems.event.events.GameEntityCollisionEvent;
@@ -13,6 +15,8 @@ import com.bulletpointgames.timedodge.game.tags.Tags;
 import com.bulletpointgames.timedodge.utils.Time;
 import com.bulletpointgames.timedodge.utils.Vector;
 
+@Singleton
+@RequiresComponent(component = Transform.class)
 public class Physics extends Component implements GameEventListener
 {
     private Vector velocity;

@@ -6,9 +6,13 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 
 import com.bulletpointgames.timedodge.game.systems.ecs.Component;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.RequiresComponent;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.Singleton;
 import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
 
+@Singleton
+@RequiresComponent(component = Transform.class)
 public class Graphics extends Component
 {
     // Disable for opengl drawing

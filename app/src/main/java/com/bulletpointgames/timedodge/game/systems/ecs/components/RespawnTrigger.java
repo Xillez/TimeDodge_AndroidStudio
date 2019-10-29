@@ -8,10 +8,15 @@ import android.graphics.drawable.shapes.RectShape;
 
 import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.systems.ecs.Component;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.RequiresComponent;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.Singleton;
 import com.bulletpointgames.timedodge.utils.Time;
 import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
 
+@Singleton
+@RequiresComponent(component = Transform.class)
+@RequiresComponent(component = Graphics.class)
 public final class RespawnTrigger extends Component
 {
     private final float RESPAWN_TIME_SEC = 5.0f;
@@ -119,3 +124,4 @@ public final class RespawnTrigger extends Component
         this.timeSoFar = 0.0f;
     }
 }
+

@@ -4,8 +4,10 @@ import android.graphics.Canvas;
 
 import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.systems.ecs.Component;
+import com.bulletpointgames.timedodge.game.systems.ecs.annotations.Singleton;
 import com.bulletpointgames.timedodge.utils.Vector;
 
+@Singleton
 public class Transform extends Component
 {
     private Vector position = new Vector(Public.screenRect.centerX(), Public.screenRect.centerY());
