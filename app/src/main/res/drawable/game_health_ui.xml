@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- background layer -->
+    <item
+        android:id="@+id/game_health_ui_background"
+        android:drawable="@drawable/game_health_ui_base" />
+
+    <!-- progress layer -->
+    <item
+        android:id="@+id/game_health_ui_progress"
+        android:drawable="@drawable/game_health_ui_green" />
+
+    <!-- top layer -->
+    <item
+        android:id="@+id/game_health_ui_top"
+        android:drawable="@drawable/game_health_ui_underline" />
+
+</layer-list>
+<!-- <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background"
+        android:gravity="center_vertical|fill_horizontal">
+        <shape android:shape="rectangle"
+            android:tint="@color/red">
+            <corners android:radius="8dp"/>
+            <size android:height="20dp" />
+            <solid android:color="#90caf9" />
+        </shape>
+    </item>
+    <item android:id="@android:id/progress"
+        android:gravity="center_vertical|fill_horizontal">
+        <scale android:scaleWidth="100%">
+            <shape android:shape="rectangle"
+                android:tint="@color/green_dark">
+                <corners android:radius="8dp"/>
+                <size android:height="20dp" />
+                <solid android:color="#b9f6ca" />
+            </shape>
+        </scale>
+    </item>
+</layer-list>-->

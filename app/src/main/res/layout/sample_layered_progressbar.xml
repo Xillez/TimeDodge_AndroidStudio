@@ -1,0 +1,11 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.bulletpointgames.timedodge.activities.views"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.bulletpointgames.timedodge.UI.elements.LayeredProgressbar
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:drawable="@drawable/game_health_ui" />
+
+</FrameLayout>

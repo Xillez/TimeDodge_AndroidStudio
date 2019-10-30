@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="LayeredProgressbar">
+        <attr name="drawable" format="color|reference" />
+    </declare-styleable>
+</resources>

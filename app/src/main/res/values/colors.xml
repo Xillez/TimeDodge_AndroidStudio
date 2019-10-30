@@ -9,4 +9,8 @@
     <color name="light_green">#00930C</color>
     <color name="dark_green">#005106</color>
     <color name="text_color">#DDDDDD</color>
+    <color name="red_dark">#880000</color>
+    <color name="red">#FF0000</color>
+    <color name="green_dark">#008800</color>
+    <color name="green">#00FF00</color>
 </resources>

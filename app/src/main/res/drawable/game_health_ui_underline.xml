@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="20dp"
+    android:viewportWidth="120"
+    android:viewportHeight="20">
+
+    <!-- hide anything outside drawing area -->
+    <clip-path
+        android:pathData="M0,0 L100,0 L110,20 L10,20 z" />
+
+
+
+    <path
+        android:strokeColor="@color/white"
+        android:strokeWidth="3"
+        android:pathData="M0,0 L10,20  L110,20" />
+
+</vector>

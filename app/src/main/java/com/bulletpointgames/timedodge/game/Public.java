@@ -2,7 +2,9 @@ package com.bulletpointgames.timedodge.game;
 
 import android.app.Activity;
 import android.graphics.Rect;
+import android.provider.Contacts;
 
+import com.bulletpointgames.timedodge.UI.UIManager;
 import com.bulletpointgames.timedodge.activities.GameActivity;
 import com.bulletpointgames.timedodge.game.systems.event.GameEventHandler;
 import com.bulletpointgames.timedodge.game.systems.spawn.SpawnManager;
@@ -34,6 +36,7 @@ public class Public
     public static SpawnManager spawnManager = new SpawnManager();
     public static TimerManager timerManager = new TimerManager();
     public static Input input = new Input();
+    public static UIManager uiManager = new UIManager();
 
     public static final int TARGET_FPS = 60;
     public static final float MAX_FRAME_TIME_SEC = 1.0f / TARGET_FPS;
