@@ -2,6 +2,8 @@ package com.bulletpointgames.timedodge.game.systems.ecs;
 
 import android.graphics.Canvas;
 
+import com.bulletpointgames.timedodge.game.systems.UI.UIManager;
+import com.bulletpointgames.timedodge.game.systems.UI.annotations.AttachUI;
 import com.bulletpointgames.timedodge.game.systems.ecs.annotations.RequiresComponent;
 import com.bulletpointgames.timedodge.game.systems.ecs.annotations.Singleton;
 import com.bulletpointgames.timedodge.game.systems.thread.GameManager;
@@ -20,6 +22,9 @@ public class Component implements GameManager.GameLifecycle
         public Component()
         {
             this.id = Tools.getNewUID();
+            AttachUI annotation = this.getClass().getAnnotation(AttachUI.class);
+            if (annotation != null)
+                UIManager.handleAttachedUI(annotation, this);
         }
 
         public void create()

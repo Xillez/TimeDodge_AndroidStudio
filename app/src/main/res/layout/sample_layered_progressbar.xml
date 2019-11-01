@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.bulletpointgames.timedodge.UI.elements.LayeredProgressbar
+    <com.bulletpointgames.timedodge.game.systems.UI.elements.HealthManagerUI
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:drawable="@drawable/game_health_ui" />

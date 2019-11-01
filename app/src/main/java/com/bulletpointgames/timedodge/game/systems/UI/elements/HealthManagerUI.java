@@ -1,24 +1,24 @@
-package com.bulletpointgames.timedodge.UI.elements;
+package com.bulletpointgames.timedodge.game.systems.UI.elements;
 
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.AttributeSet;
 import android.util.Log;
 
 import com.bulletpointgames.timedodge.R;
-import com.bulletpointgames.timedodge.UI.UIElement;
+import com.bulletpointgames.timedodge.game.systems.UI.UICompElement;
+import com.bulletpointgames.timedodge.game.systems.UI.UIElement;
 import com.bulletpointgames.timedodge.game.Public;
+import com.bulletpointgames.timedodge.game.systems.ecs.components.HealthManager;
+import com.bulletpointgames.timedodge.game.systems.ecs.components.Transform;
 import com.bulletpointgames.timedodge.utils.Logging;
 import com.bulletpointgames.timedodge.utils.Vector;
 import com.bulletpointgames.timedodge.utils.XMath;
 
-public class LayeredProgressbar extends UIElement
+public class HealthManagerUI extends UICompElement
 {
     private LayerDrawable drawable;
     private Drawable progressDrawable;
@@ -27,10 +27,12 @@ public class LayeredProgressbar extends UIElement
     private float MIN = 0.0f;
     private float MAX = 100.0f;
 
-    private Vector pos = new Vector(0,0);
+    private Transform transform = null;
+
+    private Vector pos = new Vector(0, 0);
     private Vector size = new Vector(110,20);
 
-    public LayeredProgressbar()
+    public HealthManagerUI()
     {
         Resources res = Public.gameActivity.getResources();
         this.drawable = (LayerDrawable) ResourcesCompat.getDrawable(res, R.drawable.game_health_ui, null);
@@ -49,8 +51,28 @@ public class LayeredProgressbar extends UIElement
     }
 
     @Override
+    public void create()
+    {
+        super.create();
+
+        this.transform = (Transform) this.component.getParent().getComponentByType(Transform.class);
+    }
+
+    @Override
+    public void update()
+    {
+        super.update();
+
+        this.progress = ((HealthManager) this.component).getHealth();
+    }
+
+    @Override
     public void draw(Canvas canvas)
     {
+        super.draw(canvas);
+
+        Vector pos = this.transform.getPosition().add(new Vector(40, -40));
+
         // Compress health range to -1 - 0 for moving healthbar backwards
         float displacement = ((this.progress - this.MIN)/(this.MAX - this.MIN)) - 1;
 
@@ -60,7 +82,7 @@ public class LayeredProgressbar extends UIElement
                 lpb_bounds.top,
                 lpb_bounds.right + (int)(size.x * displacement),
                 lpb_bounds.bottom
-            );
+        );
 
         // Draw the example drawable on top of the text.
         if (this.drawable != null)
@@ -71,6 +93,12 @@ public class LayeredProgressbar extends UIElement
             this.progressDrawable.setBounds(progressDrawable_bounds);
             this.drawable.draw(canvas);
         }
+    }
+
+    @Override
+    public void destroy()
+    {
+        super.destroy();
     }
 
     public LayerDrawable getDrawable()

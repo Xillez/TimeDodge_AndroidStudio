@@ -177,7 +177,7 @@ public class GameManager extends Thread
     }
 
     @Override
-    public void run()
+public void run()       // TODO: Move UIManager to separate thread/service or into GameCanvas
     {
         Log.i(Logging.LOG_INFO_TAG, "GameManager thread started construction");
         super.run();
@@ -187,14 +187,18 @@ public class GameManager extends Thread
         this.gameCreate();
         Log.i(Logging.LOG_INFO_TAG, "GameManager finished game creation/setup");
 
+        Public.uiManager.create();
+
 
         while (running.get())
         {
             this.gameUpdate();
+            Public.uiManager.update();
             //this.gameDraw();
         }
 
         this.gameDestroy();
+        Public.uiManager.destroy();
     }
 
     public void shutdown()
@@ -339,6 +343,7 @@ public class GameManager extends Thread
         try {
             this.haltUpdating();
             this.gameDraw(canvas);
+            Public.uiManager.draw(canvas);
             this.continueUpdating();
         } catch (InterruptedException e) {
             e.printStackTrace();

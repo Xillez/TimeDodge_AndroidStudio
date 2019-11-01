@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bulletpointgames.timedodge.R;
+import com.bulletpointgames.timedodge.game.Public;
 
 public class GameOverFragment extends Fragment
 {
@@ -59,6 +60,8 @@ public class GameOverFragment extends Fragment
                 mListener.onGameOverMenuButtonPressed();
         });
         view.findViewById(R.id.frag_gameover_btn_replay).setOnClickListener(v -> {
+            Public.uiManager.destroy();
+
             if (validateListenerExists())
                 mListener.onGameOverReplayButtonPressed();
         });

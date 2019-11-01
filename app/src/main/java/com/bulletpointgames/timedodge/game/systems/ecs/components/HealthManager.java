@@ -2,7 +2,8 @@ package com.bulletpointgames.timedodge.game.systems.ecs.components;
 
 import android.graphics.Canvas;
 
-import com.bulletpointgames.timedodge.UI.elements.LayeredProgressbar;
+import com.bulletpointgames.timedodge.game.systems.UI.annotations.AttachUI;
+import com.bulletpointgames.timedodge.game.systems.UI.elements.HealthManagerUI;
 import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.systems.ecs.Component;
 import com.bulletpointgames.timedodge.game.systems.ecs.annotations.RequiresComponent;
@@ -15,16 +16,15 @@ import com.bulletpointgames.timedodge.game.systems.score.ScoreManager;
 import com.bulletpointgames.timedodge.utils.XMath;
 
 @Singleton
+@AttachUI(uiClass = HealthManagerUI.class, fieldName = "health")
 @RequiresComponent(component = Transform.class)
 @RequiresComponent(component = Physics.class)
 public class HealthManager extends Component implements GameEventListener
 {
     public final int MAX_HEALTH = 100;
     public final int MIN_HEALTH = 0;
-    private int playerHealth = this.MAX_HEALTH;
-    private Transform parentTransform = null;
-    private Physics parentPhysics = null;
-    private LayeredProgressbar healthBar = new LayeredProgressbar();
+    private int health = this.MAX_HEALTH;
+    //private HealthManagerUI healthBar = new HealthManagerUI();
 
     public HealthManager()
     {
@@ -36,11 +36,8 @@ public class HealthManager extends Component implements GameEventListener
     {
         super.create();
 
-        this.parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
-        this.parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
-
-        this.healthBar.setMAX(this.MAX_HEALTH);
-        this.healthBar.setMIN(this.MIN_HEALTH);
+        /*this.healthBar.setMAX(this.MAX_HEALTH);
+        this.healthBar.setMIN(this.MIN_HEALTH);*/
     }
 
     @Override
@@ -48,8 +45,8 @@ public class HealthManager extends Component implements GameEventListener
     {
         super.update();
 
-        this.healthBar.setPos(this.parentTransform.getPosition().add(40.0f));
-        this.healthBar.setProgress(this.playerHealth);
+        /*this.healthBar.setPos(this.parentTransform.getPosition().add(40.0f));
+        this.healthBar.setProgress(this.health);*/
     }
 
     @Override
@@ -57,7 +54,7 @@ public class HealthManager extends Component implements GameEventListener
     {
         super.draw(canvas);
 
-        this.healthBar.draw(canvas);
+        //this.healthBar.draw(canvas);
     }
 
     // OpenGL Version
@@ -86,7 +83,7 @@ public class HealthManager extends Component implements GameEventListener
         {
             this.modifyHealth(-35);
 
-            if (this.playerHealth <= 0)
+            if (this.health <= 0)
             {
                 PlayerDeathEvent playerDeathEvent = new PlayerDeathEvent();
                 playerDeathEvent.targets.add(Public.gameActivity);
@@ -97,8 +94,13 @@ public class HealthManager extends Component implements GameEventListener
         }
     }
 
+    public int getHealth()
+    {
+        return health;
+    }
+
     public void modifyHealth(int health)
     {
-        this.playerHealth = XMath.clamp(this.playerHealth + health, this.MAX_HEALTH, this.MIN_HEALTH);
+        this.health = XMath.clamp(this.health + health, this.MAX_HEALTH, this.MIN_HEALTH);
     }
 }

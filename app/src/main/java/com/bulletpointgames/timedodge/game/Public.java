@@ -1,10 +1,8 @@
 package com.bulletpointgames.timedodge.game;
 
-import android.app.Activity;
 import android.graphics.Rect;
-import android.provider.Contacts;
 
-import com.bulletpointgames.timedodge.UI.UIManager;
+import com.bulletpointgames.timedodge.game.systems.UI.UIManager;
 import com.bulletpointgames.timedodge.activities.GameActivity;
 import com.bulletpointgames.timedodge.game.systems.event.GameEventHandler;
 import com.bulletpointgames.timedodge.game.systems.spawn.SpawnManager;

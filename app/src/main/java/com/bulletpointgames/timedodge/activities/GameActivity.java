@@ -104,6 +104,7 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
         Public.gameActivity = null;
         Public.spawnManager.destroy();
         Public.gameManager.shutdown();
+        Public.uiManager.destroy();
 
         // Un-register sensor listener
         Log.i(LOG_INFO_TAG, "App paused, un-registering sensor listener");
@@ -165,6 +166,7 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
         Public.gameActivity = null;
         Public.gameManager.shutdown();
         Public.spawnManager.destroy();
+        Public.uiManager.destroy();
 
         super.onDestroy();
     }

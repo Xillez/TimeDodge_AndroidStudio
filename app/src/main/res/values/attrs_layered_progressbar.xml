@@ -1,5 +1,5 @@
 <resources>
-    <declare-styleable name="LayeredProgressbar">
+    <declare-styleable name="HealthManagerUI">
         <attr name="drawable" format="color|reference" />
     </declare-styleable>
 </resources>
