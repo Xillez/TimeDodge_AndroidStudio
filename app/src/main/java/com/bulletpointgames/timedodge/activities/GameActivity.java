@@ -213,9 +213,10 @@ X- Remove debris wall collision.
 X- Fix game thread shutdown on app exit.
 X- Fix broken spawn timer for debris.
 X- Add debris re-spawn on screen exit.
-- Fix no velocity on first entity spawn.
+x- Fix no velocity on first entity spawn.
 - Add points giving, pick-up-able points and close-encounter bonuses!
-- Implement RequiresComponent and ExecuteAfter annotation for better control over component dependencies and execution control.
+x- Implement RequiresComponent annotation for better control over component dependencies
+- Implement ExecuteAfter annotation for better control over execution flow.
 X- Implement game layer and entity tags on entities to allow for customizable sorting/filtering (XML configuration for layer name????).
 - Add spawn behaviour configuration xmls to resources and implement loading of these.
 - Re-enable vibration and sound for player-wall collision.
