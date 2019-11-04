@@ -103,6 +103,9 @@ public class GameManager extends Thread
             return;
         }
 
+        // Update TimerManager
+        Public.timerManager.update();
+
         // Skip updating if game is paused
         if (paused) {
             return;
@@ -110,9 +113,6 @@ public class GameManager extends Thread
 
         // Handle spawning of entities.
         Public.spawnManager.update();
-
-        // Update TimerManager
-        Public.timerManager.update();
 
         // Update entities
         try {
