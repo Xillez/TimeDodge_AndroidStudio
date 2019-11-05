@@ -55,7 +55,7 @@ public class Physics extends Component implements GameEventListener
 
         // Update  position. Normal dt for player, shifted dt for debris.
         if (this.parent.hasTag(Tags.PLAYER_TAG))
-            this.parentTransform.getPosition().addTo(this.velocity.multi(Time.getDeltaTime()));
+            this.parentTransform.getPosition().addTo(this.velocity.multi(Time.getDeltaTimeNanos()));
         else if (this.parent.hasTag(Tags.DEBRIS_TAG))
             this.parentTransform.getPosition().addTo(this.velocity.multi(Time.getPlayerAffectedDeltaTime()));
     }

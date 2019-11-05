@@ -21,14 +21,20 @@ public class Time
     }
 
     @Contract(pure = true)
-    public static float getDeltaTime()
+    public static float getDeltaTimeNanos()
     {
         return Time.elapsed;
+    }
+
+    @Contract(pure = true)
+    public static float getDeltaTimeMillis()
+    {
+        return Time.elapsed * 1000;
     }
 
     public static float getPlayerAffectedDeltaTime()
     {
         // If player is moving too slow, ensure time moves at 15%.
-        return Math.max(Time.getDeltaTime() * playerPhysics.getVelocity().length() * 0.0025f, Time.getDeltaTime() * 0.15f);
+        return Math.max(Time.getDeltaTimeNanos() * playerPhysics.getVelocity().length() * 0.0025f, Time.getDeltaTimeNanos() * 0.15f);
     }
 }

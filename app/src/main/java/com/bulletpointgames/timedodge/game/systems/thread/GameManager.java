@@ -83,6 +83,7 @@ public class GameManager extends Thread
         }
 
         Public.spawnManager.create();
+        Public.scoreManager.create();
     }
 
     private void gameUpdate()
@@ -93,7 +94,7 @@ public class GameManager extends Thread
         this.framesSinceDebugUpdate++;
         // Update debug screen every 5 frames.
         if (this.framesSinceDebugUpdate >= 25) {
-            ((Activity) this.context).runOnUiThread(() -> { ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_ups)).setText(String.format("UPS: %f", (1.0f / Time.getDeltaTime()))); });
+            ((Activity) this.context).runOnUiThread(() -> { ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_ups)).setText(String.format("UPS: %f", (1.0f / Time.getDeltaTimeNanos()))); });
             this.framesSinceDebugUpdate = 0;
         }
 
@@ -103,16 +104,18 @@ public class GameManager extends Thread
             return;
         }
 
-        // Update TimerManager
-        Public.timerManager.update();
-
         // Skip updating if game is paused
         if (paused) {
             return;
         }
 
+        // Update TimerManager
+        Public.timerManager.update();
+
         // Handle spawning of entities.
         Public.spawnManager.update();
+
+        Public.scoreManager.update();
 
         // Update entities
         try {
@@ -133,7 +136,7 @@ public class GameManager extends Thread
         // If running, give up cpu, if not continue for stopping
         if (running.get())
         {
-            Tools.sleepRestOfFrame(Time.getDeltaTime(), "Game thread", (Activity) this.context, ((Activity) this.context).findViewById(R.id.game_debuginfo_gamethread_sleeptime));
+            Tools.sleepRestOfFrame(Time.getDeltaTimeNanos(), "Game thread", (Activity) this.context, ((Activity) this.context).findViewById(R.id.game_debuginfo_gamethread_sleeptime));
         }
     }
 
@@ -167,6 +170,7 @@ public class GameManager extends Thread
         Log.i(Logging.LOG_INFO_TAG, "GameManager started destruction");
         // Destroy for SpawnManager
         Public.spawnManager.destroy();
+        Public.scoreManager.destroy();
 
         // Destroy entities
         for (Entity entity : this.entities)

@@ -1,37 +1,58 @@
 package com.bulletpointgames.timedodge.game.systems.score;
 
+import com.bulletpointgames.timedodge.game.Public;
+
 public class ScoreManager
 {
-    private static long points = 0L;
-    private static long bonuses = 0L;
+    private long points = 0L;
+    private long bonuses = 0L;
 
+    public ScoreManager()
+    {
+
+    }
+
+    public void create()
+    {
+        Public.timerManager.registerTimer(0, 1000, ()->{ScoreManager.AddPoints(10);});
+    }
+
+    public void update()
+    {
+        //
+    }
+
+    public void destroy()
+    {
+        //
+    }
     public static long GetPoints()
     {
-        return points;
+        return Public.scoreManager.points;
     }
 
     public static void AddPoints(long pointsToAdd)
     {
-        points += pointsToAdd;
+        Public.scoreManager.points += pointsToAdd;
     }
 
     public static void RemovePoints(long pointsToRemove)
     {
-        points -= pointsToRemove;
+        Public.scoreManager.points -= pointsToRemove;
     }
 
     public static long GetBonuses()
     {
-        return bonuses;
+        return Public.scoreManager.bonuses;
     }
 
     public static void AddBonuses(long pointsToAdd)
     {
-        bonuses += pointsToAdd;
+        Public.scoreManager.bonuses += pointsToAdd;
     }
 
     public static void RemoveBonuses(long pointsToRemove)
     {
-        bonuses -= pointsToRemove;
+        Public.scoreManager.bonuses -= pointsToRemove;
     }
 }

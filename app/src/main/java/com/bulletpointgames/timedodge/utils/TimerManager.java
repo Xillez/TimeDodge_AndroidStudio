@@ -22,6 +22,8 @@ public class TimerManager
 
     private ArrayList<TimerData> timers = new ArrayList<>();
 
+    private float totalPlayTime = 0.0f;
+
     public void registerTimer(long timeUntilStart, long timeUntilTrigger, Runnable runnable)
     {
         this.timers.add(new TimerData(timeUntilStart, timeUntilTrigger, runnable));
@@ -29,9 +31,14 @@ public class TimerManager
 
     public void update()
     {
+        // Update total play time
+        float dt = Time.getDeltaTimeMillis();
+        this.totalPlayTime += dt;
+
+        // Run through timers
         for (TimerData timerData : this.timers)
         {
-            timerData.timeSoFar += (long) (Time.getDeltaTime() * 1000);
+            timerData.timeSoFar += (long) dt;
 
             if (!timerData.started)
             {
@@ -49,5 +56,15 @@ public class TimerManager
                 timerData.timeSoFar = 0L;
             }
         }
+    }
+
+    public float getTotalPlayTime()
+    {
+        return totalPlayTime;
+    }
+
+    public void resetTotalPlayTime()
+    {
+        this.totalPlayTime = 0.0f;
     }
 }

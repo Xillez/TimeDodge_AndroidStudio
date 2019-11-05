@@ -66,7 +66,7 @@ public final class RespawnTrigger extends Component
             this.enteredScreen = true;
         }
 
-        this.timeSoFar += Time.getDeltaTime();
+        this.timeSoFar += Time.getDeltaTimeNanos();
 
         this.timeExpiration = (this.timeSoFar >= this.RESPAWN_TIME_SEC);
     }
