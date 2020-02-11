@@ -197,10 +197,10 @@ public class GameActivity extends AppCompatActivity implements GameOverFragment.
     {
         if (event instanceof PlayerDeathEvent)
         {
-            runOnUiThread(()->{
+            /*runOnUiThread(()->{
                 ConstraintLayout gameoverFragment = findViewById(R.id.frag_gameover);
                 gameoverFragment.setVisibility(View.VISIBLE);
-            });
+            });*/
         }
     }
 }
