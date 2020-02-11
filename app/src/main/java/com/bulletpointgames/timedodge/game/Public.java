@@ -4,6 +4,7 @@ import android.graphics.Rect;
 
 import com.bulletpointgames.timedodge.game.systems.UI.UIManager;
 import com.bulletpointgames.timedodge.activities.GameActivity;
+import com.bulletpointgames.timedodge.game.systems.collision.CollisionManager;
 import com.bulletpointgames.timedodge.game.systems.event.GameEventHandler;
 import com.bulletpointgames.timedodge.game.systems.score.ScoreManager;
 import com.bulletpointgames.timedodge.game.systems.spawn.SpawnManager;
@@ -37,6 +38,7 @@ public class Public
     public static Input input = new Input();
     public static UIManager uiManager = new UIManager();
     public static ScoreManager scoreManager = new ScoreManager();
+    public static CollisionManager collisionManager = new CollisionManager();
 
     public static final int TARGET_FPS = 60;
     public static final float MAX_FRAME_TIME_SEC = 1.0f / TARGET_FPS;

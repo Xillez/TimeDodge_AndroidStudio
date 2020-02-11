@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.layers.Layers;
 import com.bulletpointgames.timedodge.game.systems.ecs.Entity;
-import com.bulletpointgames.timedodge.game.systems.ecs.components.CollisionCircle;
+import com.bulletpointgames.timedodge.game.systems.ecs.components.CircleCollider;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Graphics;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Physics;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.RespawnTrigger;
@@ -94,7 +94,7 @@ public class SpawnManager {
         entity.addComponent(new Graphics());
         Physics entityPhysics = new Physics();
         entity.addComponent(entityPhysics);
-        CollisionCircle collision = new CollisionCircle();
+        CircleCollider collision = new CircleCollider();
         collision.setBackgroundCollision(false);
         entity.addComponent(collision);
         RespawnTrigger respawnTrigger = new RespawnTrigger();

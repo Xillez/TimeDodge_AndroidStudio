@@ -127,18 +127,27 @@ public final class Entity implements GameManager.GameLifecycle
     public Component getComponentByType(Class clazz)
     {
         for (Component component : this.components)
-            if (component.getClass().equals(clazz))
+            if (component.getClass().equals(clazz) || clazz.isAssignableFrom(component.getClass()))
                 return component;
 
         Log.e(Logging.LOG_ERR_TAG, String.format("Could not find components type \"%s\" on entity! ", clazz.getName()));
         return null;
     }
 
+    public ArrayList<Component> getComponentsByType(Class clazz)
+    {
+        ArrayList<Component> found = new ArrayList<>();
+        for (Component component : this.components)
+            if (component.getClass().equals(clazz) || clazz.isAssignableFrom(component.getClass()))
+                found.add(component);
+        return found;
+    }
+
     public int nrComponentByType(Class clazz)
     {
         int nrComp = 0;
         for (Component component : this.components)
-            if (component.getClass().equals(clazz))
+            if (component.getClass().equals(clazz) || clazz.isAssignableFrom(component.getClass()))
                 nrComp++;
 
         return nrComp;
@@ -169,6 +178,16 @@ public final class Entity implements GameManager.GameLifecycle
                 inputComponent.setParent(this);
                 this.components.add(inputComponent);
             }
+        }
+    }
+
+    public void removeComponent(Component inputComponent)
+    {
+        // Validate component
+        if (inputComponent != null)
+        {
+            inputComponent.destroy();
+            this.components.remove(inputComponent);
         }
     }
 

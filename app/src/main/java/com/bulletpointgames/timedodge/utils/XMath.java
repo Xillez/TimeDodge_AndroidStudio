@@ -42,4 +42,9 @@ public class XMath
     {
         return Math.max(min, Math.min(max, value));
     }
+
+    public static boolean floatEqual(float value, float checkAgainst, float precision)
+    {
+        return (value >= checkAgainst - precision && value <= checkAgainst + precision);
+    }
 }

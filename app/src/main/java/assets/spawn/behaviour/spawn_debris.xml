@@ -30,7 +30,7 @@ Entity entity = new Entity();
     entity.addComponent(new Graphics());
     Physics entityPhysics = new Physics();
     entity.addComponent(entityPhysics);
-    CollisionCircle collision = new CollisionCircle();
+    CircleCollider collision = new CircleCollider();
     collision.setBackgroundCollision(false);
     entity.addComponent(collision);
     //entity.addComponent(new RespawnTrigger());

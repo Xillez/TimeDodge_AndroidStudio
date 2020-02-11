@@ -4,39 +4,23 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.util.Log;
 
 import com.bulletpointgames.timedodge.game.Public;
-import com.bulletpointgames.timedodge.game.systems.ecs.Component;
-import com.bulletpointgames.timedodge.game.systems.ecs.Entity;
+import com.bulletpointgames.timedodge.game.systems.collision.CollisionManager;
 import com.bulletpointgames.timedodge.game.systems.ecs.annotations.RequiresComponent;
-import com.bulletpointgames.timedodge.game.systems.ecs.annotations.Singleton;
-import com.bulletpointgames.timedodge.game.systems.event.GameEventListener;
-import com.bulletpointgames.timedodge.game.systems.event.events.GameEntityCollisionEvent;
-import com.bulletpointgames.timedodge.game.systems.event.events.GameWallCollisionEvent;
-import com.bulletpointgames.timedodge.game.systems.event.events.ui.GameOverUIEvent;
-import com.bulletpointgames.timedodge.game.systems.score.ScoreManager;
-import com.bulletpointgames.timedodge.game.tags.Tags;
-import com.bulletpointgames.timedodge.utils.Logging;
-import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
 
-import java.util.ArrayList;
-
-@Singleton
+//@Singleton
 @RequiresComponent(component = Transform.class)
 @RequiresComponent(component = Graphics.class)
 @RequiresComponent(component = Physics.class)
-public class CollisionCircle extends Collision
+public class CircleCollider extends Collider
 {
-    private boolean backgroundCollision = true;
-    private float DETECTION_RANGE = 75.0f;
+    protected Transform parentTransform = null;
+    protected Graphics parentGraphics = null;
+    protected Physics parentPhysics = null;
 
-    private Transform parentTransform = null;
-    private Graphics parentGraphics = null;
-    private Physics parentPhysics = null;
-
-    public CollisionCircle()
+    public CircleCollider()
     {
         super();
     }
@@ -58,13 +42,13 @@ public class CollisionCircle extends Collision
         super.update();
 
         // No parent transform nor graphics found, abort
-        if (this.parentTransform == null || this.parentGraphics == null)
+        /*if (this.parentTransform == null || this.parentGraphics == null)
             return;
 
         Vector pos = this.parentTransform.getPosition();
         Vector size = this.parentGraphics.getActualSize();
 
-        ArrayList<Component> comps = Public.gameManager.getAllComponentsOfTypeNearEntity(CollisionCircle.class, this.parent, this.parentTransform.getPosition(), this.DETECTION_RANGE);
+        ArrayList<Component> comps = Public.gameManager.getAllComponentsOfTypeNearEntity(CircleCollider.class, this.parent, this.parentTransform.getPosition(), this.DETECTION_RANGE);
         if (comps == null) {
             Log.i(Logging.LOG_DEBUG_TAG, "Failed to fetch collision components!");
             return;
@@ -132,7 +116,7 @@ public class CollisionCircle extends Collision
                 this.triggerWallCollisionEvent(this.parentPhysics, GameWallCollisionEvent.WallSide.WALL_BOTTOM, unstuckPos);
                 this.triggerGameOverEvent();
             }
-        }
+        }*/
     }
 
     @Override
@@ -147,10 +131,16 @@ public class CollisionCircle extends Collision
                 return;
 
             Vector pos = this.parentTransform.getPosition();
+            float detectRange = CollisionManager.DETECTION_RANGE;
 
             ShapeDrawable detectCircle = new ShapeDrawable(new OvalShape());
             detectCircle.getPaint().setColor(0x8800ff00);
-            detectCircle.setBounds(new Rect((int) (pos.x - this.DETECTION_RANGE), (int)(pos.y - this.DETECTION_RANGE), (int)(pos.x + this.DETECTION_RANGE), (int)(pos.y + this.DETECTION_RANGE)));
+            detectCircle.setBounds(
+                    new Rect(
+                            (int) (pos.x - (this.getRadius() + detectRange)),
+                            (int) (pos.y - (this.getRadius() + detectRange)),
+                            (int) (pos.x + (this.getRadius() + detectRange)),
+                            (int) (pos.y + (this.getRadius() + detectRange))));
             detectCircle.draw(canvas);
         }
     }
@@ -184,49 +174,15 @@ public class CollisionCircle extends Collision
         super.destroy();
     }
 
-    public void triggerEntityCollisionEvent(GameEventListener target, Vector deflectionForce)
+    @Override
+    public Vector getPosition()
     {
-        GameEntityCollisionEvent collEvent = new GameEntityCollisionEvent();
-        collEvent.targets.add(target);
-        collEvent.referrer = this;
-        collEvent.deflecionForce = deflectionForce;
-        //collEvent.intersection = intersectionPoint;
-        //collEvent.unstuckPosition = unstuckPosition;
-        Public.gameEventHandler.registerEvent(collEvent);
+        return this.parentTransform.getPosition();
     }
 
-    public void triggerWallCollisionEvent(Physics target, GameWallCollisionEvent.WallSide wallSide, Vector unstuckPosition)
+    @Override
+    public float getRadius()
     {
-        GameWallCollisionEvent collEvent = new GameWallCollisionEvent();
-        collEvent.targets.add(target);
-
-        if (target.getParent().hasTag(Tags.PLAYER_TAG))
-        {
-            collEvent.targets.add((HealthManager) target.getParent().getComponentByType(HealthManager.class));
-        }
-
-        collEvent.referrer = this;
-        collEvent.collisionWithSide = wallSide;
-        collEvent.unstuckPosition = unstuckPosition;
-        Public.gameEventHandler.registerEvent(collEvent);
-    }
-
-    private void triggerGameOverEvent()
-    {
-        GameOverUIEvent goEvent = new GameOverUIEvent();
-        goEvent.referrer = null;
-        goEvent.points = ScoreManager.GetPoints();
-        goEvent.bonuses = ScoreManager.GetBonuses();
-        Public.gameEventHandler.registerEvent(goEvent);
-    }
-
-    public boolean isBackgroundCollision()
-    {
-        return backgroundCollision;
-    }
-
-    public void setBackgroundCollision(boolean backgroundCollision)
-    {
-        this.backgroundCollision = backgroundCollision;
+        return this.parentGraphics.getActualSize().x / 2.0f;
     }
 }

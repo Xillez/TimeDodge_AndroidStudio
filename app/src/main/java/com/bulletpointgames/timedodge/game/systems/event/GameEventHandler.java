@@ -1,9 +1,5 @@
 package com.bulletpointgames.timedodge.game.systems.event;
 
-import android.util.Log;
-
-import com.bulletpointgames.timedodge.utils.Logging;
-
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;

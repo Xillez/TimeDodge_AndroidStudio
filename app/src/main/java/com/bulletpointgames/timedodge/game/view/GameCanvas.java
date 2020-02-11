@@ -67,7 +67,7 @@ public class GameCanvas extends View
         // Update debug screen every 5 frames.
         if (this.framesSinceDebugUpdate >= 5) {
             ((TextView) ((Activity) this.context).findViewById(R.id.game_debuginfo_fps)).setText(String.format("FPS: %f", ( 1.0f / elapsed)));
-            Log.d(Logging.LOG_DEBUG_TAG, String.format("FPS: %f", ( 1.0f / elapsed)));
+            //Log.d(Logging.LOG_DEBUG_TAG, String.format("FPS: %f", ( 1.0f / elapsed)));
             this.framesSinceDebugUpdate = 0;
         }
 

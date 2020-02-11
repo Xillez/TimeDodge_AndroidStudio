@@ -72,29 +72,74 @@ public class Tools
         return new Vector((rnd.nextFloat() * Public.screenRect.width()) + Public.screenRect.left, (rnd.nextFloat() * Public.screenRect.height()) + Public.screenRect.top);
     }
 
+    public static Vector findClosestCircleColliderUnstuckPosition(Vector pos, float radius, Vector otherPos, float otherRadius)
+    {
+        // Get difference vector form other to me.
+        Vector diff = pos.sub(otherPos);
+
+        // If its smaller than their combined radius', set diff to be little more than this distance.
+        if (diff.length() <= radius + otherRadius)
+        {
+            diff.normalizeTo();
+            diff.multiTo(radius + otherRadius + 0.01f);
+        }
+        return otherPos.add(diff);
+    }
+
+    public static Vector findClosestScreenUnstuckPosition(Vector pos, float radius)
+    {
+        Vector unstuckPos = new Vector(pos.x, pos.y);
+
+        // Collider with left
+        if ((pos.x - radius) <= Public.gameBoardRect.left)
+        {
+            unstuckPos.setAxis(Vector.Axis.x, Public.gameBoardRect.left + radius + 0.01f);
+        }
+
+        // Collider with top
+        if ((pos.y - radius) <= Public.gameBoardRect.top)
+        {
+            unstuckPos.setAxis(Vector.Axis.y, Public.gameBoardRect.top + radius + 0.01f);
+        }
+
+        // Collider with right
+        if ((pos.x + radius) >= Public.gameBoardRect.right)
+        {
+            unstuckPos.setAxis(Vector.Axis.x, Public.gameBoardRect.right - radius - 0.01f);
+        }
+
+        // Collider with bottom
+        if ((pos.y + radius) >= Public.gameBoardRect.bottom)
+        {
+            unstuckPos.setAxis(Vector.Axis.y, Public.gameBoardRect.bottom - radius - 0.01f);
+        }
+
+        return unstuckPos;
+    }
+
     public static Vector findClosestScreenUnstuckPosition(Vector pos, Vector size)
     {
         Vector unstuckPos = new Vector(pos.x, pos.y);
 
-        // Collision with left
+        // Collider with left
         if ((pos.x - (size.x / 2.0f)) <= Public.gameBoardRect.left)
         {
             unstuckPos.setAxis(Vector.Axis.x, Public.gameBoardRect.left + (size.x / 2.0f) + 0.01f);
         }
 
-        // Collision with top
+        // Collider with top
         if ((pos.y - (size.y / 2.0f)) <= Public.gameBoardRect.top)
         {
             unstuckPos.setAxis(Vector.Axis.y, Public.gameBoardRect.top + (size.y / 2.0f) + 0.01f);
         }
 
-        // Collision with right
+        // Collider with right
         if ((pos.x + (size.x / 2.0f)) >= Public.gameBoardRect.right)
         {
             unstuckPos.setAxis(Vector.Axis.x, Public.gameBoardRect.right - (size.x / 2.0f) - 0.01f);
         }
 
-        // Collision with bottom
+        // Collider with bottom
         if ((pos.y + (size.y / 2.0f)) >= Public.gameBoardRect.bottom)
         {
             unstuckPos.setAxis(Vector.Axis.y, Public.gameBoardRect.bottom - (size.y / 2.0f) - 0.01f);

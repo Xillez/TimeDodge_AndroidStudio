@@ -3,6 +3,7 @@ package com.bulletpointgames.timedodge.game.systems.thread;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.widget.TextView;
@@ -12,11 +13,12 @@ import com.bulletpointgames.timedodge.game.Public;
 import com.bulletpointgames.timedodge.game.layers.Layers;
 import com.bulletpointgames.timedodge.game.systems.ecs.Component;
 import com.bulletpointgames.timedodge.game.systems.ecs.Entity;
-import com.bulletpointgames.timedodge.game.systems.ecs.components.CollisionCircle;
+import com.bulletpointgames.timedodge.game.systems.ecs.components.CircleCollider;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Graphics;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.HealthManager;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Physics;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.PlayerController;
+import com.bulletpointgames.timedodge.game.systems.ecs.components.Shield;
 import com.bulletpointgames.timedodge.game.systems.ecs.components.Transform;
 import com.bulletpointgames.timedodge.game.tags.Tags;
 import com.bulletpointgames.timedodge.game.view.GameView;
@@ -60,8 +62,9 @@ public class GameManager extends Thread
         Physics physics = new Physics();
         ball.addComponent(physics);
         ball.addComponent(new PlayerController());
-        ball.addComponent(new CollisionCircle());
+        ball.addComponent(new CircleCollider());
         ball.addComponent(new HealthManager());
+        ball.addComponent(new Shield());
         this.addEntity(ball);
         Time.playerPhysics = physics;
 
@@ -84,6 +87,7 @@ public class GameManager extends Thread
 
         Public.spawnManager.create();
         Public.scoreManager.create();
+        Public.collisionManager.create();
     }
 
     private void gameUpdate()
@@ -105,9 +109,13 @@ public class GameManager extends Thread
         }
 
         // Skip updating if game is paused
-        if (paused) {
+        /*if (paused) {
             return;
-        }
+        }*/
+
+        if (!paused)
+        {
+
 
         // Update TimerManager
         Public.timerManager.update();
@@ -116,6 +124,8 @@ public class GameManager extends Thread
         Public.spawnManager.update();
 
         Public.scoreManager.update();
+
+        Public.collisionManager.update();
 
         // Update entities
         try {
@@ -132,6 +142,7 @@ public class GameManager extends Thread
 
         // Handle events
         Public.gameEventHandler.handleEvents();
+        }
 
         // If running, give up cpu, if not continue for stopping
         if (running.get())
@@ -144,6 +155,7 @@ public class GameManager extends Thread
     {
         // Draw for SpawnManager, Not really needed
         Public.spawnManager.draw(canvas);
+        Public.collisionManager.draw(canvas);
 
         // Draw entities
         for (Entity entity : this.entities)
@@ -171,6 +183,7 @@ public class GameManager extends Thread
         // Destroy for SpawnManager
         Public.spawnManager.destroy();
         Public.scoreManager.destroy();
+        Public.collisionManager.destroy();
 
         // Destroy entities
         for (Entity entity : this.entities)
@@ -181,7 +194,7 @@ public class GameManager extends Thread
     }
 
     @Override
-public void run()       // TODO: Move UIManager to separate thread/service or into GameCanvas
+    public void run()       // TODO: Move UIManager to separate thread/service or into GameCanvas
     {
         Log.i(Logging.LOG_INFO_TAG, "GameManager thread started construction");
         super.run();
@@ -241,8 +254,16 @@ public void run()       // TODO: Move UIManager to separate thread/service or in
         }
     }
 
-    public ArrayList<Component> getAllComponentsOfType(Class<CollisionCircle> clazz, Entity exclude)
+    public ArrayList<Component> getAllComponentsOfType(Class clazz, Entity exclude)
     {
+        // If not a component, abort!
+        if (!Component.class.isAssignableFrom(clazz))
+        {
+            Log.w(Logging.LOG_WARN_TAG, "Class given does not extend Component!");
+            return new ArrayList<>();
+        }
+
+        // Get all components of given class
         ArrayList<Component> components = new ArrayList<>();
         for (Entity entity : this.entities)
         {
@@ -251,16 +272,17 @@ public void run()       // TODO: Move UIManager to separate thread/service or in
                 if (entity.getID() == exclude.getID())
                     continue;
             for (Component comp : entity.getComponents())
-                if (comp.getClass().equals(clazz)) components.add(comp);
+                if (comp.getClass().equals(clazz) || clazz.isAssignableFrom(comp.getClass()))
+                    components.add(comp);
         }
         return components;
     }
 
-    public ArrayList<Component> getAllComponentsOfTypeNearEntity(Class<CollisionCircle> clazz, Entity exclude, Vector pos, float distance)
+    public ArrayList<Component> getAllComponentsOfTypeNearEntity(@NonNull Class clazz, Entity exclude, Vector pos, float distance)
     {
         // Can't get components from invalid position or distance
         if (pos == null || distance <= 0.0f)
-             return null;
+            return null;
 
         ArrayList<Component> components = new ArrayList<>();
         for (Entity other : this.entities)
@@ -277,8 +299,10 @@ public void run()       // TODO: Move UIManager to separate thread/service or in
             // If other entity is close to pos
             if (pos.sub(otherPos).length() <= distance)
             {
+                //Log.d(Logging.LOG_DEBUG_TAG, "FindAllComponentsNearEntity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 for (Component comp : other.getComponents())
-                    if (comp.getClass().equals(clazz)) components.add(comp);
+                    if (comp.getClass().equals(clazz) || clazz.isAssignableFrom(comp.getClass()))
+                        components.add(comp);
             }
         }
 
