@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public final class Entity implements GameManager.GameLifecycle
 {
     private int entityID = 0;
+    public Transform transform = new Transform();
     private volatile ArrayList<Component> components = new ArrayList<>();
     private ArrayList<String> tags = new ArrayList<>();
     private ArrayList<Integer> layers = new ArrayList<>();
@@ -24,7 +25,6 @@ public final class Entity implements GameManager.GameLifecycle
     public Entity()
     {
         this.entityID = Tools.getNewUID();
-        this.addComponent(new Transform());
     }
 
     @Override
@@ -189,13 +189,6 @@ public final class Entity implements GameManager.GameLifecycle
             inputComponent.destroy();
             this.components.remove(inputComponent);
         }
-    }
-
-    public void setPosition(Vector pos)
-    {
-        Transform transform = (Transform) this.getComponentByType(Transform.class);
-        if (transform != null)
-            transform.setPosition(pos);
     }
 
     public boolean hasTag(String tag)
