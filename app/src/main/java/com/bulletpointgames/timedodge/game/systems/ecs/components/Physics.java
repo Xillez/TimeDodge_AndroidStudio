@@ -117,7 +117,7 @@ public class Physics extends Component implements GameEventListener
             if (!entityCollisionEvent.doPhysics)
                 return;
 
-            // Recieved unstuck position, use it.
+            // Received unstuck position, use it.
             if (entityCollisionEvent.unstuckPosition != null)
             {
                 parentTransform.getPosition().set(((GameEntityCollisionEvent) event).unstuckPosition);
