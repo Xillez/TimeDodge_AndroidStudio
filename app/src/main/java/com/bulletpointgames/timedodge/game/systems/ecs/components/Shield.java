@@ -29,7 +29,6 @@ import java.util.ArrayList;
 @RequiresComponent(component = Physics.class)
 public class Shield extends Collider implements GameEventListener
 {
-    private Transform parentTransform = null;
     private Graphics parentGraphics = null;
 
     private Drawable shieldDrawable = null;
@@ -50,7 +49,6 @@ public class Shield extends Collider implements GameEventListener
     {
         super.create();
 
-        this.parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
         this.parentGraphics = (Graphics) this.parent.getComponentByType(Graphics.class);
 
         Resources res = Public.gameActivity.getResources();
@@ -76,7 +74,7 @@ public class Shield extends Collider implements GameEventListener
     {
         super.draw(canvas);
 
-        Vector parentPos = this.parentTransform.getPosition();
+        Vector parentPos = this.parent.transform.getPosition();
         this.shieldDrawable.setBounds(
             new Rect(
                 (int) (parentPos.x - this.getRadius()),
@@ -119,7 +117,7 @@ public class Shield extends Collider implements GameEventListener
     @Override
     public Vector getPosition()
     {
-        return this.parentTransform.getPosition();
+        return this.parent.transform.getPosition();
     }
 
     @Override

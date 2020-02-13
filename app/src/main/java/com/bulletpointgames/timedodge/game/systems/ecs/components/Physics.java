@@ -16,13 +16,10 @@ import com.bulletpointgames.timedodge.utils.Time;
 import com.bulletpointgames.timedodge.utils.Vector;
 
 @Singleton
-@RequiresComponent(component = Transform.class)
 public class Physics extends Component implements GameEventListener
 {
     private Vector velocity;
     private Vector acceleration;
-
-    private Transform parentTransform = null;
 
     public Physics()
     {
@@ -36,8 +33,6 @@ public class Physics extends Component implements GameEventListener
         this.velocity = new Vector(0,0);
         this.acceleration = new Vector(0,0);
 
-        this.parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
-
         Public.gameEventHandler.registerListener(this);
     }
 
@@ -46,18 +41,14 @@ public class Physics extends Component implements GameEventListener
     {
         super.update();
 
-        // No parent transform found, abort
-        if (this.parentTransform == null)
-            return;
-
         // Update velocity
         this.velocity.addTo(this.acceleration);
 
         // Update  position. Normal dt for player, shifted dt for debris.
         if (this.parent.hasTag(Tags.PLAYER_TAG))
-            this.parentTransform.getPosition().addTo(this.velocity.multi(Time.getDeltaTimeNanos()));
+            this.parent.transform.getPosition().addTo(this.velocity.multi(Time.getDeltaTimeNanos()));
         else if (this.parent.hasTag(Tags.DEBRIS_TAG))
-            this.parentTransform.getPosition().addTo(this.velocity.multi(Time.getPlayerAffectedDeltaTime()));
+            this.parent.transform.getPosition().addTo(this.velocity.multi(Time.getPlayerAffectedDeltaTime()));
     }
 
     @Override
@@ -67,11 +58,7 @@ public class Physics extends Component implements GameEventListener
 
         if (Public.DEBUG_MODE)
         {
-            // No parent transform found, abort
-            if (this.parentTransform == null)
-                return;
-
-            Vector pos = this.parentTransform.getPosition();
+            Vector pos = this.parent.transform.getPosition();
             Paint debugVelocityPaint = new Paint();
             debugVelocityPaint.setColor(0xFFF5D040);
             canvas.drawLine(pos.x, pos.y, pos.x + this.velocity.x, pos.y + this.velocity.y, debugVelocityPaint);
@@ -104,10 +91,6 @@ public class Physics extends Component implements GameEventListener
     @Override
     public void onEvent(GameEvent event)
     {
-        // No parent transform found, abort
-        if (this.parentTransform == null)
-            return;
-
         // Entity to entity collision
         if (event instanceof GameEntityCollisionEvent)
         {
@@ -120,7 +103,7 @@ public class Physics extends Component implements GameEventListener
             // Received unstuck position, use it.
             if (entityCollisionEvent.unstuckPosition != null)
             {
-                parentTransform.getPosition().set(((GameEntityCollisionEvent) event).unstuckPosition);
+                this.parent.transform.getPosition().set(((GameEntityCollisionEvent) event).unstuckPosition);
             }
 
             // Add bounce of other entity + removal of energy (hence 0.65 instead of 1)
@@ -141,7 +124,7 @@ public class Physics extends Component implements GameEventListener
 
             // Unstuck ball
             if (wallCollisionEvent.unstuckPosition != null)
-                parentTransform.getPosition().set(wallCollisionEvent.unstuckPosition);
+                this.parent.transform.getPosition().set(wallCollisionEvent.unstuckPosition);
         }
     }
 

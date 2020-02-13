@@ -11,12 +11,10 @@ import com.bulletpointgames.timedodge.game.systems.ecs.annotations.RequiresCompo
 import com.bulletpointgames.timedodge.utils.Vector;
 
 //@Singleton
-@RequiresComponent(component = Transform.class)
 @RequiresComponent(component = Graphics.class)
 @RequiresComponent(component = Physics.class)
 public class CircleCollider extends Collider
 {
-    protected Transform parentTransform = null;
     protected Graphics parentGraphics = null;
     protected Physics parentPhysics = null;
 
@@ -30,8 +28,7 @@ public class CircleCollider extends Collider
     {
         super.create();
 
-        // Fetch transform and graphics components from parent
-        this.parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
+        // Fetch Graphics and Physics components from parent
         this.parentGraphics = (Graphics) this.parent.getComponentByType(Graphics.class);
         this.parentPhysics = (Physics) this.parent.getComponentByType(Physics.class);
     }
@@ -126,11 +123,7 @@ public class CircleCollider extends Collider
 
         if (Public.DEBUG_MODE)
         {
-            // No parent transform found, abort
-            if (this.parentTransform == null)
-                return;
-
-            Vector pos = this.parentTransform.getPosition();
+            Vector pos = this.parent.transform.getPosition();
             float detectRange = CollisionManager.DETECTION_RANGE;
 
             ShapeDrawable detectCircle = new ShapeDrawable(new OvalShape());
@@ -177,7 +170,7 @@ public class CircleCollider extends Collider
     @Override
     public Vector getPosition()
     {
-        return this.parentTransform.getPosition();
+        return this.parent.transform.getPosition();
     }
 
     @Override

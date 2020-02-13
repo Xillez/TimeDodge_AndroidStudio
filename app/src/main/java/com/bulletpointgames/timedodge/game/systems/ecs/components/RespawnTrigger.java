@@ -15,7 +15,6 @@ import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
 
 @Singleton
-@RequiresComponent(component = Transform.class)
 @RequiresComponent(component = Graphics.class)
 public final class RespawnTrigger extends Component
 {
@@ -27,7 +26,6 @@ public final class RespawnTrigger extends Component
 
     private float timeSoFar = 0.0f;
 
-    private Transform parentTransform = null;
     private Graphics parentGraphics = null;
 
     public RespawnTrigger()
@@ -40,7 +38,6 @@ public final class RespawnTrigger extends Component
     {
         super.create();
 
-        this.parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
         this.parentGraphics = (Graphics) this.parent.getComponentByType(Graphics.class);
     }
 
@@ -49,11 +46,11 @@ public final class RespawnTrigger extends Component
     {
         super.update();
 
-        // No parent transform nor graphics found, abort
-        if (this.parentTransform == null || this.parentGraphics == null)
+        // No parent Graphics component found, abort
+        if (this.parentGraphics == null)
             return;
 
-        Vector pos = this.parentTransform.getPosition();
+        Vector pos = this.parent.transform.getPosition();
         Vector size = this.parentGraphics.getActualSize();
         Rect objRect = new Rect((int) (pos.x - (size.x / 2.0f)), (int) (pos.y - (size.y / 2.0f)), (int) (pos.x + (size.x / 2.0f)), (int) (pos.y + (size.y / 2.0f)));
 
@@ -76,13 +73,13 @@ public final class RespawnTrigger extends Component
     {
         super.draw(canvas);
 
-        // No parent transform nor graphics found, abort
-        if (this.parentTransform == null || this.parentGraphics == null)
+        // No parent Graphics Component found, abort
+        if (this.parentGraphics == null)
             return;
 
         if (Public.DEBUG_MODE)
         {
-            Vector pos = this.parentTransform.getPosition();
+            Vector pos = this.parent.transform.getPosition();
             Vector size = this.parentGraphics.getActualSize();
 
             ShapeDrawable detectCircle = new ShapeDrawable(new RectShape());

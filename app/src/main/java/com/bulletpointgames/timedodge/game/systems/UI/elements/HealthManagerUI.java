@@ -55,7 +55,7 @@ public class HealthManagerUI extends UICompElement
     {
         super.create();
 
-        this.transform = (Transform) this.component.getParent().getComponentByType(Transform.class);
+        this.transform = this.component.getParent().transform;
     }
 
     @Override

@@ -12,15 +12,12 @@ import com.bulletpointgames.timedodge.utils.Tools;
 import com.bulletpointgames.timedodge.utils.Vector;
 
 @Singleton
-@RequiresComponent(component = Transform.class)
 public class Graphics extends Component
 {
     // Disable for opengl drawing
     private ShapeDrawable shape = new ShapeDrawable();
     private Vector size = new Vector(Tools.fromDPtoDevicePixels(15), Tools.fromDPtoDevicePixels(15));
     public boolean isPlayer = false;
-
-    Transform parentTransform = null;
 
     public Graphics()
     {
@@ -38,8 +35,6 @@ public class Graphics extends Component
     public void create()
     {
         super.create();
-
-        this.parentTransform = (Transform) this.parent.getComponentByType(Transform.class);
     }
 
     @Override
@@ -53,13 +48,9 @@ public class Graphics extends Component
     {
         super.draw(canvas);
 
-        // No parent transform found, abort
-        if (parentTransform != null)
-        {
-            Vector parentPos = parentTransform.getPosition();
-            Vector parentScale = parentTransform.getScale();
-            this.shape.setBounds(new Rect((int) (parentPos.x - (size.x * parentScale.x * 0.5f)), (int) (parentPos.y - (size.y * parentScale.y * 0.5f)), (int) (parentPos.x + (size.x * parentScale.x * 0.5f)), (int) (parentPos.y + (size.y * parentScale.y * 0.5f))));
-        }
+        Vector parentPos = this.parent.transform.getPosition();
+        Vector parentScale = this.parent.transform.getScale();
+        this.shape.setBounds(new Rect((int) (parentPos.x - (size.x * parentScale.x * 0.5f)), (int) (parentPos.y - (size.y * parentScale.y * 0.5f)), (int) (parentPos.x + (size.x * parentScale.x * 0.5f)), (int) (parentPos.y + (size.y * parentScale.y * 0.5f))));
 
         if (isPlayer)
             this.shape.getPaint().setColor(0xffff0000);
@@ -95,11 +86,8 @@ public class Graphics extends Component
     }
 
     public Vector getActualSize() {
-        if (this.parentTransform != null) {
-            Vector parentScale = parentTransform.getScale();
-            return new Vector(size.x * parentScale.x, size.y * parentScale.y);
-        }
-        return size;
+        Vector parentScale = this.parent.transform.getScale();
+        return new Vector(size.x * parentScale.x, size.y * parentScale.y);
     }
 
     public Rect getBounds()

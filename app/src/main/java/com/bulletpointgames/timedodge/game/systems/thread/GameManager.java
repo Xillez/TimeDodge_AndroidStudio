@@ -292,14 +292,13 @@ public class GameManager extends Thread
                 if (other.getID() == exclude.getID())
                     continue;
 
-            Vector otherPos = ((Transform) other.getComponentByType(Transform.class)).getPosition();
+            Vector otherPos = other.transform.getPosition();
             if (otherPos == null)
                 return null;
 
             // If other entity is close to pos
             if (pos.sub(otherPos).length() <= distance)
             {
-                //Log.d(Logging.LOG_DEBUG_TAG, "FindAllComponentsNearEntity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 for (Component comp : other.getComponents())
                     if (comp.getClass().equals(clazz) || clazz.isAssignableFrom(comp.getClass()))
                         components.add(comp);

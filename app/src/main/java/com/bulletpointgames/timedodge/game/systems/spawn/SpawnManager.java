@@ -42,7 +42,7 @@ public class SpawnManager {
         // TODO: Load spawn manager configuration xml !!NOT IMPLEMENTED, FUTURE UPDATE!!
 
         ArrayList<Entity> players = Public.gameManager.getAllEntitiesWithTag(Tags.PLAYER_TAG, null);
-        this.playerTransform = (Transform) players.get(0).getComponentByType(Transform.class);
+        this.playerTransform = players.get(0).transform;
 
         Public.timerManager.registerTimer(1000, 750, () -> spawnEntity());
     }
@@ -53,7 +53,7 @@ public class SpawnManager {
         Physics entityPhysics = null;
         for (RespawnTrigger detector : this.respawnTriggers)
         {
-            entityTransform = (Transform) detector.getParent().getComponentByType(Transform.class);
+            entityTransform = detector.getParent().transform;
             entityPhysics = (Physics) detector.getParent().getComponentByType(Physics.class);
 
             if ((detector.hasEnteredScreen() || detector.hasTimeExpired()) && !detector.isVisible())
@@ -90,7 +90,7 @@ public class SpawnManager {
         Entity entity = new Entity();
         entity.addTag(Tags.DEBRIS_TAG);
         entity.addLayer(Layers.DEBRIS_LAYER);
-        Transform entityTransform = (Transform) entity.getComponentByType(Transform.class);
+        Transform entityTransform = entity.transform;
         entity.addComponent(new Graphics());
         Physics entityPhysics = new Physics();
         entity.addComponent(entityPhysics);
