@@ -6,6 +6,8 @@ public class Vector extends PointF
 {
     public enum Axis {x, y}
 
+    public static final Vector ZERO = new Vector(0.0f, 0.0f);
+
     public Vector(float x, float y)
     {
         this.x = x;
